@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coś poszło nie tak | Szymon Domagała</title>
+<meta name="robots" content="noindex, follow">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav('/')}"></div>
+<main>
+  <section class="section" style="min-height:60vh;display:flex;align-items:center">
+    <div class="container" style="text-align:center">
+      <div class="eyebrow">Błąd 500</div>
+      <h1 style="font-size:clamp(2rem,5vw,3rem)">Coś poszło nie tak</h1>
+      <p class="lead">Zapisałem, co się stało, i zajmę się tym. Spróbuj odświeżyć stronę za chwilę.</p>
+
+      <p th:if="${incident}" style="margin-top:22px;font-size:14px">
+        Jeśli problem wraca, podaj ten numer przy zgłoszeniu:<br>
+        <strong style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:20px;letter-spacing:.06em"
+                th:text="${incident}">A1B2C3D4</strong>
+      </p>
+
+      <div class="hero-ctas" style="justify-content:center;margin-top:26px">
+        <a href="/" class="btn btn-primary">Strona główna</a>
+        <a href="tel:+48502338373" class="btn btn-outline">502 338 373</a>
+      </div>
+    </div>
+  </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
+</body>
+</html>

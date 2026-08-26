@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('stats')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div class="page-h">
+        <div>
+          <h2>Statystyki odwiedzin</h2>
+          <p>Dane własne, bez ciasteczek stron trzecich</p>
+        </div>
+        <div class="r">
+          <a th:each="d : ${ranges}" th:href="@{/admin/statystyki(dni=${d})}"
+             th:class="${range == d} ? 'btn btn-d' : 'btn btn-o'"
+             th:text="${d == 365} ? '12 mies.' : ${d} + ' dni'">30 dni</a>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-ic b"><svg><use href="#i-eye"/></svg></div>
+          <div class="kpi-v" th:text="${visits}">0</div>
+          <div class="kpi-l">Odsłony (bez botów)</div>
+          <div th:replace="~{fragments/admin-layout :: trend(${visitsTrend})}"></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic g"><svg><use href="#i-users"/></svg></div>
+          <div class="kpi-v" th:text="${sessions}">0</div>
+          <div class="kpi-l">Sesje</div>
+          <div th:replace="~{fragments/admin-layout :: trend(${sessionsTrend})}"></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic a"><svg><use href="#i-chart"/></svg></div>
+          <div class="kpi-v" th:text="${perSession}">0,0</div>
+          <div class="kpi-l">Odsłon na sesję</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic n"><svg><use href="#i-info"/></svg></div>
+          <div class="kpi-v" th:text="${botTotal}">0</div>
+          <div class="kpi-l">Wizyty botów AI</div>
+        </div>
+      </div>
+
+      <!--/* Boty AI na wierzchu: to jedyny wskaźnik widoczności w AI,
+             który da się zmierzyć z własnego serwera. */-->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-h">
+          <div><h2>Boty AI</h2><div class="sub">Kto po Ciebie sięgał, żeby zbudować odpowiedź</div></div>
+        </div>
+        <div class="tbl-scroll">
+          <table class="tbl">
+            <thead><tr><th>Bot</th><th class="num">Wizyty</th><th style="width:38%">Udział</th></tr></thead>
+            <tbody>
+              <tr th:each="b : ${bots}">
+                <td class="t-main" th:text="${b.label()}">GPTBot</td>
+                <td class="num" th:text="${b.value()}">0</td>
+                <td>
+                  <div class="pb-tr"><div class="pb-fl" th:style="'width:' + ${b.percent()} + '%'"></div></div>
+                </td>
+              </tr>
+              <tr th:if="${bots.isEmpty()}">
+                <td colspan="3">Żaden bot AI jeszcze nie zajrzał w tym okresie.
+                  Sprawdź, czy <a href="/robots.txt" target="_blank">robots.txt</a> jest dostępny.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-h">
+          <div><h2>Sesje w czasie</h2><div class="sub">bez botów</div></div>
+          <div class="r">
+            <div class="legend">
+              <span><i style="background:#1D9E75"></i>Dzień roboczy</span>
+              <span><i style="background:#2C4459"></i>Weekend</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-b">
+          <!--/* Wykres w czystym CSS — panel nie ładuje żadnej biblioteki z CDN-u. */-->
+          <div class="chart">
+            <div class="bar-w" th:each="b : ${bars}">
+              <!--/* .bar-v jest pozycjonowany względem słupka, więc musi być w środku */-->
+              <div class="bar" th:classappend="${b.weekend()} ? ' alt'"
+                   th:style="'height:' + ${b.percent()} + '%'"
+                   th:title="|${b.label()}: ${b.value()}|">
+                <span class="bar-v" th:if="${b.value() > 0}" th:text="${b.value()}">0</span>
+              </div>
+              <div class="bar-l" th:text="${b.label()}">1 sie</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-h"><h2>Najczęściej odwiedzane</h2></div>
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr><th>Ścieżka</th><th class="num">Odsłony</th><th class="num">%</th></tr></thead>
+              <tbody>
+                <tr th:each="r : ${paths}">
+                  <td class="t-main" th:text="${r.label()}">/blog</td>
+                  <td class="num" th:text="${r.value()}">0</td>
+                  <td class="num" th:text="${r.percent()} + '%'">0%</td>
+                </tr>
+                <tr th:if="${paths.isEmpty()}"><td colspan="3">Brak danych w tym okresie.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="display:grid;gap:16px">
+          <div class="card">
+            <div class="card-h"><h2>Źródła ruchu</h2></div>
+            <div class="card-b">
+              <div class="pb">
+                <div class="pb-i" th:each="r : ${referrers}">
+                  <div class="pb-top"><b th:text="${r.label()}">google.com</b><span th:text="${r.value()}">0</span></div>
+                  <div class="pb-tr"><div class="pb-fl" th:style="'width:' + ${r.percent()} + '%'"></div></div>
+                </div>
+                <p th:if="${referrers.isEmpty()}" style="font-size:12.5px;color:var(--ink-3)">
+                  Brak danych o źródłach w tym okresie.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Urządzenia</h2></div>
+            <div class="card-b">
+              <div class="pb">
+                <div class="pb-i" th:each="d : ${devices}">
+                  <div class="pb-top">
+                    <b th:text="${d.label() == 'mobile'} ? 'Telefon' : 'Komputer'">Telefon</b>
+                    <span th:text="${d.percent()} + '%'">0%</span>
+                  </div>
+                  <div class="pb-tr">
+                    <div class="pb-fl" th:classappend="${d.label() == 'mobile'} ? '' : ' n'"
+                         th:style="'width:' + ${d.percent()} + '%'"></div>
+                  </div>
+                </div>
+                <p th:if="${devices.isEmpty()}" style="font-size:12.5px;color:var(--ink-3)">
+                  Brak danych o urządzeniach w tym okresie.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+
+</body>
+</html>

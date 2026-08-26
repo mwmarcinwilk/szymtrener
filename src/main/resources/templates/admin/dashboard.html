@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('dash')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-ic b"><svg><use href="#i-eye"/></svg></div>
+          <div class="kpi-v" th:text="${visits}">0</div>
+          <div class="kpi-l">Odsłony (30 dni)</div>
+          <div th:replace="~{fragments/admin-layout :: trend(${visitsTrend})}"></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic a"><svg><use href="#i-inbox"/></svg></div>
+          <div class="kpi-v" th:text="${newSubmissions}">0</div>
+          <div class="kpi-l">Nowe zgłoszenia</div>
+          <div class="kpi-t fl" th:if="${newSubmissions > 0}">czekają na odpowiedź</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic g"><svg><use href="#i-chart"/></svg></div>
+          <div class="kpi-v" th:text="${conversion}">—</div>
+          <div class="kpi-l">Konwersja formularza</div>
+          <div class="kpi-t fl" th:text="|${sessions} sesji|">0 sesji</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic n"><svg><use href="#i-post"/></svg></div>
+          <div class="kpi-v" th:text="${publishedPosts}">0</div>
+          <div class="kpi-l">Opublikowane posty</div>
+          <div class="kpi-t fl" th:text="|${scheduledPosts} zaplanowane|">0 zaplanowane</div>
+        </div>
+      </div>
+
+      <div class="grid-15-1">
+        <div class="card">
+          <div class="card-h">
+            <div><h2>Odwiedziny</h2><div class="sub">Ostatnie 14 dni</div></div>
+            <div class="r"><a class="btn btn-o btn-s" href="/admin/statystyki">Statystyki</a></div>
+          </div>
+          <div class="card-b">
+            <!--/* Wykres w czystym CSS — panel nie ładuje żadnej biblioteki z CDN-u. */-->
+            <div class="chart">
+              <div class="bar-w" th:each="b : ${bars}">
+                <div class="bar" th:classappend="${b.weekend()} ? ' alt'"
+                     th:style="'height:' + ${b.percent()} + '%'"
+                     th:title="|${b.label()}: ${b.value()}|">
+                  <span class="bar-v" th:if="${b.value() > 0}" th:text="${b.value()}">0</span>
+                </div>
+                <div class="bar-l" th:text="${b.label()}">1 sie</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">
+            <h2>Najnowsze zgłoszenia</h2>
+            <div class="r"><a class="btn btn-o btn-s" href="/admin/zgloszenia">Wszystkie</a></div>
+          </div>
+          <div class="list">
+            <a class="li" th:each="s : ${latestSubmissions}" th:href="@{/admin/zgloszenia/{id}(id=${s.id})}">
+              <div class="li-ic" th:classappend="${s.status.name() == 'NEW'} ? 'a' : 'g'"
+                   th:text="${s.initials()}">MK</div>
+              <div>
+                <div class="t" th:text="${s.name}">Imię</div>
+                <div class="s" th:text="${s.type.label() + (s.city != null ? ' · ' + s.city : '')}">Online</div>
+              </div>
+              <div class="r">
+                <span class="bg" th:classappend="${s.status.badge()}" th:text="${s.status.label()}">Nowe</span>
+                <div class="s" style="margin-top:4px" th:text="${s.createdLabel}">—</div>
+              </div>
+            </a>
+            <p th:if="${latestSubmissions.isEmpty()}" style="padding:16px;font-size:13px;color:var(--ink-3)">
+              Brak zgłoszeń.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:16px">
+        <div class="card">
+          <div class="card-h">
+            <h2>Kolejka publikacji</h2>
+            <div class="r"><a class="btn btn-o btn-s" href="/admin/posty">Kalendarz</a></div>
+          </div>
+          <div class="list">
+            <a class="li" th:each="p : ${queue}" th:href="@{/admin/posty/{id}(id=${p.id})}">
+              <div class="li-ic" th:classappend="${p.status.name() == 'SCHEDULED'} ? 'b' : 'g'">
+                <svg width="16" height="16">
+                  <use th:href="${p.status.name() == 'SCHEDULED'} ? '#i-clock' : '#i-edit'"/>
+                </svg>
+              </div>
+              <div>
+                <div class="t" th:text="${p.title}">Tytuł wpisu</div>
+                <div class="s" th:utext="${p.dateLabel()}">—</div>
+              </div>
+              <div class="r"><span class="bg" th:classappend="${p.status.badge()}" th:text="${p.status.label()}">Szkic</span></div>
+            </a>
+            <p th:if="${queue.isEmpty()}" style="padding:16px;font-size:13px;color:var(--ink-3)">
+              Nic nie czeka w kolejce. <a href="/admin/posty/nowy">Napisz nowy wpis</a>.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h2>Skąd przychodzą</h2><div class="sub">30 dni</div></div>
+          <div class="card-b">
+            <div class="pb">
+              <div class="pb-i" th:each="r : ${referrers}">
+                <div class="pb-top"><b th:text="${r.label()}">Google</b><span th:text="${r.value()}">0</span></div>
+                <div class="pb-tr"><div class="pb-fl" th:style="'width:' + ${r.percent()} + '%'"></div></div>
+              </div>
+              <p th:if="${referrers.isEmpty()}" style="font-size:12.5px;color:var(--ink-3)">
+                Jeszcze nie ma danych o źródłach ruchu.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--/* Jedyny wskaźnik widoczności w AI, który da się zmierzyć z własnego
+             serwera: ile razy boty cytujące faktycznie odwiedziły stronę. */-->
+      <div class="card" style="margin-top:16px">
+        <div class="card-h">
+          <h2>Wizyty botów AI (30 dni)</h2>
+          <div class="r"><a class="btn btn-o btn-s" href="/admin/statystyki">Szczegóły</a></div>
+        </div>
+        <div class="tbl-scroll">
+          <table class="tbl">
+            <thead><tr><th>Bot</th><th class="num">Wizyty</th></tr></thead>
+            <tbody>
+              <tr th:each="row : ${botVisits}">
+                <td class="t-main" th:text="${row[0]}">GPTBot</td>
+                <td class="num" th:text="${row[1]}">0</td>
+              </tr>
+              <tr th:if="${botVisits.isEmpty()}"><td colspan="2">Jeszcze żaden bot AI tu nie zajrzał.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

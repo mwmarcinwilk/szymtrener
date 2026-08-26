@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('settings')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <form method="post" th:action="@{/admin/ustawienia}">
+
+        <div class="page-h">
+          <div>
+            <h2>Ustawienia</h2>
+            <p>Konfiguracja bloga, poczty i powiadomień</p>
+          </div>
+          <div class="r">
+            <button class="btn btn-p" type="submit"><svg><use href="#i-check"/></svg>Zapisz</button>
+          </div>
+        </div>
+
+        <div th:if="${info}" role="status"
+             style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+             th:text="${info}">Zapisano.</div>
+
+        <div class="note-bar">
+          <svg><use href="#i-info"/></svg>
+          <div>
+            <b>Wysyłka poczty przez JavaMail.</b> Formularze ze strony trafiają na wskazany adres
+            przez serwer SMTP, bez usług zewnętrznych. Dane dostępowe do serwera siedzą w pliku
+            <code>.env</code> — poniżej widać, z czego aplikacja faktycznie korzysta.
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div style="display:grid;gap:16px">
+            <div class="card">
+              <div class="card-h"><h2>Blog</h2></div>
+              <div class="card-b">
+                <div class="fld">
+                  <label for="pageSize">Wpisów na stronie</label>
+                  <input type="number" id="pageSize" name="pageSize" th:value="${pageSize}" min="3" max="48" required>
+                  <div class="hint"><span>Dotyczy listy bloga i wyników wyszukiwania.</span></div>
+                </div>
+                <div class="fld">
+                  <label for="seoTitle">Domyślny tytuł listy wpisów</label>
+                  <input type="text" id="seoTitle" name="seoTitle" th:value="${seoTitle}" maxlength="70">
+                </div>
+                <div class="fld" style="margin-bottom:0">
+                  <label for="seoDesc">Domyślny opis listy wpisów</label>
+                  <textarea id="seoDesc" name="seoDesc" rows="3" maxlength="170" th:text="${seoDesc}"></textarea>
+                  <div class="hint"><span>Do 160 znaków. Dłuższy i tak zostanie ucięty w wynikach.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h"><h2>Poczta (JavaMail / SMTP)</h2></div>
+              <div class="card-b">
+                <div class="fld">
+                  <label for="recipient">Adres, na który idą zgłoszenia</label>
+                  <input type="email" id="recipient" name="recipient" th:value="${recipient}" required>
+                </div>
+                <!--/* Pola serwera są tylko do odczytu: pochodzą z .env i zmiana
+                       wymaga restartu aplikacji. Edytowalne pole, które nic nie
+                       zapisuje, byłoby gorsze niż jego brak. */-->
+                <div class="fld">
+                  <label for="smtpHost">Serwer SMTP</label>
+                  <input type="text" id="smtpHost" th:value="${smtpHost}" readonly disabled>
+                </div>
+                <div class="fld">
+                  <label for="smtpPort">Port</label>
+                  <input type="text" id="smtpPort" th:value="${smtpPort}" readonly disabled>
+                </div>
+                <div class="fld" style="margin-bottom:0">
+                  <label for="mailFrom">Nadawca (from)</label>
+                  <input type="text" id="mailFrom" th:value="${mailFrom}" readonly disabled>
+                  <div class="hint"><span>Serwer, port i nadawca pochodzą z pliku .env.</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;gap:16px">
+            <div class="card">
+              <div class="card-h"><h2>Powiadomienia</h2></div>
+              <div class="card-b">
+                <div class="fld">
+                  <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                    <input type="checkbox" name="notify" value="true" th:checked="${notify}" style="width:auto">
+                    Powiadamiaj mnie o nowych zgłoszeniach
+                  </label>
+                </div>
+                <div class="fld" style="margin-bottom:0">
+                  <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                    <input type="checkbox" name="autoReply" value="true" th:checked="${autoReply}" style="width:auto">
+                    Wysyłaj automatyczne potwierdzenie zgłaszającemu
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h"><h2>Widoczność</h2></div>
+              <div class="card-b">
+                <div class="fld">
+                  <label>Adres strony</label>
+                  <input type="text" th:value="${siteUrl}" readonly disabled>
+                </div>
+                <div class="fld">
+                  <label>Mapa strony i kanał RSS</label>
+                  <input type="text" value="Generowane automatycznie" readonly disabled>
+                  <div class="hint">
+                    <a href="/sitemap.xml" target="_blank">sitemap.xml</a>
+                    <a href="/robots.txt" target="_blank">robots.txt</a>
+                    <a href="/feed.xml" target="_blank">feed.xml</a>
+                  </div>
+                </div>
+                <div class="fld" style="margin-bottom:0">
+                  <label>Powiadamianie wyszukiwarek (IndexNow)</label>
+                  <input type="text" th:value="${indexNow} ? 'Włączone' : 'Wyłączone'" readonly disabled>
+                  <div class="hint"><span th:if="${!indexNow}">Włącz przez INDEXNOW_ENABLED w .env.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h"><h2>Hasło</h2></div>
+              <div class="card-b">
+                <p style="font-size:12px;color:var(--ink-3);line-height:1.6;margin-bottom:10px">
+                  Zmiana hasła do panelu. Po zmianie zalogujesz się od nowa.
+                  Zmienna <code>ADMIN_PASSWORD</code> zakłada tylko pierwsze konto i nie zmienia hasła istniejącego.
+                </p>
+                <a class="btn btn-o btn-s" href="/admin/haslo" style="width:100%;justify-content:center">Zmień hasło</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

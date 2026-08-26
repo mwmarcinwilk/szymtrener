@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('subs')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+      <div th:if="${info}" role="status"
+           style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${info}">Gotowe.</div>
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+      <div class="page-h">
+        <div>
+          <h2>Zgłoszenia od klientów</h2>
+          <p>Wszystkie wypełnione formularze w jednym miejscu</p>
+        </div>
+      </div>
+
+      <div class="filters">
+        <a class="f-btn" th:classappend="${activeStatus == null} ? ' on'" href="/admin/zgloszenia">
+          Wszystkie <span class="n" th:text="${countAll}">0</span></a>
+        <a class="f-btn" th:each="s : ${statuses}" th:classappend="${activeStatus == s} ? ' on'"
+           th:href="@{/admin/zgloszenia(status=${s})}">
+          <span th:text="${s.label()}">Nowe</span>
+          <span class="n" th:if="${s.name() == 'NEW'}" th:text="${countNew}">0</span>
+          <span class="n" th:if="${s.name() == 'IN_CONTACT'}" th:text="${countContact}">0</span>
+          <span class="n" th:if="${s.name() == 'CLIENT'}" th:text="${countClients}">0</span>
+          <span class="n" th:if="${s.name() == 'ARCHIVED'}" th:text="${countArchived}">0</span>
+        </a>
+      </div>
+      <div class="card">
+        <div class="tbl-scroll">
+          <table class="tbl">
+            <thead><tr><th>Klient</th><th>Zainteresowanie</th><th>Miasto</th><th>Źródło</th><th>Status</th><th>Data</th><th class="act">Akcje</th></tr></thead>
+            <tbody>
+              <tr th:each="s : ${items.content}" style="cursor:pointer"
+                  th:onclick="|location.href='/admin/zgloszenia/${s.id}'|">
+                <td><div class="t-main" th:text="${s.name}">Imię</div><div class="t-sub" th:text="${s.email}">e-mail</div></td>
+                <td><span class="chip" th:text="${s.interest} ?: ${s.type.label()}">Prowadzenie online</span></td>
+                <td th:text="${s.city} ?: '—'">Łódź</td>
+                <td>
+                  <span class="chip src" th:if="${s.source != null}" th:text="${s.source}">Instagram</span>
+                  <span th:if="${s.source == null}" class="t-sub" style="margin:0">—</span>
+                </td>
+                <td><span class="bg" th:classappend="${s.status.badge()}" th:text="${s.status.label()}">Nowe</span></td>
+                <td><div class="t-sub" style="margin:0" th:text="${s.createdLabel}">—</div></td>
+                <td class="act" th:onclick="'event.stopPropagation()'">
+                  <div class="row-acts">
+                    <a class="mini" th:href="@{/admin/zgloszenia/{id}(id=${s.id})}" title="Otwórz"><svg><use href="#i-eye"/></svg></a>
+                    <a class="mini" th:href="'mailto:' + ${s.email}" title="Napisz"><svg><use href="#i-mail"/></svg></a>
+                  </div>
+                </td>
+              </tr>
+              <tr th:if="${items.isEmpty()}"><td colspan="7">Brak zgłoszeń.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div th:replace="~{fragments/admin-layout :: pager(${items}, ${baseUrl})}"></div>
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

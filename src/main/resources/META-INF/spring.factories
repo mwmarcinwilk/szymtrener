@@ -1,0 +1,4 @@
+# EnvironmentPostProcessor musi byc tutaj, nie jako @Component: odpala sie
+# ZANIM Spring zbuduje DataSource, wiec adnotacja bylaby za pozno.
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  pl.szymtrener.config.DatabaseUrlEnvironmentPostProcessor

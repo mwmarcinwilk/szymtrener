@@ -1,0 +1,17 @@
+# Sekrety NIGDY nie mogą trafić do obrazu
+.env
+.env.*
+!.env.example
+
+target/
+.git/
+.gitignore
+.idea/
+*.iml
+.vault/
+docs/
+deploy/
+.DS_Store
+**/.DS_Store
+*.md
+!README.md

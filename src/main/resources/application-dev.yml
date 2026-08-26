@@ -1,0 +1,12 @@
+spring:
+  thymeleaf:
+    cache: false
+  jpa:
+    show-sql: false
+app:
+  site-url: http://localhost:8080
+  indexnow:
+    enabled: false
+logging:
+  level:
+    pl.szymtrener: DEBUG

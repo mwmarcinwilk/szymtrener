@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head('Logowanie')}"></head>
+<body style="display:grid;place-items:center;min-height:100vh;background:#F5F7F9">
+<!--/* th:action, nie action — dopiero wtedy Thymeleaf dokłada ukryte pole _csrf.
+       Z samym action formularz wraca z 403 i nie da się zalogować. */-->
+<form method="post" th:action="@{/admin/logowanie}" class="card" style="padding:28px;width:min(380px,92vw)">
+  <div class="side-logo" style="color:#16232F;margin-bottom:4px">Szymon <span>Domagała</span></div>
+  <p style="color:#5A6B7A;font-size:13px;margin:0 0 18px">Panel trenera</p>
+
+  <div th:if="${param.blad}" style="background:#FDECEA;color:#C2503A;padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:12px">
+    Nieprawidłowy e-mail lub hasło.
+  </div>
+  <div th:if="${param.wylogowano}" style="background:#EAF6F1;color:#1D9E75;padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:12px">
+    Wylogowano.
+  </div>
+  <div th:if="${param.get('haslo-zmienione')}" style="background:#EAF6F1;color:#1D9E75;padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:12px">
+    Hasło zmienione. Zaloguj się nowym.
+  </div>
+
+  <div class="fld"><label for="username">E-mail</label>
+  <input type="email" id="username" name="username" required autofocus></div>
+
+  <div class="fld"><label for="password">Hasło</label>
+  <input type="password" id="password" name="password" required></div>
+
+  <button class="btn btn-p" type="submit" style="width:100%;margin-top:18px;justify-content:center">Zaloguj</button>
+</form>
+</body>
+</html>

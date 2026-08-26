@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${pageTitle}">Blog o treningu i długowieczności | Szymon Domagała</title>
+<meta name="description" th:content="${pageDescription}" content="Blog trenera Szymona Domagały: trening siłowy po 40-tce, sarkopenia, regeneracja i długowieczność.">
+<link rel="canonical" th:href="${canonical}" href="https://szymtrener.pl/blog">
+<meta name="robots" th:content="${robots} ?: 'index, follow, max-image-preview:large'"
+      content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0E1A26">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:url" th:content="${canonical}">
+<meta property="og:title" th:content="${pageTitle}">
+<meta property="og:description" th:content="${pageDescription}">
+<meta property="og:image" th:content="${siteUrl} + '/images/szymon-trening.jpeg'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Blog Szymona Domagały" href="/feed.xml">
+<link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+<link rel="stylesheet" th:href="@{/css/blog.css}" href="/css/blog.css">
+<script type="application/ld+json" th:each="json : ${jsonLd}" th:utext="${json}"></script>
+</head>
+<body>
+
+<div th:replace="~{fragments/nav :: nav('/')}"></div>
+
+<main>
+  <!-- ─── NAGŁÓWEK ─── -->
+  <header class="blog-hero">
+    <div class="container">
+      <div class="eyebrow">Blog</div>
+      <h1 th:if="${activeCategory == null}">Trening, który ma sens<br><em>przez kolejne dekady</em></h1>
+      <h1 th:if="${activeCategory != null}" th:text="${activeCategory.name}">Longevity</h1>
+      <p class="lead" th:text="${activeCategory != null and activeCategory.description != null} ? ${activeCategory.description} : ${blogLead}">
+        Piszę o tym, co realnie działa: treningu siłowym po 40-tce, zatrzymywaniu utraty mięśni, regeneracji i długowieczności. Bez mitów, bez skrótów.</p>
+      <div class="cats">
+        <a class="cat" th:classappend="${activeCategory == null and searchQuery == null} ? ' on'" href="/blog">Wszystkie</a>
+        <a class="cat" th:each="c : ${categories}"
+           th:classappend="${activeCategory != null and activeCategory.id == c.id} ? ' on'"
+           th:href="@{/blog/kategoria/{slug}(slug=${c.slug})}" th:text="${c.name}">Longevity</a>
+      </div>
+
+      <!--/* Zwykly GET — dziala bez JS i crawler widzi wyniki pod adresem. */-->
+      <form class="blog-search" action="/blog/szukaj" method="get" role="search">
+        <label class="visually-hidden" for="q">Szukaj na blogu</label>
+        <input type="search" id="q" name="q" placeholder="Szukaj: sarkopenia, białko, plecy…"
+               th:value="${searchQuery}" autocomplete="off">
+        <button type="submit" class="btn btn-primary">Szukaj</button>
+      </form>
+    </div>
+  </header>
+
+  <!-- ─── WYRÓŻNIONY ─── -->
+  <section class="section" th:if="${featured != null}" style="padding-bottom:clamp(28px,4vw,44px)">
+    <div class="container">
+      <article class="feat" data-reveal>
+        <div class="feat-img">
+          <span class="feat-tag" th:text="${featured.categoryName}">Longevity</span>
+          <img th:src="${featured.coverUrl}" th:alt="${featured.coverAlt}"
+               src="/images/szymon-trening.jpeg" alt="" loading="lazy" decoding="async">
+        </div>
+        <div class="feat-body">
+          <div class="pmeta">
+            <time th:datetime="${featured.publishedIso}" th:text="${featured.publishedLabel}">11 sierpnia 2026</time>
+            <span class="dot"></span><span th:text="|${featured.readingMinutes} min czytania|">7 min czytania</span>
+            <span class="dot"></span><span th:text="${featured.authorName}">Szymon Domagała</span>
+          </div>
+          <h2><a th:href="@{/blog/{slug}(slug=${featured.slug})}" th:text="${featured.title}">Dlaczego mięśnie to polisa na życie</a></h2>
+          <p th:text="${featured.lead}">Zajawka wpisu.</p>
+          <a th:href="@{/blog/{slug}(slug=${featured.slug})}" class="btn btn-primary">Czytaj artykuł</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ─── SIATKA ─── -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <p th:if="${searchQuery != null and !posts.isEmpty()}" class="lead"
+         th:text="${resultLabel}">Znaleziono 3 wpisy.</p>
+      <p th:if="${posts.isEmpty() and searchQuery != null and !#strings.isEmpty(searchQuery)}" class="lead">
+        Nic nie pasuje do frazy <strong th:text="${searchQuery}">fraza</strong>.
+        Spróbuj krótszego słowa albo <a href="/blog">przejrzyj wszystkie wpisy</a>.
+      </p>
+      <p th:if="${posts.isEmpty() and searchQuery == null}" class="lead">Nie ma jeszcze wpisów w tej kategorii.</p>
+      <div class="posts">
+        <article class="post" data-reveal th:each="p : ${posts}">
+          <div class="post-img">
+            <span class="post-tag" th:text="${p.categoryName}">Trening</span>
+            <span class="post-kind" th:if="${p.hasVideo}" title="Zawiera film"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span>
+            <span class="post-kind" th:if="${p.hasPdf and !p.hasVideo}" title="Zawiera plan PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
+            <img th:src="${p.coverUrl}" th:alt="${p.coverAlt}" src="/images/studio-2.jpeg" alt="" loading="lazy" decoding="async">
+          </div>
+          <div class="post-body">
+            <div class="pmeta">
+              <time th:datetime="${p.publishedIso}" th:text="${p.publishedLabel}">4 sierpnia 2026</time>
+              <span class="dot"></span><span th:text="|${p.readingMinutes} min|">9 min</span>
+            </div>
+            <h3><a th:href="@{/blog/{slug}(slug=${p.slug})}" th:text="${p.title}">Tytuł wpisu</a></h3>
+            <p th:text="${p.lead}">Zajawka.</p>
+            <a th:href="@{/blog/{slug}(slug=${p.slug})}" class="post-more">Czytaj <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+        </article>
+      </div>
+
+      <!--/* Paginacja jako zwykły link — działa bez JS, crawler przechodzi dalej. */-->
+      <div class="load-more" th:if="${hasNext}">
+        <a class="btn btn-outline" th:href="${nextPageUrl}"
+           th:text="${searchQuery != null} ? 'Pokaż kolejne wyniki' : 'Pokaż starsze wpisy'">Pokaż starsze wpisy</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="action-band">
+    <div class="action-band-img" aria-hidden="true"><img src="/images/szymon-trening.jpeg" alt="Szymon Domagała podczas treningu" loading="lazy" decoding="async"></div>
+    <div class="action-band-overlay" aria-hidden="true"></div>
+    <div class="container action-inner">
+      <div data-reveal>
+        <div class="eyebrow">Zacznij dziś</div>
+        <h2 class="action-title">Czytanie to dobry start. <em>Trening jest lepszy.</em></h2>
+        <p class="action-sub">Jeden telefon dzieli Cię od pierwszego treningu. Bezpłatna rozmowa wstępna, bez zobowiązań.</p>
+        <div class="hero-ctas">
+          <a href="/#kontakt" class="btn btn-primary">Umów rozmowę wstępną</a>
+          <a href="tel:+48502338373" class="btn btn-outline">502 338 373</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
+</body>
+</html>

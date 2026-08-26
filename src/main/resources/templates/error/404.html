@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nie znaleziono strony | Szymon Domagała</title>
+<meta name="robots" content="noindex, follow">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav('/')}"></div>
+<main>
+  <section class="section" style="min-height:60vh;display:flex;align-items:center">
+    <div class="container" style="text-align:center">
+      <div class="eyebrow">Błąd 404</div>
+      <h1 style="font-size:clamp(2rem,5vw,3rem)">Tej strony tu nie ma</h1>
+      <p class="lead">Adres jest nieaktualny albo zawiera literówkę. Sprawdź listę wpisów lub wróć na stronę główną.</p>
+      <div class="hero-ctas" style="justify-content:center">
+        <a href="/" class="btn btn-primary">Strona główna</a>
+        <a href="/blog" class="btn btn-outline">Blog</a>
+      </div>
+    </div>
+  </section>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!--/* Fragment nawigacji. Parametr base: '' na stronie glownej, '/' na podstronach. */-->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="nav(base)" th:remove="tag">
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<!-- ─── NAWIGACJA ─── -->
+<nav id="main-nav">
+  <div class="container nav-inner">
+    <a th:href="|${base}#hero|" href="#hero" class="nav-logo">Szymon <span>Domagała</span></a>
+    <ul class="nav-links">
+      <li><a th:href="|${base}#o-mnie|" href="#o-mnie">O mnie</a></li>
+      <li><a th:href="|${base}#oferta|" href="#oferta">Oferta</a></li>
+      <li><a th:href="|${base}#online|" href="#online">Online</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a th:href="|${base}#podcast|" href="#podcast">Ekspert</a></li>
+      <li><a th:href="|${base}#studio|" href="#studio">Studio</a></li>
+      <li><a th:href="|${base}#faq|" href="#faq">FAQ</a></li>
+      <li><a th:href="|${base}#kontakt|" href="#kontakt">Kontakt</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a th:href="|${base}#kontakt|" href="#kontakt" class="btn btn-primary">Umów konsultację</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Otwórz menu" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── MENU MOBILNE ─── -->
+<div class="mobile-menu" id="mobile-menu">
+  <a th:href="|${base}#o-mnie|" href="#o-mnie"><span class="idx">01</span>O mnie</a>
+  <a th:href="|${base}#oferta|" href="#oferta"><span class="idx">02</span>Oferta</a>
+  <a th:href="|${base}#online|" href="#online"><span class="idx">03</span>Online</a>
+  <a href="/blog"><span class="idx">04</span>Blog</a>
+  <a th:href="|${base}#podcast|" href="#podcast"><span class="idx">05</span>Ekspert</a>
+  <a th:href="|${base}#studio|" href="#studio"><span class="idx">06</span>Studio</a>
+  <a th:href="|${base}#faq|" href="#faq"><span class="idx">07</span>FAQ</a>
+  <a th:href="|${base}#kontakt|" href="#kontakt"><span class="idx">08</span>Kontakt</a>
+  <div class="mm-contact">
+    <span>Zadzwoń lub napisz:</span>
+    <a href="tel:+48502338373">502 338 373</a>
+    <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+</div>

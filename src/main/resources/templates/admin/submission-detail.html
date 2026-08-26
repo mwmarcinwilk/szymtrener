@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('subs')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div th:if="${info}" role="status"
+           style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${info}">Zapisano.</div>
+
+      <div class="page-h">
+        <div>
+          <div class="top-crumb">Zgłoszenia / Szczegóły</div>
+          <div class="who" style="margin-top:9px">
+            <div class="av" th:text="${item.initials()}">MK</div>
+            <div>
+              <div class="nm" th:text="${item.name}">Imię i nazwisko</div>
+              <div class="mt"
+                   th:text="${item.type.label() + ' · ' + item.createdLabel + (item.city != null ? ' · ' + item.city : '')}">
+                Formularz online</div>
+            </div>
+          </div>
+        </div>
+        <div class="r">
+          <a class="btn btn-o" href="/admin/zgloszenia"><svg><use href="#i-back"/></svg>Wróć</a>
+          <a class="btn btn-p" th:href="'mailto:' + ${item.email}"><svg><use href="#i-mail"/></svg>Odpisz</a>
+        </div>
+      </div>
+
+      <div class="sub-grid">
+        <div style="display:grid;gap:16px">
+          <div class="card">
+            <div class="card-h">
+              <div><h2>Ankieta klienta</h2><div class="sub" th:text="${item.type.label()}">Formularz</div></div>
+              <div class="r"><span class="bg" th:classappend="${item.status.badge()}" th:text="${item.status.label()}">Nowe</span></div>
+            </div>
+            <div class="card-b" style="padding-top:6px">
+              <!--/* Puste pola pomijamy zamiast pokazywać rząd myślników: ankieta
+                     kontaktowa ma inny zestaw pól niż zgłoszenie na prowadzenie. */-->
+              <div class="qa" th:if="${item.city != null}">
+                <div class="q">Skąd jesteś?</div><div class="a" th:text="${item.city}">Łódź</div>
+              </div>
+              <div class="qa" th:if="${item.currentTraining != null}">
+                <div class="q">Jak wygląda Twój trening teraz?</div>
+                <div class="a quote" th:text="${item.currentTraining}">—</div>
+              </div>
+              <div class="qa" th:if="${item.goal != null}">
+                <div class="q">Co chcesz osiągnąć?</div>
+                <div class="a quote" th:text="${item.goal}">—</div>
+              </div>
+              <div class="qa" th:if="${item.equipment != null}">
+                <div class="q">Dostęp do sprzętu?</div><div class="a" th:text="${item.equipment}">—</div>
+              </div>
+              <div class="qa" th:if="${item.interest != null}">
+                <div class="q">Zainteresowanie</div><div class="a" th:text="${item.interest}">—</div>
+              </div>
+              <div class="qa" th:if="${item.message != null}">
+                <div class="q">Wiadomość</div><div class="a quote" th:text="${item.message}">—</div>
+              </div>
+              <div class="qa" th:if="${item.source != null}">
+                <div class="q">Skąd o mnie wie?</div><div class="a" th:text="${item.source}">Instagram</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Historia kontaktu</h2></div>
+            <div class="card-b">
+              <div class="tl">
+                <div class="tl-i">
+                  <div class="tl-d g"><svg><use href="#i-inbox"/></svg></div>
+                  <div>
+                    <div class="tl-t" th:text="'Zgłoszenie z formularza: ' + ${item.type.label()}">Zgłoszenie</div>
+                    <div class="tl-s"
+                         th:text="${item.createdLabel + (item.source != null ? ' · źródło: ' + item.source : '')}">—</div>
+                  </div>
+                </div>
+                <!--/* Stan wysyłki bierzemy z pola mailSent/mailError, a nie zakładamy,
+                       że skoro zgłoszenie jest w bazie, to mail poszedł. */-->
+                <div class="tl-i" th:if="${item.mailSent}">
+                  <div class="tl-d"><svg><use href="#i-mail"/></svg></div>
+                  <div>
+                    <div class="tl-t">Powiadomienie wysłane</div>
+                    <div class="tl-s" th:text="'na ' + ${item.email}">—</div>
+                  </div>
+                </div>
+                <div class="tl-i" th:if="${item.mailError != null}">
+                  <div class="tl-d"><svg><use href="#i-info"/></svg></div>
+                  <div>
+                    <div class="tl-t" style="color:var(--red)">Poczta nie przeszła</div>
+                    <div class="tl-s" th:text="${item.mailError}">—</div>
+                  </div>
+                </div>
+                <div class="tl-i" th:if="${item.callAt != null}">
+                  <div class="tl-d"><svg><use href="#i-cal"/></svg></div>
+                  <div>
+                    <div class="tl-t">Rozmowa wstępna umówiona</div>
+                    <div class="tl-s" th:text="${item.callAtLocal().replace('T', ', ')}">—</div>
+                  </div>
+                </div>
+                <div class="tl-i" th:if="${item.status.name() == 'NEW'}">
+                  <div class="tl-d"><svg><use href="#i-clock"/></svg></div>
+                  <div>
+                    <div class="tl-t">Oczekuje na odpowiedź trenera</div>
+                    <div class="tl-s">Zadeklarowany czas odpowiedzi: 24 godziny</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;gap:16px">
+          <div class="card">
+            <div class="card-h"><h2>Dane kontaktowe</h2></div>
+            <div class="card-b">
+              <div class="qa" style="padding-top:0">
+                <div class="q">E-mail</div><div class="a" style="font-size:13.5px" th:text="${item.email}">—</div>
+              </div>
+              <div class="qa" th:if="${item.phone != null}">
+                <div class="q">Telefon</div><div class="a" style="font-size:13.5px" th:text="${item.phone}">—</div>
+              </div>
+              <div class="qa" style="border:none">
+                <div class="q">Zgoda RODO</div>
+                <div class="a" style="font-size:13.5px;color:var(--mint-2);font-weight:700"
+                     th:text="'Udzielona ' + ${item.createdLabel}">—</div>
+              </div>
+              <div class="contact-row">
+                <a th:if="${item.phone != null}" th:href="'tel:' + ${item.phone}"><svg><use href="#i-phone"/></svg>Zadzwoń</a>
+                <a th:href="'mailto:' + ${item.email}"><svg><use href="#i-mail"/></svg>Napisz</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Status</h2></div>
+            <div class="card-b">
+              <form method="post" th:action="@{/admin/zgloszenia/{id}/status(id=${item.id})}">
+                <div class="fld">
+                  <label for="status">Etap</label>
+                  <select id="status" name="status">
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label()}"
+                            th:selected="${s == item.status}">Nowe</option>
+                  </select>
+                </div>
+                <div class="fld">
+                  <label for="callAt">Rozmowa wstępna</label>
+                  <input type="datetime-local" id="callAt" name="callAt" th:value="${item.callAtLocal()}">
+                </div>
+                <button class="btn btn-p" type="submit" style="width:100%;justify-content:center">
+                  <svg><use href="#i-check"/></svg>Zapisz zmiany</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h">
+              <h2>Notatki trenera</h2>
+              <div class="r"><span class="chip" th:text="${notes.size()}">0</span></div>
+            </div>
+            <div class="card-b">
+              <div class="notes" th:if="${!notes.isEmpty()}">
+                <div class="note" th:each="n : ${notes}">
+                  <div class="m">
+                    <svg width="11" height="11"><use href="#i-note"/></svg>
+                    <b th:text="${n.author}">Szymon</b> · <span th:text="${n.createdLabel}">—</span>
+                  </div>
+                  <p th:text="${n.body}">treść</p>
+                </div>
+              </div>
+              <form class="note-add" method="post" th:action="@{/admin/zgloszenia/{id}/notatka(id=${item.id})}">
+                <textarea name="body" rows="3" placeholder="Dodaj notatkę — widoczna tylko dla Ciebie…" required></textarea>
+                <button class="btn btn-o" type="submit" style="width:100%;justify-content:center">
+                  <svg><use href="#i-plus"/></svg>Dodaj notatkę</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Klient</h2></div>
+            <div class="card-b">
+              <p style="font-size:12px;color:var(--ink-3);line-height:1.6;margin-bottom:10px">
+                Przepisze imię i miejscowość do kartoteki klientów i ustawi zgłoszeniu status „Klient”.
+              </p>
+              <form method="post" th:action="@{/admin/klienci/ze-zgloszenia/{id}(id=${item.id})}">
+                <button class="btn btn-p" type="submit" style="width:100%;justify-content:center">
+                  <svg><use href="#i-users"/></svg>Zrób z tego klienta</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Dane osobowe</h2></div>
+            <div class="card-b">
+              <p style="font-size:12px;color:var(--ink-3);line-height:1.6;margin-bottom:10px">
+                Klient ma prawo zażądać kopii swoich danych i ich usunięcia. Na jedno i drugie
+                masz 30 dni (RODO, art. 15 i 17).
+              </p>
+              <a class="btn btn-o btn-s" th:href="@{/admin/zgloszenia/{id}/dane(id=${item.id})}"
+                 style="width:100%;justify-content:center;margin-bottom:8px">Pobierz dane (JSON)</a>
+              <form method="post" th:action="@{/admin/zgloszenia/{id}/usun(id=${item.id})}"
+                    data-confirm-title="Usunąć dane zgłoszenia?"
+                    data-confirm="Zgłoszenie zniknie razem z notatkami. Tego nie da się cofnąć."
+                    data-confirm-ok="Usuń trwale">
+                <button class="btn btn-danger btn-s" type="submit" style="width:100%;justify-content:center">
+                  <svg><use href="#i-trash"/></svg>Usuń dane trwale</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Profil testow integracyjnych. Baza pochodzi z Testcontainers (patrz PostgresTestBase),
+# poczta i pingi na zewnatrz sa wylaczone — test nie ma prawa nic wysylac.
+spring:
+  thymeleaf:
+    cache: false
+  jpa:
+    show-sql: false
+  mail:
+    host: localhost
+    port: 3025
+app:
+  site-url: https://szymtrener.pl
+  indexnow:
+    enabled: false
+  analytics:
+    salt: sol-testowa
+  admin:
+    email: admin@example.com
+    password: HasloTestowe12345
+logging:
+  level:
+    org.hibernate.SQL: warn
+    pl.szymtrener: warn

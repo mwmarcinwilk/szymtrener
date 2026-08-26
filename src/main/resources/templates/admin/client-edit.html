@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('clients')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content" style="display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start">
+
+      <div class="card" style="padding:20px">
+        <div th:if="${info}" role="status"
+             style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:16px"
+             th:text="${info}">Zapisano.</div>
+
+        <div class="card-h" style="padding:0 0 14px"><h2>Dane klienta</h2></div>
+
+        <form method="post" th:action="@{/admin/klienci/zapisz}" th:object="${form}">
+          <input type="hidden" th:field="*{id}">
+          <input type="hidden" th:field="*{submissionId}">
+
+          <div class="fld">
+            <label for="name">Imię i nazwisko</label>
+            <input type="text" id="name" th:field="*{name}" required>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 120px;gap:12px">
+            <div class="fld">
+              <label for="city">Miejscowość</label>
+              <input type="text" id="city" th:field="*{city}">
+            </div>
+            <div class="fld">
+              <label for="age">Wiek</label>
+              <input type="number" id="age" th:field="*{age}" min="1" max="120">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="fld">
+              <label for="mode">Tryb</label>
+              <select id="mode" th:field="*{mode}">
+                <option th:each="m : ${modes}" th:value="${m}" th:text="${m.label()}">Online</option>
+              </select>
+            </div>
+            <div class="fld">
+              <label for="startedAt">Start współpracy</label>
+              <input type="date" id="startedAt" th:field="*{startedAt}">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 120px;gap:12px">
+            <div class="fld">
+              <label for="planName">Plan</label>
+              <input type="text" id="planName" th:field="*{planName}" placeholder="np. Siła 3× w tygodniu">
+            </div>
+            <div class="fld">
+              <label for="sessionCount">Sesje</label>
+              <input type="number" id="sessionCount" th:field="*{sessionCount}" min="0">
+            </div>
+          </div>
+
+          <div class="fld">
+            <label for="status">Status</label>
+            <select id="status" th:field="*{status}">
+              <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label()}">Aktywny</option>
+            </select>
+          </div>
+
+          <button class="btn btn-p" type="submit">Zapisz</button>
+          <a class="btn btn-o" href="/admin/klienci">Wróć do listy</a>
+        </form>
+      </div>
+
+      <div style="display:grid;gap:14px">
+        <div class="card" style="padding:16px" th:if="${source != null}">
+          <div class="card-h" style="padding:0 0 12px"><h2>Skąd przyszedł</h2></div>
+          <p style="font-size:13px;line-height:1.6;color:var(--ink-2)">
+            Zgłoszenie z formularza <b th:text="${source.type}">ONLINE</b>
+            z dnia <b th:text="${source.createdLabel}">—</b>.
+          </p>
+          <a class="btn btn-o btn-s" th:href="@{/admin/zgloszenia/{id}(id=${source.id})}"
+             style="width:100%;justify-content:center;margin-top:8px">Otwórz zgłoszenie</a>
+        </div>
+
+        <div class="card" style="padding:16px" th:if="${form.id != null}">
+          <div class="card-h" style="padding:0 0 12px"><h2>Usuń</h2></div>
+          <p style="font-size:12px;color:var(--ink-3);line-height:1.6;margin-bottom:10px">
+            Usuwa wyłącznie kartę klienta. Zgłoszenie, z którego powstał, zostaje.
+          </p>
+          <form method="post" th:action="@{/admin/klienci/{id}/usun(id=${form.id})}"
+                data-confirm-title="Usunąć klienta?"
+                data-confirm="Kartoteka tego klienta zostanie skasowana. Tego nie da się cofnąć."
+                data-confirm-ok="Usuń klienta">
+            <button class="btn btn-danger btn-s" type="submit"
+                    style="width:100%;justify-content:center">Usuń klienta</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

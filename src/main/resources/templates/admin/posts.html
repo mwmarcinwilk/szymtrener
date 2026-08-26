@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('posts')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div th:if="${info}" role="status"
+           style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${info}">Gotowe.</div>
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+
+      <div class="page-h">
+        <div>
+          <h2>Posty na blogu</h2>
+          <p th:text="|${countPublished} opublikowanych · ${countScheduled} zaplanowane · ${countDraft} szkice|">
+            0 opublikowanych</p>
+        </div>
+        <div class="r">
+          <a class="btn btn-p" href="/admin/posty/nowy"><svg><use href="#i-plus"/></svg>Nowy post</a>
+        </div>
+      </div>
+
+      <div class="filters">
+        <a class="f-btn" th:classappend="${activeStatus == null} ? ' on'" href="/admin/posty">
+          Wszystkie <span class="n" th:text="${countAll}">0</span></a>
+        <a class="f-btn" th:classappend="${activeStatus?.name() == 'PUBLISHED'} ? ' on'" href="/admin/posty?status=PUBLISHED">
+          Opublikowane <span class="n" th:text="${countPublished}">0</span></a>
+        <a class="f-btn" th:classappend="${activeStatus?.name() == 'SCHEDULED'} ? ' on'" href="/admin/posty?status=SCHEDULED">
+          Zaplanowane <span class="n" th:text="${countScheduled}">0</span></a>
+        <a class="f-btn" th:classappend="${activeStatus?.name() == 'DRAFT'} ? ' on'" href="/admin/posty?status=DRAFT">
+          Szkice <span class="n" th:text="${countDraft}">0</span></a>
+        <a class="f-btn" th:classappend="${activeStatus?.name() == 'ARCHIVED'} ? ' on'" href="/admin/posty?status=ARCHIVED">
+          Archiwum <span class="n" th:text="${countArchived}">0</span></a>
+      </div>
+
+      <div class="grid-main-side">
+        <div class="card">
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead>
+                <tr><th>Tytuł</th><th>Status</th><th>Data</th><th class="num">Ocena</th><th class="num">Odsłony</th><th class="act">Akcje</th></tr>
+              </thead>
+              <tbody>
+                <tr th:each="p : ${posts.content}">
+                  <td>
+                    <div class="t-main" th:text="${p.title}">Tytuł</div>
+                    <div class="t-sub"
+                         th:text="${(p.category != null ? p.category.name : 'bez kategorii') + ' · ' + p.readingMinutes + ' min czytania'}">—</div>
+                  </td>
+                  <td><span class="bg"
+                            th:classappend="${p.status.name() == 'PUBLISHED'} ? 'pub' : (${p.status.name() == 'SCHEDULED'} ? 'plan' : (${p.status.name() == 'ARCHIVED'} ? 'arch' : 'draft'))"
+                            th:text="${p.status.label()}">Szkic</span></td>
+                  <td><div class="t-sub" style="margin:0" th:utext="${p.dateLabel()}">—</div></td>
+                  <!--/* Ocena AI liczona przy zapisie; szkic bez zapisu jej nie ma. */-->
+                  <td class="num" th:text="${p.aiScore != null ? p.aiScore + '/100' : '—'}">—</td>
+                  <td class="num" th:text="${p.viewCount}">0</td>
+                  <td class="act">
+                    <div class="row-acts">
+                      <a class="mini" th:href="@{/admin/posty/{id}(id=${p.id})}" title="Edytuj"><svg><use href="#i-edit"/></svg></a>
+                      <a class="mini" th:if="${p.status.name() == 'PUBLISHED'}" th:href="@{/blog/{s}(s=${p.slug})}"
+                         target="_blank" title="Zobacz na stronie"><svg><use href="#i-eye"/></svg></a>
+                      <a class="mini" th:unless="${p.status.name() == 'PUBLISHED'}" th:href="@{/admin/posty/{id}/podglad(id=${p.id})}"
+                         target="_blank" title="Podgląd szkicu"><svg><use href="#i-eye"/></svg></a>
+                      <!--/* Opublikowany wpis trafia do archiwum, szkic znika — decyduje serwer. */-->
+                      <!--/* Treść pytania idzie przez data-*: Thymeleaf nie wpuszcza
+                             zmiennych tekstowych wprost do atrybutów zdarzeń. */-->
+                      <form method="post" th:action="@{/admin/posty/{id}/usun(id=${p.id})}" style="display:inline"
+                            th:data-confirm-title="${p.status.name() == 'PUBLISHED'} ? 'Przenieść wpis do archiwum?' : 'Usunąć szkic?'"
+                            th:data-confirm="${p.status.name() == 'PUBLISHED'}
+                              ? 'Wpis zniknie z listy, ale jego adres dalej będzie działał — bot, który go zacytował, nie trafi na 404.'
+                              : 'Szkic „' + ${p.title} + '” zostanie skasowany. Tego nie da się cofnąć.'"
+                            th:data-confirm-ok="${p.status.name() == 'PUBLISHED'} ? 'Do archiwum' : 'Usuń szkic'">
+                        <button class="mini del" type="submit"
+                                th:title="${p.status.name() == 'PUBLISHED'} ? 'Do archiwum' : 'Usuń szkic'"><svg><use href="#i-trash"/></svg></button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                <tr th:if="${posts.isEmpty()}">
+                  <td colspan="6" th:if="${activeStatus == null}">
+                    Nie ma jeszcze wpisów. <a href="/admin/posty/nowy">Napisz pierwszy</a>.</td>
+                  <td colspan="6" th:unless="${activeStatus == null}">
+                    Brak wpisów o tym statusie. <a href="/admin/posty">Pokaż wszystkie</a>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h2 th:text="${#strings.capitalize(calendarLabel)}">Sierpień 2026</h2></div>
+          <div class="card-b">
+            <div class="cal">
+              <div class="cal-hd">Pn</div><div class="cal-hd">Wt</div><div class="cal-hd">Śr</div>
+              <div class="cal-hd">Cz</div><div class="cal-hd">Pt</div><div class="cal-hd">So</div><div class="cal-hd">Nd</div>
+              <div class="cal-d" th:each="d : ${calendar}"
+                   th:classappend="${d.muted} ? ' mut' : (${d.today} ? ' today' : '')">
+                <span th:text="${d.number}">1</span>
+                <span class="ev g" th:if="${d.published}" title="Opublikowany"></span>
+                <span class="ev" th:if="${d.scheduled}" title="Zaplanowany"></span>
+              </div>
+            </div>
+            <div class="legend" style="margin-top:16px">
+              <span><i style="background:#1D9E75"></i>Opublikowany</span>
+              <span><i style="background:#2C6FB5"></i>Zaplanowany</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div th:replace="~{fragments/admin-layout :: pager(${posts}, ${baseUrl})}"></div>
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

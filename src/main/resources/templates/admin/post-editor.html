@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<!--/* Quill z repozytorium, nie z CDN — aplikacja nie może zależeć od zewnętrznego hosta. */-->
+<link rel="stylesheet" th:href="@{/vendor/quill/quill.snow.css}" href="/vendor/quill/quill.snow.css">
+<link rel="stylesheet" th:href="@{/css/editor.css}" href="/css/editor.css">
+
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('editor')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <!--/* th:action, nie action — bez tego Thymeleaf nie doda ukrytego _csrf
+           i zapis wpisu wraca z 403. */-->
+      <form id="post-form" method="post" th:action="@{/admin/posty/zapisz}" th:object="${form}">
+        <input type="hidden" id="post-id" th:field="*{id}">
+        <input type="hidden" id="contentHtml" th:field="*{contentHtml}">
+        <input type="hidden" id="contentDelta" th:field="*{contentDelta}">
+        <input type="hidden" id="coverMediaId" th:field="*{coverMediaId}">
+
+        <div class="ne-bar">
+          <div>
+            <div class="crumb" th:text="*{id} == null ? 'Blog / Nowy post' : 'Blog / Edycja posta'">Blog / Nowy post</div>
+            <h2>Edytor posta</h2>
+          </div>
+          <span class="q-save ok" id="q-save">Bez zmian</span>
+          <div class="r">
+            <a class="btn btn-o" href="/admin/posty"><svg><use href="#i-back"/></svg>Wróć</a>
+            <button class="btn btn-o" type="submit" data-save>Zapisz szkic</button>
+            <a class="btn btn-o" th:if="*{id} != null" th:href="@{/admin/posty/{id}/podglad(id=*{id})}" target="_blank">
+              <svg><use href="#i-eye"/></svg>Podgląd</a>
+            <button class="btn btn-p" type="button" id="q-publish"><svg><use href="#i-check"/></svg>Opublikuj</button>
+          </div>
+        </div>
+
+        <div th:if="${error}" role="alert"
+             style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+             th:text="${error}">Błąd.</div>
+        <div th:if="${info}" role="status"
+             style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+             th:text="${info}">Zapisano.</div>
+
+        <div class="ne">
+          <div class="ne-main">
+            <input class="ne-title" id="q-title" name="title" th:value="*{title}"
+                   placeholder="Tytuł posta…" autocomplete="off">
+            <div class="ne-slug">
+              <svg width="13" height="13" style="color:var(--ink-3)"><use href="#i-link"/></svg>
+              szymtrener.pl/blog/
+              <input id="q-slug" name="slug" th:value="*{slug}" aria-label="Adres posta" placeholder="adres-posta">
+            </div>
+            <div class="ne-lead">
+              <label for="q-excerpt">Zajawka na listę wpisów</label>
+              <textarea id="q-excerpt" name="lead" th:text="*{lead}"
+                        placeholder="Odpowiedz na pytanie z tytułu w pierwszych zdaniach — ten fragment trafia na listę wpisów i do wyników wyszukiwania."></textarea>
+            </div>
+
+            <div class="import-row">
+              <button type="button" class="btn btn-o btn-s" id="btn-import">
+                <svg width="14" height="14"><use href="#i-up"/></svg> Wczytaj z Worda (.docx)
+              </button>
+              <span id="import-status">Formatowanie, listy, tabele i obrazki przechodzą do treści.</span>
+            </div>
+
+            <div id="q-toolbar">
+              <span class="ql-formats">
+                <select class="ql-header">
+                  <option selected>Akapit</option>
+                  <option value="2">Nagłówek H2</option>
+                  <option value="3">Nagłówek H3</option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-bold" title="Pogrubienie"></button>
+                <button class="ql-italic" title="Kursywa"></button>
+                <button class="ql-underline" title="Podkreślenie"></button>
+                <button class="ql-strike" title="Przekreślenie"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="bullet" title="Lista punktowana"></button>
+                <button class="ql-list" value="ordered" title="Lista numerowana"></button>
+                <button class="ql-blockquote" title="Cytat"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-link" title="Link"></button>
+                <button class="ql-clean" title="Wyczyść formatowanie"></button>
+              </span>
+              <span class="ne-tsep"></span>
+              <button type="button" class="ins" data-ins="image"><svg><use href="#i-img"/></svg>Zdjęcie</button>
+              <button type="button" class="ins" data-ins="video"><svg><use href="#i-vid"/></svg>Film</button>
+              <button type="button" class="ins" data-ins="pdf"><svg><use href="#i-pdf"/></svg>PDF</button>
+            </div>
+
+            <div id="q-editor"></div>
+
+            <div class="ne-foot">
+              <span>Słowa: <b id="q-words">0</b></span>
+              <span>Znaki: <b id="q-chars">0</b></span>
+              <span>Czas czytania: <b id="q-read">1 min</b></span>
+              <span class="sp">Ctrl/⌘ + S zapisuje szkic</span>
+            </div>
+          </div>
+
+          <aside class="ne-side">
+            <div class="card">
+              <div class="card-h"><h2>Publikacja</h2></div>
+              <div class="card-b">
+                <div class="fld">
+                  <label for="q-status">Status</label>
+                  <select id="q-status" name="status">
+                    <option value="DRAFT" th:selected="*{status} == 'DRAFT'">Szkic</option>
+                    <option value="SCHEDULED" th:selected="*{status} == 'SCHEDULED'">Zaplanowany</option>
+                    <option value="PUBLISHED" th:selected="*{status} == 'PUBLISHED'">Opublikowany</option>
+                    <option value="ARCHIVED" th:selected="*{status} == 'ARCHIVED'">Archiwum</option>
+                  </select>
+                </div>
+                <div class="fld">
+                  <label for="q-when">Data i godzina publikacji</label>
+                  <input type="datetime-local" id="q-when" name="publishAt" th:value="*{publishAt}">
+                </div>
+                <div class="fld">
+                  <label for="q-cat">Kategoria</label>
+                  <select id="q-cat" name="categoryId">
+                    <option value="">— wybierz —</option>
+                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"
+                            th:selected="${c.id} == *{categoryId}">Longevity</option>
+                  </select>
+                </div>
+                <div class="fld">
+                  <label for="q-tags">Tagi</label>
+                  <input id="q-tags" name="tags" th:value="*{tags}" placeholder="sarkopenia, trening siłowy, 40+">
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h"><h2>Zdjęcie główne</h2></div>
+              <div class="card-b">
+                <div class="thumb-set" id="cover-set" hidden>
+                  <img id="cover-thumb" src="" alt="">
+                  <div class="ov">
+                    <button type="button" class="mini" id="cover-change" title="Zmień"><svg><use href="#i-edit"/></svg></button>
+                    <button type="button" class="mini del" id="cover-clear" title="Usuń"><svg><use href="#i-trash"/></svg></button>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-o btn-s" id="cover-pick"
+                        style="width:100%;justify-content:center">
+                  <svg><use href="#i-img"/></svg>Wybierz z biblioteki
+                </button>
+                <div class="fld" style="margin-top:13px">
+                  <label for="cover-alt">Tekst alternatywny (alt)</label>
+                  <input id="cover-alt" name="coverAlt" th:value="*{coverAlt}">
+                  <div class="hint"><span>Wymagany dla wyszukiwarek i czytników</span></div>
+                </div>
+                <div class="fld">
+                  <label for="cover-caption">Podpis pod zdjęciem</label>
+                  <input id="cover-caption" name="coverCaption" th:value="*{coverCaption}">
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h"><h2>SEO &amp; widoczność w AI</h2></div>
+              <div class="card-b">
+                <div class="gauge" style="margin-bottom:16px">
+                  <div class="ring" id="seo-ring"><i id="seo-val" th:text="${score.score()}">0</i></div>
+                  <div>
+                    <div style="font-size:13px;font-weight:800" id="seo-label" th:text="${score.label()}">—</div>
+                    <div style="font-size:11.5px;color:var(--ink-2);line-height:1.5;margin-top:3px"
+                         id="seo-hint" th:text="${score.hint()}"></div>
+                  </div>
+                </div>
+                <div class="fld">
+                  <label for="seo-title">Tytuł SEO</label>
+                  <input id="seo-title" name="seoTitle" th:value="*{seoTitle}">
+                  <div class="hint"><span>Zalecane 30–65 znaków</span><span class="q-cnt" id="c-title">0</span></div>
+                </div>
+                <div class="fld">
+                  <label for="seo-desc">Meta opis</label>
+                  <textarea id="seo-desc" name="seoDescription" th:text="*{seoDescription}"></textarea>
+                  <div class="hint"><span>Zalecane 120–160 znaków</span><span class="q-cnt" id="c-desc">0</span></div>
+                </div>
+                <div class="fld">
+                  <label>Podgląd w Google</label>
+                  <div class="serp">
+                    <div class="u" id="serp-u"></div>
+                    <div class="t" id="serp-t"></div>
+                    <div class="d" id="serp-d"></div>
+                  </div>
+                </div>
+                <!--/* Lista renderowana serwerowo, żeby była na miejscu przed startem JS.
+                       Potem odświeża ją score() dokładnie w tym samym układzie. */-->
+                <div id="seo-list" style="margin-top:6px">
+                  <div class="seo-row" th:each="c : ${score.checks()}">
+                    <span class="ic" th:classappend="${c.ok()} ? 'ok' : 'wr'" th:text="${c.ok()} ? '✓' : '!'">✓</span>
+                    <span class="tx" th:text="${c.text()}">Warunek</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!--/* „W skrócie" i FAQ to pola bazy, nie fragmenty treści — dzięki temu blok
+               podsumowania na blogu i JSON-LD FAQPage nie mogą się rozjechać z tekstem. */-->
+        <div class="grid-2" style="margin-top:16px">
+          <div class="card">
+            <div class="card-h"><h2>W skrócie</h2></div>
+            <div class="card-b">
+              <div class="rowset" id="summary-set">
+                <div class="rowline" th:each="point : *{summaryPoints}">
+                  <input type="text" name="summaryPoints" th:value="${point}"
+                         placeholder="Jedno zdanie z konkretem — najlepiej z liczbą">
+                  <button type="button" class="rm" title="Usuń">×</button>
+                </div>
+              </div>
+              <button type="button" class="addrow" data-target="summary-set" style="margin-top:8px">+ dodaj punkt</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Najczęstsze pytania (FAQ)</h2></div>
+            <div class="card-b">
+              <div class="rowset" id="faq-set">
+                <div class="rowline" th:each="q, i : *{faqQuestions}" style="grid-template-columns:1fr auto">
+                  <div style="display:grid;gap:6px">
+                    <input type="text" name="faqQuestions" th:value="${q}" placeholder="Pytanie, które zadaje klient">
+                    <textarea name="faqAnswers" rows="2" placeholder="Krótka, samodzielna odpowiedź"
+                              th:text="${i.index < form.faqAnswers.size()} ? ${form.faqAnswers[i.index]} : ''"></textarea>
+                  </div>
+                  <button type="button" class="rm" title="Usuń">×</button>
+                </div>
+                <div class="rowline" th:if="*{faqQuestions.isEmpty()}" style="grid-template-columns:1fr auto">
+                  <div style="display:grid;gap:6px">
+                    <input type="text" name="faqQuestions" placeholder="Pytanie, które zadaje klient">
+                    <textarea name="faqAnswers" rows="2" placeholder="Krótka, samodzielna odpowiedź"></textarea>
+                  </div>
+                  <button type="button" class="rm" title="Usuń">×</button>
+                </div>
+              </div>
+              <button type="button" class="addrow" data-target="faq-set" style="margin-top:8px">+ dodaj pytanie</button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- modal wstawiania mediów -->
+      <div class="q-ov" id="q-ov" role="dialog" aria-modal="true" aria-labelledby="q-mtitle">
+        <div class="q-mod">
+          <div class="q-mh">
+            <h3 id="q-mtitle">Wstaw media</h3>
+            <button type="button" class="x" data-close aria-label="Zamknij">✕</button>
+          </div>
+          <div class="q-mb">
+            <!-- ZDJĘCIE -->
+            <div class="q-pane on" data-pane="image">
+              <div class="q-tabs">
+                <button type="button" class="q-tab on" data-tab="lib">Biblioteka</button>
+                <button type="button" class="q-tab" data-tab="up">Wgraj plik</button>
+              </div>
+              <div class="q-tabbody on" data-tab="lib">
+                <div class="q-libgrid" id="q-lib"></div>
+              </div>
+              <div class="q-tabbody" data-tab="up">
+                <div class="drop" id="q-drop-img" style="margin-bottom:16px">
+                  <svg><use href="#i-up"/></svg>
+                  <div class="t">Kliknij, aby wybrać zdjęcie</div>
+                  <div class="s">JPG, PNG, WebP · maks. 25 MB · skalowane do 1600 px</div>
+                </div>
+              </div>
+              <div class="fld">
+                <label for="q-alt">Tekst alternatywny (alt)</label>
+                <input id="q-alt" placeholder="Opisz, co jest na zdjęciu">
+              </div>
+              <div class="fld">
+                <label for="q-cap">Podpis pod zdjęciem</label>
+                <input id="q-cap" placeholder="Opcjonalny podpis widoczny na blogu">
+              </div>
+              <div class="q-tip"><span>ℹ</span><div><b>Alt jest wymagany.</b> Bez niego zdjęcie nie liczy się do oceny widoczności, a czytniki ekranu je pomijają.</div></div>
+            </div>
+
+            <!-- FILM -->
+            <div class="q-pane" data-pane="video">
+              <div class="fld">
+                <label for="q-url">Adres filmu z YouTube</label>
+                <input id="q-url" placeholder="https://www.youtube.com/watch?v=…">
+              </div>
+              <div class="q-vprev" id="q-vprev"></div>
+              <div class="fld">
+                <label for="q-vcap">Podpis pod filmem</label>
+                <input id="q-vcap" placeholder="np. Rozmowa o treningu po 40-tce">
+              </div>
+              <div class="q-tip"><span>ℹ</span><div><b>Film ładuje się po kliknięciu.</b> Na blogu pokazuje się miniatura z przyciskiem play — strona zostaje szybka, a film nie ustawia ciasteczek przed zgodą.</div></div>
+            </div>
+
+            <!-- PDF -->
+            <div class="q-pane" data-pane="pdf">
+              <div class="q-tabs">
+                <button type="button" class="q-tab on" data-tab="lib">Biblioteka</button>
+                <button type="button" class="q-tab" data-tab="up">Wgraj plik</button>
+              </div>
+              <div class="q-tabbody on" data-tab="lib">
+                <div id="q-pdflib" style="margin-bottom:16px"></div>
+              </div>
+              <div class="q-tabbody" data-tab="up">
+                <div class="drop" id="q-drop-pdf" style="margin-bottom:16px">
+                  <svg><use href="#i-up"/></svg>
+                  <div class="t">Kliknij, aby wybrać plik PDF</div>
+                  <div class="s">PDF · maks. 25 MB</div>
+                </div>
+              </div>
+              <div class="fld">
+                <label for="q-plabel">Nazwa wyświetlana</label>
+                <input id="q-plabel" placeholder="np. Plan startowy na 4 tygodnie">
+              </div>
+              <div class="q-tip"><span>ℹ</span><div><b>Materiał do pobrania</b> działa jak zachęta do kontaktu — plik pojawia się jako karta z przyciskiem, a panel liczy pobrania.</div></div>
+            </div>
+          </div>
+          <div class="q-mf">
+            <button type="button" class="btn btn-o" data-close>Anuluj</button>
+            <button type="button" class="btn btn-p q-ok" id="q-iok">Wstaw zdjęcie</button>
+            <button type="button" class="btn btn-p q-ok" id="q-vok">Wstaw film</button>
+            <button type="button" class="btn btn-p q-ok" id="q-pok">Wstaw PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- wybór zdjęcia głównego -->
+      <div class="q-ov" id="cover-ov" role="dialog" aria-modal="true" aria-labelledby="cover-ov-title">
+        <div class="q-mod">
+          <div class="q-mh">
+            <h3 id="cover-ov-title">Wybierz zdjęcie główne</h3>
+            <button type="button" class="x" data-cover-close aria-label="Zamknij">✕</button>
+          </div>
+          <div class="q-mb"><div class="q-libgrid" id="cover-lib"></div></div>
+          <div class="q-mf"><button type="button" class="btn btn-o" data-cover-close>Zamknij</button></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/vendor/quill/quill.js}" src="/vendor/quill/quill.js"></script>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+<script th:src="@{/js/admin-editor.js}" src="/js/admin-editor.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('media')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+      <div th:if="${info}" role="status"
+           style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${info}">Gotowe.</div>
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+
+      <div class="page-h">
+        <div>
+          <h2>Biblioteka mediów</h2>
+          <p th:text="|${countAll} plików · ${totalSize}|">0 plików</p>
+        </div>
+        <div class="r">
+          <button type="button" class="btn btn-p" id="btn-upload"><svg><use href="#i-up"/></svg>Wgraj pliki</button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <a class="f-btn" th:classappend="${activeKind == null} ? ' on'" href="/admin/media">
+          Wszystkie <span class="n" th:text="${countAll}">0</span></a>
+        <a class="f-btn" th:classappend="${activeKind?.name() == 'IMAGE'} ? ' on'" href="/admin/media?rodzaj=IMAGE">
+          Zdjęcia <span class="n" th:text="${countImages}">0</span></a>
+        <a class="f-btn" th:classappend="${activeKind?.name() == 'PDF'} ? ' on'" href="/admin/media?rodzaj=PDF">
+          PDF <span class="n" th:text="${countPdfs}">0</span></a>
+        <a class="f-btn" th:classappend="${activeKind?.name() == 'OTHER'} ? ' on'" href="/admin/media?rodzaj=OTHER">
+          Pozostałe <span class="n" th:text="${countOther}">0</span></a>
+      </div>
+
+      <div class="card" style="padding:18px">
+        <div class="drop" id="drop" style="margin-bottom:16px">
+          <svg><use href="#i-up"/></svg>
+          <div class="t">Przeciągnij pliki albo kliknij, żeby wybrać</div>
+          <div class="s">JPG, PNG, WEBP do 25 MB · PDF planów treningowych</div>
+          <input type="file" id="file-input" multiple accept="image/jpeg,image/png,image/webp,application/pdf" hidden>
+        </div>
+
+        <div class="media-grid">
+          <figure class="m-item" th:each="f : ${files.content}">
+            <div class="m-thumb">
+              <span class="kind" th:text="${f.kind}">IMAGE</span>
+              <img th:if="${f.kind.name() == 'IMAGE'}" th:src="${f.publicUrl()}" th:alt="${f.altText}" loading="lazy">
+              <svg th:unless="${f.kind.name() == 'IMAGE'}" class="big"><use href="#i-pdf"/></svg>
+            </div>
+            <figcaption class="m-meta">
+              <div class="n" th:text="${f.originalName}">plik.jpg</div>
+              <div class="s">
+                <span th:text="${f.humanSize()}">120 KB</span>
+                <span th:if="${f.width != null}" th:text="' · ' + ${f.width} + '×' + ${f.height}"></span>
+                <span> · ID <b th:text="${f.id}">1</b></span>
+              </div>
+              <!--/* Serwer odmówi, jeśli plik jest użyty we wpisie — nie psujemy treści. */-->
+              <form method="post" th:action="@{/admin/media/{id}/usun(id=${f.id})}" style="margin-top:8px"
+                    data-confirm-title="Usunąć plik?"
+                    th:data-confirm="'Plik ' + ${f.originalName} + ' zniknie z biblioteki. Serwer odmówi, jeśli jest użyty w którymś wpisie.'"
+                    data-confirm-ok="Usuń plik">
+                <button class="mini del" type="submit" title="Usuń plik"><svg><use href="#i-trash"/></svg></button>
+              </form>
+            </figcaption>
+          </figure>
+        </div>
+        <p th:if="${files.isEmpty()}">Biblioteka jest pusta.</p>
+      </div>
+
+      <div th:replace="~{fragments/admin-layout :: pager(${files}, ${baseUrl})}"></div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+<script>
+/* Wgrywanie plikow z biblioteki — ten sam punkt, ktorego uzywa edytor. */
+(function () {
+  const drop = document.getElementById('drop');
+  const input = document.getElementById('file-input');
+  const token = document.querySelector('meta[name="_csrf"]')?.content;
+  const header = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
+  if (!drop) return;
+
+  drop.addEventListener('click', () => input.click());
+  document.getElementById('btn-upload')?.addEventListener('click', () => input.click());
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.style.borderColor = 'var(--mint)'; });
+  drop.addEventListener('dragleave', () => { drop.style.borderColor = ''; });
+  drop.addEventListener('drop', e => { e.preventDefault(); send(e.dataTransfer.files); });
+  input.addEventListener('change', () => send(input.files));
+
+  async function send(files) {
+    for (const file of files) {
+      const data = new FormData();
+      data.append('file', file);
+      await fetch('/admin/api/media', {
+        method: 'POST',
+        headers: token ? { [header]: token } : {},
+        body: data
+      });
+    }
+    location.reload();
+  }
+})();
+</script>
+</body>
+</html>

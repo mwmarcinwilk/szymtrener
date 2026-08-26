@@ -1,0 +1,24 @@
+# Tylko baza do pracy lokalnej. Aplikacja na produkcji chodzi z systemd, nie z kontenera.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: szymtrener-db
+    environment:
+      POSTGRES_DB: szymtrener
+      POSTGRES_USER: szymtrener
+      POSTGRES_PASSWORD: szymtrener
+    ports:
+      # Port na hoscie da sie zmienic w .env (DB_PORT). Domyslnie 5432, ale jesli
+      # masz lokalnie Postgres.app albo Homebrew, ustaw 5433 i nie bedziesz musial
+      # nic wylaczac.
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U szymtrener"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

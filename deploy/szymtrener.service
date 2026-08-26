@@ -1,0 +1,22 @@
+[Unit]
+Description=szymtrener.pl
+After=network.target postgresql.service
+
+[Service]
+User=szymtrener
+WorkingDirectory=/opt/szymtrener
+EnvironmentFile=/opt/szymtrener/.env
+ExecStart=/usr/bin/java -jar /opt/szymtrener/szymtrener.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=10
+
+# Utwardzenie: aplikacja nie potrzebuje niczego poza swoim katalogiem.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/szymtrener
+
+[Install]
+WantedBy=multi-user.target

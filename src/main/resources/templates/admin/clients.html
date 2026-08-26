@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('clients')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div th:if="${info}" role="status"
+           style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${info}">Zapisano.</div>
+
+      <div class="page-h">
+        <div>
+          <h2>Klienci</h2>
+          <p th:text="|${activeCount} aktywnych · ${countOnline} online · ${countOnsite} stacjonarnie|">0 aktywnych</p>
+        </div>
+        <div class="r">
+          <a class="btn btn-p" href="/admin/klienci/nowy"><svg><use href="#i-plus"/></svg>Dodaj klienta</a>
+        </div>
+      </div>
+
+      <div class="filters">
+        <a class="f-btn" th:classappend="${activeStatus == null} ? ' on'" href="/admin/klienci">
+          Wszyscy <span class="n" th:text="${countAll}">0</span></a>
+        <a class="f-btn" th:each="s : ${statuses}" th:classappend="${activeStatus == s} ? ' on'"
+           th:href="@{/admin/klienci(status=${s})}" th:text="${s.label()}">Aktywny</a>
+      </div>
+
+      <div class="card">
+        <div class="tbl-scroll">
+          <table class="tbl">
+            <thead><tr><th>Klient</th><th>Forma</th><th>Start</th><th>Plan</th><th class="num">Treningi</th><th>Status</th><th class="act">Akcje</th></tr></thead>
+            <tbody>
+              <tr th:each="t : ${items.content}" style="cursor:pointer"
+                  th:onclick="|location.href='/admin/klienci/${t.id}'|">
+                <td>
+                  <div class="t-main" th:text="${t.name}">Imię</div>
+                  <div class="t-sub" th:text="${t.city} ?: '—'">Łódź</div>
+                </td>
+                <td><span class="chip" th:text="${t.mode != null ? t.mode.label() : '—'}">Online</span></td>
+                <td><div class="t-sub" style="margin:0" th:text="${t.startedAt} ?: '—'">—</div></td>
+                <td><div class="t-sub" style="margin:0" th:text="${t.planName} ?: '—'">—</div></td>
+                <td class="num" th:text="${t.sessionCount}">0</td>
+                <td><span class="bg" th:classappend="${t.status.badge()}" th:text="${t.status.label()}">Aktywny</span></td>
+                <td class="act" th:onclick="'event.stopPropagation()'">
+                  <div class="row-acts">
+                    <a class="mini" th:href="@{/admin/klienci/{id}(id=${t.id})}" title="Otwórz"><svg><use href="#i-eye"/></svg></a>
+                  </div>
+                </td>
+              </tr>
+              <tr th:if="${items.isEmpty()}">
+                <td colspan="7">
+                  Nie ma jeszcze klientów. Wejdź w <a href="/admin/zgloszenia">zgłoszenie</a>
+                  i kliknij „Zrób z tego klienta”, albo <a href="/admin/klienci/nowy">dodaj ręcznie</a>.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div th:replace="~{fragments/admin-layout :: pager(${items}, ${baseUrl})}"></div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

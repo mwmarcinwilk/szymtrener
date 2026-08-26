@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Ogólna strona błędu — wchodzi dla statusów, dla których nie ma własnego
+       szablonu (error/404.html, error/500.html). Bez niej Spring próbuje
+       wyrenderować widok „error", nie znajduje go i zamiast czystego 403
+       wyrzuca TemplateInputException, czyli błąd w miejscu obsługi błędu. */-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="'Błąd ' + (${status} ?: '') + ' | Szymon Domagała'">Błąd | Szymon Domagała</title>
+<meta name="robots" content="noindex, follow">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+<main>
+  <section class="section" style="min-height:60vh;display:flex;align-items:center">
+    <div class="container" style="text-align:center">
+      <div class="eyebrow" th:text="'Błąd ' + (${status} ?: '')">Błąd</div>
+      <h1 style="font-size:clamp(2rem,5vw,3rem)"
+          th:text="${status != null and status == 403} ? 'Brak dostępu' : 'Coś poszło nie tak'">Coś poszło nie tak</h1>
+      <p class="lead" th:if="${status != null and status == 403}">
+        Twoja sesja mogła wygasnąć. Zaloguj się ponownie i spróbuj jeszcze raz.</p>
+      <p class="lead" th:unless="${status != null and status == 403}">
+        Spróbuj odświeżyć stronę za chwilę.</p>
+
+      <div class="hero-ctas" style="justify-content:center;margin-top:26px">
+        <a class="btn btn-primary" href="/">Strona główna</a>
+        <a class="btn btn-outline" href="/admin">Panel</a>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

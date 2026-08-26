@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${pageTitle}">Tytuł wpisu | Szymon Domagała</title>
+<meta name="description" th:content="${pageDescription}" content="">
+<link rel="canonical" th:href="${canonical}" href="https://szymtrener.pl/blog/wpis">
+<meta name="author" th:content="${post.authorName}" content="Szymon Domagała">
+<meta name="robots" th:content="${robots} ?: 'index, follow, max-image-preview:large'"
+      content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0E1A26">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:url" th:content="${canonical}">
+<meta property="og:title" th:content="${pageTitle}">
+<meta property="og:description" th:content="${pageDescription}">
+<meta property="og:image" th:content="${post.coverAbsoluteUrl}">
+<meta property="article:published_time" th:content="${post.publishedIso}">
+<meta property="article:modified_time" th:content="${post.modifiedIso}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Blog Szymona Domagały" href="/feed.xml">
+<link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+<link rel="stylesheet" th:href="@{/css/blog.css}" href="/css/blog.css">
+<script type="application/ld+json" th:each="json : ${jsonLd}" th:utext="${json}"></script>
+</head>
+<body>
+
+<div th:replace="~{fragments/nav :: nav('/')}"></div>
+
+<main>
+  <!--/* Podglad szkicu z panelu: ten sam widok co publiczny, ale bez indeksowania. */-->
+  <div th:if="${preview}" role="status"
+       style="background:#1A2B3C;color:#4ECBA3;padding:10px 16px;text-align:center;font-weight:800;font-size:13px;letter-spacing:.04em;position:sticky;top:0;z-index:60">
+    PODGLĄD. Wpis nieopublikowany
+    <a th:href="@{/admin/posty/{id}(id=${post.id})}"
+       style="color:#fff;text-decoration:underline;margin-left:10px;font-weight:700">Wróć do edycji</a>
+  </div>
+  <article class="art-hero">
+    <div class="container art-wrap">
+      <a href="/blog" class="art-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Wszystkie wpisy
+      </a>
+
+      <div class="pmeta">
+        <a th:if="${post.categorySlug != null}" th:href="@{/blog/kategoria/{s}(s=${post.categorySlug})}"
+           style="color:var(--mint);font-weight:800;letter-spacing:.1em;text-transform:uppercase"
+           th:text="${post.categoryName}">Longevity</a>
+        <span class="dot"></span><time th:datetime="${post.publishedIso}" th:text="${post.publishedLabel}">11 sierpnia 2026</time>
+        <span class="dot"></span><span th:text="|${post.readingMinutes} min czytania|">7 min czytania</span>
+      </div>
+
+      <h1 th:text="${post.title}">Dlaczego mięśnie to polisa na życie</h1>
+
+      <!--/* Lead = odpowiedź „answer-first" bezpośrednio po H1 (40–80 słów). */-->
+      <p class="art-lead" th:text="${post.lead}">Lead artykułu.</p>
+
+      <figure class="art-cover" th:if="${post.coverUrl != null}">
+        <img th:src="${post.coverUrl}" th:alt="${post.coverAlt}" loading="eager" fetchpriority="high" decoding="async">
+        <figcaption th:if="${post.coverCaption != null}" th:text="${post.coverCaption}"></figcaption>
+      </figure>
+
+      <div class="art-body">
+        <!--/* „W skrócie" — pole strukturalne, nie dowolny HTML. Gwarantuje BLUF na każdym wpisie. */-->
+        <div class="art-key" th:if="${!post.summaryPoints.isEmpty()}">
+          <h3>W skrócie</h3>
+          <ul>
+            <li th:each="pt : ${post.summaryPoints}" th:text="${pt}">Punkt podsumowania.</li>
+          </ul>
+        </div>
+
+        <!--/* Treść z edytora, przepuszczona przez sanitizer po stronie serwera. */-->
+        <div th:utext="${post.contentHtml}"></div>
+
+        <!--/* FAQ — pole strukturalne, zsynchronizowane 1:1 z JSON-LD FAQPage. */-->
+        <th:block th:if="${!post.faq.isEmpty()}">
+          <h2>Najczęstsze pytania</h2>
+          <th:block th:each="f : ${post.faq}">
+            <h3 th:text="${f.question}">Pytanie?</h3>
+            <p th:utext="${f.answer}">Odpowiedź.</p>
+          </th:block>
+        </th:block>
+      </div>
+
+      <div class="art-author" th:if="${post.authorName != null}">
+        <img th:src="${post.authorPhotoUrl}" src="/images/szymon-portret.jpeg" th:alt="${post.authorName}" alt="" loading="lazy">
+        <div>
+          <div class="nm" th:text="${post.authorName}">Szymon Domagała</div>
+          <p class="bio" th:text="${post.authorBio}">Bio autora.</p>
+        </div>
+      </div>
+
+      <div class="art-cta">
+        <h2>Chcesz plan dopasowany do siebie?</h2>
+        <p>Zacznijmy od rozmowy wstępnej. Sprawdzimy, czy mogę Ci realnie pomóc — stacjonarnie w Łodzi lub online w całej Polsce.</p>
+        <div class="hero-ctas" style="justify-content:center">
+          <a href="/#online-form" class="btn btn-primary">Umów rozmowę wstępną</a>
+          <a href="tel:+48502338373" class="btn btn-outline">502 338 373</a>
+        </div>
+      </div>
+
+      <div class="related" th:if="${!related.isEmpty()}">
+        <h2>Powiązane wpisy</h2>
+        <div class="posts">
+          <article class="post" th:each="r : ${related}">
+            <div class="post-img">
+              <span class="post-tag" th:text="${r.categoryName}">Trening</span>
+              <img th:src="${r.coverUrl}" th:alt="${r.coverAlt}" src="/images/studio-2.jpeg" alt="" loading="lazy" decoding="async">
+            </div>
+            <div class="post-body">
+              <div class="pmeta"><time th:datetime="${r.publishedIso}" th:text="${r.publishedLabel}">4 sierpnia 2026</time><span class="dot"></span><span th:text="|${r.readingMinutes} min|">9 min</span></div>
+              <h3><a th:href="@{/blog/{slug}(slug=${r.slug})}" th:text="${r.title}">Tytuł</a></h3>
+              <a th:href="@{/blog/{slug}(slug=${r.slug})}" class="post-more">Czytaj <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </article>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
+</body>
+</html>

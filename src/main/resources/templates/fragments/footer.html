@@ -1,0 +1,21 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="footer" th:remove="tag">
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="container footer-inner">
+    <div>
+      <div class="footer-logo">Szymon <span>Domagała</span></div>
+      <div class="footer-tagline">Trener Longevity · Łódź &amp; Online</div>
+      <p class="footer-meta">Autor treści: <strong>Szymon Domagała</strong> · Instruktor Sportu<br>Aktualizacja: <time th:datetime="${lastModified}" th:text="${lastModifiedLabel}">3 czerwca 2026</time></p>
+    </div>
+    <div class="footer-copy">
+      <p>© <span th:text="${year}">2026</span> Szymon Domagała. Wszelkie prawa zastrzeżone.</p>
+      <p style="margin-top:6px;"><a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a> · <a href="tel:+48502338373">502 338 373</a></p>
+      <p style="margin-top:6px;"><a href="/polityka-prywatnosci">Polityka prywatności</a></p>
+    </div>
+  </div>
+</footer>
+
+<button class="back-top" id="backTop" aria-label="Wróć do góry">↑</button>
+
+<script th:src="@{/js/main.js}" src="/js/main.js" defer></script>
+</div>

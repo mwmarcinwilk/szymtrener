@@ -1,0 +1,105 @@
+spring:
+  application:
+    name: szymtrener
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/szymtrener}
+    username: ${DB_USER:szymtrener}
+    password: ${DB_PASSWORD:szymtrener}
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    open-in-view: false          # swiadomie wylaczone: widoki dostaja gotowe DTO
+    hibernate:
+      ddl-auto: validate         # schemat tworzy wylacznie Flyway
+    properties:
+      hibernate.jdbc.batch_size: 50
+      hibernate.jdbc.lob.non_contextual_creation: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  thymeleaf:
+    cache: true
+  servlet:
+    multipart:
+      max-file-size: 25MB        # PDF-y planow treningowych
+      max-request-size: 30MB
+  mail:
+    # Gmail: MAIL_HOST=smtp.gmail.com, MAIL_PORT=587, MAIL_USER=<adres@gmail.com>,
+    # MAIL_PASSWORD=<haslo aplikacji, 16 znakow>. Zwykle haslo do konta NIE zadziala —
+    # Google wymaga dwuskladnikowego logowania i osobnego hasla aplikacji.
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USER:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 30d
+          cache-public: true
+      chain:
+        # Adres pliku dostaje skrót jego treści (/js/admin-a1b2c3.js), wiec 30-dniowy
+        # cache jest bezpieczny: po zmianie pliku zmienia sie adres i przegladarka
+        # pobiera nowa wersje od razu. Bez tego poprawka w CSS albo JS docieralaby
+        # do uzytkownika dopiero po wygasnieciu cache.
+        strategy:
+          content:
+            enabled: true
+            paths: /css/**,/js/**,/vendor/**,/images/**
+
+server:
+  port: ${PORT:8080}
+  compression:
+    enabled: true                # mniejszy HTML = szybszy TTFB dla botow
+    mime-types: text/html,text/css,application/javascript,application/json,image/svg+xml,application/xml
+    min-response-size: 1024
+  forward-headers-strategy: native   # za nginx: poprawne https w canonical
+  error:
+    whitelabel:
+      enabled: false
+
+management:
+  endpoints.web.exposure.include: health,info
+  endpoint.health.show-details: never
+  health:
+    # Awaria SMTP NIE moze oznaczac, ze serwis jest niesprawny. Zgloszenie zapisuje
+    # sie w bazie niezaleznie od poczty, a blad wysylki laduje w submission.mail_error
+    # (patrz MailService) — strona dziala dalej. Z wlaczonym wskaznikiem kazdy problem
+    # z poczta u operatora zapalalby /actuator/health na DOWN i wywracal monitoring.
+    mail.enabled: false
+
+app:
+  site-url: ${SITE_URL:https://szymtrener.pl}
+  brand-name: "Szymon Domagała – Trener Longevity"
+  mail:
+    recipient: ${MAIL_RECIPIENT:szymtrener@gmail.com}
+    # Nadawca musi byc TYM SAMYM adresem co MAIL_USER albo jego zweryfikowanym
+    # aliasem („Wysylaj jako" w ustawieniach Gmaila). Gmail nie pozwala wysylac
+    # z obcego adresu — podmieni go na konto uwierzytelnione albo odrzuci wiadomosc.
+    from: ${MAIL_FROM:${MAIL_USER:}}
+    auto-reply: true
+  admin:
+    email: ${ADMIN_EMAIL:szymtrener@gmail.com}
+    # haslo startowe: ustaw ADMIN_PASSWORD przy pierwszym uruchomieniu, potem zmien w panelu
+    password: ${ADMIN_PASSWORD:}
+  media:
+    max-image-width: 1600
+    jpeg-quality: 0.82
+    allowed-mime: image/jpeg,image/png,image/webp,application/pdf
+  indexnow:
+    enabled: ${INDEXNOW_ENABLED:false}
+    key: ${INDEXNOW_KEY:}
+  analytics:
+    enabled: true
+    salt: ${ANALYTICS_SALT:zmien-mnie-w-produkcji}
+
+logging:
+  level:
+    pl.szymtrener: INFO

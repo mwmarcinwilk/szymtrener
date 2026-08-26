@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Fragmenty wspolne dla panelu: <head>, sidebar i gorna belka. */-->
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="|${title} · Panel trenera|">Panel trenera</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="_csrf" th:content="${_csrf?.token}">
+  <meta name="_csrf_header" th:content="${_csrf?.headerName}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" th:href="@{/css/admin.css}" href="/css/admin.css">
+</head>
+<body>
+
+<aside class="side" th:fragment="sidebar(active)">
+  <div class="side-top">
+    <div class="side-logo">Szymon <span>Domagała</span></div>
+    <div class="side-sub">Panel trenera</div>
+  </div>
+  <nav class="side-nav">
+    <a class="side-link" th:classappend="${active == 'dash'} ? ' on'" href="/admin"><svg><use href="#i-dash"/></svg>Pulpit</a>
+    <div class="side-group">Blog</div>
+    <a class="side-link" th:classappend="${active == 'posts'} ? ' on'" href="/admin/posty"><svg><use href="#i-post"/></svg>Posty<span
+       class="cnt" th:with="n=${@adminNav.publishedPosts()}" th:if="${n > 0}" th:text="${n}">0</span></a>
+    <a class="side-link" th:classappend="${active == 'editor'} ? ' on'" href="/admin/posty/nowy"><svg><use href="#i-edit"/></svg>Nowy post</a>
+    <a class="side-link" th:classappend="${active == 'media'} ? ' on'" href="/admin/media"><svg><use href="#i-media"/></svg>Media</a>
+    <div class="side-group">Klienci</div>
+    <a class="side-link" th:classappend="${active == 'subs'} ? ' on'" href="/admin/zgloszenia"><svg><use href="#i-inbox"/></svg>Zgłoszenia<span
+       class="cnt" th:with="n=${@adminNav.newSubmissions()}" th:if="${n > 0}" th:text="${n}">0</span></a>
+    <a class="side-link" th:classappend="${active == 'clients'} ? ' on'" href="/admin/klienci"><svg><use href="#i-users"/></svg>Klienci</a>
+    <div class="side-group">Analiza</div>
+    <a class="side-link" th:classappend="${active == 'stats'} ? ' on'" href="/admin/statystyki"><svg><use href="#i-chart"/></svg>Statystyki</a>
+    <a class="side-link" th:classappend="${active == 'settings'} ? ' on'" href="/admin/ustawienia"><svg><use href="#i-cog"/></svg>Ustawienia</a>
+  </nav>
+  <div class="side-foot">
+    <div class="avatar">SD</div>
+    <div>
+      <div class="nm" sec:authentication="name" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">Szymon Domagała</div>
+      <div class="rl"><a href="/admin/haslo" style="color:inherit">Hasło</a> ·
+        <a href="/admin/wyloguj" style="color:inherit">Wyloguj</a></div>
+    </div>
+  </div>
+</aside>
+
+<header class="top" th:fragment="topbar(title)">
+  <button class="burger" id="burger" aria-label="Menu"><svg width="22" height="22"><use href="#i-menu"/></svg></button>
+  <h1 id="page-title" th:text="${title}">Pulpit</h1>
+  <div class="top-right">
+    <!--/* Szuka po tytułach wpisów, wszystkich statusów — w panelu najczęściej
+           szuka się szkicu, którego nie ma w wyszukiwarce publicznej. */-->
+    <form class="search" method="get" action="/admin/posty" role="search">
+      <svg><use href="#i-search"/></svg>
+      <input type="search" name="q" placeholder="Szukaj wpisu…" th:value="${query}" aria-label="Szukaj wpisu">
+    </form>
+    <a class="btn btn-p" href="/admin/posty/nowy"><svg><use href="#i-plus"/></svg>Nowy post</a>
+  </div>
+</header>
+
+<!--/* Paginacja list w panelu. Zwykle linki: dzialaja bez JS i da sie je otworzyc
+       w nowej karcie. `page` to obiekt Page ze Spring Data, `baseUrl` moze juz
+       miec wlasne parametry (np. ?status=NEW) — stad wybor miedzy ? a &. */-->
+<nav class="pager" th:fragment="pager(page, baseUrl)" th:if="${page != null and page.totalPages > 1}"
+     aria-label="Paginacja">
+  <th:block th:with="sep=${#strings.contains(baseUrl, '?') ? '&amp;' : '?'}">
+    <a class="f-btn" th:if="${!page.first}"
+       th:href="${baseUrl + sep + 'strona=' + (page.number - 1)}" rel="prev">← Poprzednia</a>
+    <span class="f-btn" th:unless="${!page.first}" aria-disabled="true" style="opacity:.4">← Poprzednia</span>
+
+    <span class="pager-at"
+          th:text="|Strona ${page.number + 1} z ${page.totalPages} · ${page.totalElements} poz.|">Strona 1 z 3</span>
+
+    <a class="f-btn" th:if="${page.hasNext()}"
+       th:href="${baseUrl + sep + 'strona=' + (page.number + 1)}" rel="next">Następna →</a>
+    <span class="f-btn" th:unless="${page.hasNext()}" aria-disabled="true" style="opacity:.4">Następna →</span>
+  </th:block>
+</nav>
+
+<!--/* Strzałka trendu obok liczby na kafelku KPI. Wydzielona, bo powtarza się
+       na pulpicie i w statystykach, a „nie ma z czym porównać" musi wyglądać
+       inaczej niż realny spadek. */-->
+<div class="kpi-t" th:fragment="trend(t)" th:if="${t != null}"
+     th:classappend="${t.known()} ? (${t.up()} ? ' up' : ' dn') : ' fl'">
+  <svg width="10" height="10" th:if="${t.known()}">
+    <use th:href="${t.up()} ? '#i-arrow-up' : '#i-arrow-dn'"/>
+  </svg>
+  <span th:text="${t.text()}">0%</span>
+</div>
+
+</body>
+</html>

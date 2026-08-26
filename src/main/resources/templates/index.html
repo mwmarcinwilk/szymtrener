@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Szymon Domagała – Trener Longevity Łódź | sprawni za 20 lat</title>
+<meta name="description" content="Szymon Domagała – trener personalny i Trener Longevity w Łodzi. Treningi personalne stacjonarne na Retkini oraz online w całej Polsce dla osób 35–55 lat. Umów rozmowę wstępną.">
+<link rel="canonical" href="https://szymtrener.pl/">
+<meta name="author" content="Szymon Domagała">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0E1A26">
+<link rel="preload" as="image" href="/images/szymon-hero.jpeg" fetchpriority="high">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Szymon Domagała – Trener Longevity">
+<meta property="og:url" content="https://szymtrener.pl/">
+<meta property="og:title" content="Szymon Domagała – Trener Longevity Łódź | sprawni za 20 lat">
+<meta property="og:description" content="Trener personalny i Trener Longevity w Łodzi. Treningi stacjonarne i online dla osób 35–55 lat. Trenuję ludzi, którzy chcą być sprawni za 20 lat.">
+<meta property="og:image" content="https://szymtrener.pl/images/szymon-hero.jpeg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Szymon Domagała – Trener Longevity Łódź">
+<meta name="twitter:description" content="Treningi personalne stacjonarne i online dla osób 35–55 lat. Sprawni za 20 lat.">
+<meta name="twitter:image" content="https://szymtrener.pl/images/szymon-hero.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<meta name="_csrf" th:content="${_csrf?.token}">
+<meta name="_csrf_header" th:content="${_csrf?.headerName}">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+<script type="application/ld+json" th:inline="text">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["LocalBusiness", "HealthClub", "Organization"],
+      "@id": "https://szymtrener.pl/#organizacja",
+      "name": "Fit and Health Studio Treningów Personalnych – Szymon Domagała",
+      "alternateName": "Szymtrener",
+      "url": "https://szymtrener.pl/",
+      "logo": "https://szymtrener.pl/images/szymon-hero.jpeg",
+      "image": "https://szymtrener.pl/images/studio-1.jpeg",
+      "description": "Studio treningów personalnych w Łodzi (Retkinia). Treningi stacjonarne i online dla osób 35–55 lat, ukierunkowane na siłę, sprawność i długowieczność (longevity).",
+      "foundingDate": "2015",
+      "telephone": "+48502338373",
+      "email": "szymtrener@gmail.com",
+      "priceRange": "150–240 PLN",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Armii Krajowej 32a",
+        "postalCode": "94-046",
+        "addressLocality": "Łódź",
+        "addressRegion": "łódzkie",
+        "addressCountry": "PL"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Łódź" },
+        { "@type": "Country", "name": "Polska" }
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+48502338373",
+        "email": "szymtrener@gmail.com",
+        "contactType": "customer service",
+        "availableLanguage": ["Polish"]
+      },
+      "openingHours": "Mo-Sa",
+      "founder": { "@id": "https://szymtrener.pl/#szymon" },
+      "sameAs": [
+        "https://www.facebook.com/SzymTrener",
+        "https://www.instagram.com/szymtrener",
+        "https://www.tiktok.com/@szymtrener"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://szymtrener.pl/#szymon",
+      "name": "Szymon Domagała",
+      "jobTitle": "Trener personalny, Trener Longevity",
+      "image": "https://szymtrener.pl/images/szymon-portret.jpeg",
+      "url": "https://szymtrener.pl/",
+      "description": "Instruktor Sportu z tytułem Polskiej Akademii Sportu, w branży fitness od 2007 roku. Specjalizuje się w treningu osób 35–55 lat oraz tematyce długowieczności (longevity).",
+      "worksFor": { "@id": "https://szymtrener.pl/#organizacja" },
+      "alumniOf": { "@type": "EducationalOrganization", "name": "Polska Akademia Sportu" },
+      "knowsAbout": ["trening personalny", "trening funkcjonalny", "longevity", "sarkopenia", "trening siłowy", "dietetyka", "TRX", "kettlebell"],
+      "sameAs": [
+        "https://www.facebook.com/SzymTrener",
+        "https://www.instagram.com/szymtrener",
+        "https://www.tiktok.com/@szymtrener"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://szymtrener.pl/#website",
+      "url": "https://szymtrener.pl/",
+      "name": "Szymon Domagała – Trener Longevity",
+      "inLanguage": "pl-PL",
+      "publisher": { "@id": "https://szymtrener.pl/#organizacja" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://szymtrener.pl/#strona",
+      "url": "https://szymtrener.pl/",
+      "name": "Szymon Domagała – Trener Longevity Łódź",
+      "isPartOf": { "@id": "https://szymtrener.pl/#website" },
+      "about": { "@id": "https://szymtrener.pl/#szymon" },
+      "inLanguage": "pl-PL",
+      "datePublished": "2025-01-15",
+      "dateModified": "[[${lastModified}]]"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://szymtrener.pl/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://szymtrener.pl/" },
+        { "@type": "ListItem", "position": 2, "name": "Oferta", "item": "https://szymtrener.pl/#oferta" },
+        { "@type": "ListItem", "position": 3, "name": "Kontakt", "item": "https://szymtrener.pl/#kontakt" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://szymtrener.pl/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Dla kogo są treningi personalne u Szymona Domagały?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Przede wszystkim dla osób w wieku 35–55 lat, które chcą zachować siłę i sprawność na kolejne dekady. Trenuję zarówno osoby początkujące i wracające do aktywności po przerwie, jak i te, które ćwiczą od lat, a szukają mądrego, bezpiecznego prowadzenia ukierunkowanego na zdrowie i długowieczność."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ile kosztuje trening personalny w Łodzi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pojedynczy trening stacjonarny kosztuje 190 zł, a w pakietach cena spada do 150 zł za trening (pakiet 12). Treningi dla par to od 200 do 240 zł za sesję. Prowadzenie online zaczyna się od 139 zł miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Gdzie odbywają się treningi stacjonarne?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Treningi prowadzę w moim własnym studiu Fit and Health przy ulicy Armii Krajowej 32a na Retkini w Łodzi. Studio jest wyposażone w sprzęt funkcjonalny i siłowy, ma klimatyzację, szatnie z prysznicami oraz bezpłatny parking. Trenujesz bez tłumów i kolejek, z moją pełną uwagą."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy prowadzisz treningi online w całej Polsce?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tak. Treningi online prowadzę dla klientów z dowolnego miejsca w Polsce, już od 139 zł miesięcznie. Otrzymujesz ode mnie spersonalizowany plan treningowy, stały kontakt oraz regularną analizę postępów, dzięki czemu trenujesz skutecznie w domu lub na dowolnej siłowni."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czym jest trening longevity (długowieczność)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To trening nastawiony na zdrowie i sprawność za 10, 20 i 30 lat, a nie na szybką metamorfozę. Według badań nad sarkopenią po 30. roku życia tracimy od 3 do 8% masy mięśniowej na dekadę, dlatego buduję z Tobą siłę i masę mięśniową, które działają jak polisa na samodzielne, aktywne życie."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Jak zacząć współpracę z trenerem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Najlepiej zacząć od umówienia się na konsultację. Zadzwoń pod numer 502 338 373, napisz na szymtrener@gmail.com lub wypełnij formularz na stronie. Porozmawiamy o Twoim wieku, celu i poziomie aktywności, a następnie dobiorę dla Ciebie odpowiednią formę treningu – stacjonarnie w Łodzi lub online."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div th:replace="~{fragments/nav :: nav('')}"></div>
+
+<main id="tresc">
+<section id="hero" class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-photo" aria-hidden="true">
+    <img src="/images/szymon-hero.jpeg" alt="Szymon Domagała – Trener Longevity" fetchpriority="high" decoding="async" width="783" height="1100">
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">Trener Longevity · Łódź &amp; Online</div>
+      <h1 class="hero-title">
+        <span class="line">Trenuję ludzi,</span>
+        <span class="line">którzy chcą być</span>
+        <span class="line accent-line">sprawni za 20 lat</span>
+      </h1>
+      <p class="hero-sub">
+        Szymon Domagała – trener personalny i Trener Longevity z Łodzi. Prowadzę treningi
+        personalne stacjonarne na Retkini oraz online w całej Polsce dla osób 35–55 lat,
+        które chcą być sprawne za 10, 20 i 30 lat. Nie sprzedaję metamorfoz na 12 tygodni –
+        buduję zdrowie i siłę na dekady.
+      </p>
+      <div class="hero-ctas">
+        <a href="#kontakt" class="btn btn-primary">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path stroke-linecap="round" stroke-linejoin="round" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Umów rozmowę wstępną
+        </a>
+        <a href="#oferta" class="btn btn-outline">Zobacz ofertę</a>
+      </div>
+
+      <!-- zdjęcie pokazywane na telefonie -->
+      <figure class="hero-photo-card">
+        <img src="/images/szymon-hero.jpeg" alt="Szymon Domagała – trener personalny w łódzkim studiu" decoding="async" width="783" height="1100">
+      </figure>
+
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num"><span data-count="18" data-suffix="+">18+</span></div>
+          <div class="hero-stat-label">Lat doświadczenia</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">35–55</div>
+          <div class="hero-stat-label">Specjalizacja wiekowa</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">2015</div>
+          <div class="hero-stat-label">Własne studio od</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">1:1</div>
+          <div class="hero-stat-label">Pełna uwaga trenera</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span>Scroll</span>
+    <span class="line"></span>
+  </div>
+</section>
+
+<!-- ─── MARQUEE ─── -->
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-item">Longevity</span>
+    <span class="marquee-item">Healthspan</span>
+    <span class="marquee-item">Sprawność funkcjonalna</span>
+    <span class="marquee-item">Mięśnie to polisa na życie</span>
+    <span class="marquee-item">Trening siłowy</span>
+    <span class="marquee-item">Kettlebell</span>
+    <span class="marquee-item">TRX</span>
+    <span class="marquee-item">Na szczycie piramidy jest zdrowie</span>
+    <span class="marquee-item">Łódź · Online</span>
+    <span class="marquee-item">Longevity</span>
+    <span class="marquee-item">Healthspan</span>
+    <span class="marquee-item">Sprawność funkcjonalna</span>
+    <span class="marquee-item">Mięśnie to polisa na życie</span>
+    <span class="marquee-item">Trening siłowy</span>
+    <span class="marquee-item">Kettlebell</span>
+    <span class="marquee-item">TRX</span>
+    <span class="marquee-item">Na szczycie piramidy jest zdrowie</span>
+    <span class="marquee-item">Łódź · Online</span>
+  </div>
+</div>
+
+<!-- ─── O MNIE ─── -->
+<section id="o-mnie" class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-photo" data-reveal="img">
+        <div class="frame"><img src="/images/szymon-portret.jpeg" alt="Szymon Domagała – trener personalny" loading="lazy" decoding="async" width="1067" height="1600"></div>
+        <div class="badge-float">
+          <div class="n">18+</div>
+          <div class="t">lat z ludźmi,<br>którzy myślą długofalowo</div>
+        </div>
+      </div>
+
+      <div data-reveal>
+        <div class="eyebrow">O mnie</div>
+        <h2 class="headline">Szymon Domagała –<br><em>Trener Longevity</em></h2>
+        <blockquote class="about-quote">„Na szczycie piramidy jest zdrowie, nie sylwetka."</blockquote>
+        <p class="about-text">
+          W branży fitness działam od 2007 roku – prawie dwie dekady pracy z ludźmi,
+          którzy traktują swoje ciało poważnie. Od 2015 roku prowadzę własne
+          <strong>Fit and Health Studio Treningów Personalnych</strong> w Łodzi.
+        </p>
+        <p class="about-text">
+          Jestem Instruktorem Sportu z tytułem nadanym przez Polską Akademię Sportu.
+          Specjalizuję się w treningu dla osób w wieku 35–55 lat – czyli tych,
+          dla których sprawność za 10, 20 i 30 lat jest równie ważna jak dzisiejsze samopoczucie.
+        </p>
+        <p class="about-text">
+          Moje podejście opiera się na jednej zasadzie: <strong>mięśnie to polisa na życie</strong>.
+          Każdy trening to inwestycja w Twoją przyszłą mobilność, energię i niezależność.
+        </p>
+
+        <div class="podcast-mention">
+          <div class="ic">🎙️</div>
+          <div class="tx">
+            <strong>Ekspert podcastu „Dzień Dobry Długowieczność"</strong>
+            Gościłem jako specjalista od treningu i longevity
+          </div>
+        </div>
+
+        <div class="about-certs">
+          <span class="cert-tag">Instruktor Sportu</span>
+          <span class="cert-tag">Dietetyka</span>
+          <span class="cert-tag">Trening funkcjonalny</span>
+          <span class="cert-tag">TRX</span>
+          <span class="cert-tag">Kettlebell</span>
+          <span class="cert-tag">BOSU</span>
+          <span class="cert-tag">Gravity System</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FILOZOFIA ─── -->
+<section class="philosophy">
+  <div class="container section" style="padding-block: clamp(40px,5vw,64px);">
+    <div class="phil-grid stagger">
+      <div class="phil-item">
+        <div class="phil-num">01</div>
+        <div class="phil-title">Długoterminowe myślenie</div>
+        <div class="phil-desc">Nie trenuję Cię pod wesele za miesiąc. Buduję sprawność, która ma Ci służyć przez kolejne dekady.</div>
+      </div>
+      <div class="phil-item">
+        <div class="phil-num">02</div>
+        <div class="phil-title">Mięśnie jako fundament zdrowia</div>
+        <div class="phil-desc">Tkanka mięśniowa to nie tylko estetyka. To metabolizm, odporność na kontuzje, hormony i jakość życia w starości.</div>
+      </div>
+      <div class="phil-item">
+        <div class="phil-num">03</div>
+        <div class="phil-title">Zdrowie ponad sylwetkę</div>
+        <div class="phil-desc">Na szczycie piramidy jest zdrowie. Sylwetka jest miłym efektem ubocznym – nigdy celem samym w sobie.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── OFERTA ─── -->
+<section id="oferta" class="section">
+  <div class="container">
+    <div data-reveal>
+      <div class="eyebrow">Oferta</div>
+      <h2 class="headline">Wybierz formę <em>współpracy</em></h2>
+      <p class="lead">Pracuję stacjonarnie w Łodzi oraz zdalnie w całej Polsce. Każda forma jest dostosowana do Twojego stylu życia.</p>
+    </div>
+
+    <div class="offer-tabs" data-reveal>
+      <button class="tab-btn active" onclick="showTab('stacjonarne',this)">Treningi stacjonarne</button>
+      <button class="tab-btn" onclick="showTab('pary',this)">Treningi dla par</button>
+      <button class="tab-btn" onclick="showTab('online',this)">Online &amp; Dietetyka</button>
+    </div>
+
+    <div class="offer-panel active" id="panel-stacjonarne">
+      <div class="price-grid">
+        <div class="price-card">
+          <div class="price-qty">Pojedynczy trening</div>
+          <div class="price-main">190 <span>zł / szt</span></div>
+          <div class="price-total">Elastycznie, bez zobowiązań</div>
+          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
+        </div>
+        <div class="price-card">
+          <div class="price-qty">Pakiet 4 treningów</div>
+          <div class="price-main">170 <span>zł / szt</span></div>
+          <div class="price-total">Razem: <strong>680 zł</strong></div>
+          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
+        </div>
+        <div class="price-card featured">
+          <div class="price-qty">Pakiet 8 treningów</div>
+          <div class="price-main">160 <span>zł / szt</span></div>
+          <div class="price-total">Razem: <strong>1 280 zł</strong></div>
+          <a href="#kontakt" class="btn btn-primary">Umów konsultację</a>
+        </div>
+        <div class="price-card">
+          <div class="price-qty">Pakiet 12 treningów</div>
+          <div class="price-main">150 <span>zł / szt</span></div>
+          <div class="price-total">Razem: <strong>1 800 zł</strong></div>
+          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="offer-panel" id="panel-pary">
+      <div class="price-grid">
+        <div class="price-card">
+          <div class="price-qty">Pojedynczy trening (para)</div>
+          <div class="price-main">240 <span>zł / szt</span></div>
+          <div class="price-total">Razem dla dwojga</div>
+          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
+        </div>
+        <div class="price-card">
+          <div class="price-qty">Pakiet 4 treningów (para)</div>
+          <div class="price-main">220 <span>zł / szt</span></div>
+          <div class="price-total">Razem: <strong>880 zł</strong></div>
+          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
+        </div>
+        <div class="price-card featured">
+          <div class="price-qty">Pakiet 8 treningów (para)</div>
+          <div class="price-main">210 <span>zł / szt</span></div>
+          <div class="price-total">Razem: <strong>1 680 zł</strong></div>
+          <a href="#kontakt" class="btn btn-primary">Umów konsultację</a>
+        </div>
+        <div class="price-card">
+          <div class="price-qty">Pakiet 12 treningów (para)</div>
+          <div class="price-main">200 <span>zł / szt</span></div>
+          <div class="price-total">Razem: <strong>2 400 zł</strong></div>
+          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="offer-panel" id="panel-online">
+      <div class="offer-online">
+        <div class="online-card">
+          <div class="ic">💻</div>
+          <h3>Prowadzenie online</h3>
+          <div class="online-price">od 139 <span>zł / miesiąc</span></div>
+          <p>Spersonalizowany plan treningowy, dostęp do aplikacji treningowej na telefon, stały kontakt i analiza postępów. Pracujesz z dowolnego miejsca w Polsce.</p>
+          <a href="#online" class="btn btn-outline">Poznaj szczegóły online</a>
+        </div>
+        <div class="online-card">
+          <div class="ic">🥗</div>
+          <h3>Jadłospis dietetyczny</h3>
+          <div class="online-price">od 129 <span>zł / rozpiska</span></div>
+          <p>Indywidualnie opracowany jadłospis dostosowany do Twoich potrzeb, celów zdrowotnych i stylu życia.</p>
+          <a href="#kontakt" class="btn btn-outline">Zamów jadłospis</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="offer-note" data-reveal>
+      <p>💬 <strong>Nie wiesz, od czego zacząć?</strong><br>
+        Zacznij od bezpłatnej konsultacji – porozmawiamy o Twoich potrzebach i dobierzemy odpowiedni plan.</p>
+      <a href="#kontakt" class="btn btn-primary">Umów rozmowę wstępną</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ONLINE ─── -->
+<section id="online" class="section">
+  <div class="container">
+    <div class="online-head" data-reveal>
+      <div class="online-badge">Cała Polska</div>
+      <h2>Trening ze mną — bez znaczenia gdzie jesteś</h2>
+      <p>Nie musisz mieszkać w Łodzi. Pracuję zdalnie z klientami z całej Polski. Dostajesz spersonalizowany plan, stały kontakt i kogoś kto pilnuje czy idziesz w dobrym kierunku.</p>
+    </div>
+
+    <div class="online-body">
+      <div class="steps" data-reveal>
+        <div class="step">
+          <div class="step-num">01</div>
+          <div>
+            <h3>Rozmowa wstępna <span class="free">(bezpłatna)</span></h3>
+            <p>Rozmawiamy 15-20 minut. Pytam o Twój cel, poziom aktywności i sprzęt. Sprawdzam czy mogę Ci realnie pomóc.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div>
+            <h3>Twój spersonalizowany plan</h3>
+            <p>Przygotowuję plan dostosowany do Twojego sprzętu, czasu i celu. Nie szablon — plan dla Ciebie.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div>
+            <h3>Trenujesz w aplikacji</h3>
+            <p>Otrzymujesz dostęp do aplikacji treningowej na telefon. Plan, instrukcje i kontakt ze mną — kiedy chcesz i gdzie chcesz.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div>
+            <h3>Analiza i korekta planu</h3>
+            <p>Regularnie sprawdzam jak idzie. Trening to proces — korygujemy plan gdy zajdzie potrzeba.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="online-cards" data-reveal>
+        <div class="o-card-price">
+          <h3>Prowadzenie online</h3>
+          <div class="o-price">od 139 <span>zł / miesiąc</span></div>
+          <ul class="o-list">
+            <li>Spersonalizowany plan treningowy</li>
+            <li>Dostęp do aplikacji treningowej na telefon</li>
+            <li>Stały kontakt i możliwość pytań</li>
+            <li>Regularna analiza postępów</li>
+            <li>Korekta planu gdy zajdzie potrzeba</li>
+          </ul>
+        </div>
+        <div class="o-card-who">
+          <h3>Dla kogo</h3>
+          <ul class="o-who-list">
+            <li>Osoby 35-55 lat które chcą trenować mądrze i długoterminowo</li>
+            <li>Brak dobrego trenera w swoim mieście</li>
+            <li>Potrzebujesz elastyczności — trening rano, wieczorem, w podróży</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="online-ctas" data-reveal>
+      <a href="#online-form" class="btn btn-online">Umów bezpłatną rozmowę wstępną</a>
+      <a href="#oferta" class="btn btn-online-ghost">Zobacz pełną ofertę</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FORMULARZ ONLINE ─── -->
+<section id="online-form" class="section">
+  <div class="container of-wrap">
+    <div class="of-head" data-reveal>
+      <h2>Zacznijmy rozmawiać</h2>
+      <p>Wypełnij formularz — odezwę się w ciągu 24 godzin i umówimy bezpłatną rozmowę wstępną.</p>
+    </div>
+
+    <form class="of-form" data-reveal data-endpoint="/api/zgloszenia/online" onsubmit="handleFormSubmit(event)">
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+      <div class="of-row">
+        <div class="of-group">
+          <label for="o-name">Imię <span class="req">*</span></label>
+          <input type="text" id="o-name" name="name" required>
+        </div>
+        <div class="of-group">
+          <label for="o-email">E-mail <span class="req">*</span></label>
+          <input type="email" id="o-email" name="email" required>
+        </div>
+      </div>
+      <div class="of-row">
+        <div class="of-group">
+          <label for="o-phone">Telefon</label>
+          <input type="tel" id="o-phone" name="phone">
+        </div>
+        <div class="of-group">
+          <label for="o-city">Skąd jesteś? <span class="req">*</span></label>
+          <input type="text" id="o-city" name="city" placeholder="np. Warszawa, Kraków, Poznań…" required>
+        </div>
+      </div>
+      <div class="of-group">
+        <label for="o-now">Jak wygląda Twój trening teraz? <span class="req">*</span></label>
+        <textarea id="o-now" name="currentTraining" placeholder="np. Ćwiczę sam 2x w tygodniu, biegam, nie trenuję wcale…" required></textarea>
+      </div>
+      <div class="of-group">
+        <label for="o-goal">Co chcesz osiągnąć? <span class="req">*</span></label>
+        <textarea id="o-goal" name="goal" placeholder="np. Chcę trenować regularnie, poprawić siłę…" required></textarea>
+      </div>
+      <div class="of-row">
+        <div class="of-group">
+          <label for="o-equip">Dostęp do sprzętu? <span class="req">*</span></label>
+          <select id="o-equip" name="equipment" required>
+            <option value="">Wybierz opcję</option>
+            <option>Siłownia w pobliżu</option>
+            <option>Hantle/kettlebell w domu</option>
+            <option>Tylko mata i masa ciała</option>
+            <option>Siłownia + sprzęt w domu</option>
+          </select>
+        </div>
+        <div class="of-group">
+          <label for="o-source">Skąd trafiłeś do Szymona?</label>
+          <select id="o-source" name="source">
+            <option value="">Wybierz opcję</option>
+            <option>Instagram</option>
+            <option>Facebook</option>
+            <option>TikTok</option>
+            <option>Polecenie</option>
+            <option>Google</option>
+            <option>Inne</option>
+          </select>
+        </div>
+      </div>
+      <label class="of-consent">
+        <input type="checkbox" id="o-consent" name="consent" required>
+        <span>Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w formularzu w celu udzielenia odpowiedzi na zapytanie, zgodnie z <a href="/polityka-prywatnosci">Polityką prywatności</a>.</span>
+      </label>
+      <button type="submit" class="btn btn-online">Wyślij zgłoszenie</button>
+      <div class="of-success" id="of-success">Dostałem Twoje zgłoszenie. Odezwę się w ciągu 24 godzin.</div>
+      <div class="of-error" id="of-error">Coś poszło nie tak. Zadzwoń pod <a href="tel:+48502338373">502 338 373</a> lub napisz na <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>.</div>
+    </form>
+  </div>
+</section>
+
+<!-- ─── PODCAST ─── -->
+<section id="podcast" class="section">
+  <div class="container">
+    <div class="podcast-head" data-reveal>
+      <div class="eyebrow">Podcast · Ekspert</div>
+      <h2 class="headline">Gość podcastu<br><em>„Dzień Dobry Długowieczność”</em></h2>
+      <p class="lead">
+        Jako specjalista od treningu i longevity rozmawiam o tym, jak budować siłę
+        i sprawność, która zostaje z nami na dekady – niezależnie od wieku metryki.
+      </p>
+      <div class="podcast-actions">
+        <div class="podcast-credibility">
+          <div class="ic">🎙️</div>
+          <div class="tx">
+            <strong>Wiedza oparta na praktyce</strong>
+            Trening siłowy, sarkopenia, regeneracja i mięśnie jako „polisa na życie”.
+          </div>
+        </div>
+        <a href="https://www.youtube.com/@DzienDobryDlugowiecznosc" target="_blank" rel="noopener" class="btn btn-outline">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.5a3 3 0 00-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 001 7.5 31 31 0 00.5 12 31 31 0 001 16.5a3 3 0 002.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5A3 3 0 0023 16.5 31 31 0 0023.5 12 31 31 0 0023 7.5zM9.7 15.3V8.7l5.8 3.3z"/></svg>
+          Zobacz kanał na YouTube
+        </a>
+      </div>
+    </div>
+
+    <div class="podcast-videos" data-reveal>
+      <figure>
+        <div class="video-embed yt-facade" data-id="LcXpFy7s-GQ" role="button" tabindex="0" aria-label="Odtwórz film: Jak budować mięśnie po 40-tce">
+          <img class="yt-thumb" src="https://i.ytimg.com/vi/LcXpFy7s-GQ/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/LcXpFy7s-GQ/hqdefault.jpg'" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność – budowanie mięśni po 40-tce" loading="lazy">
+          <span class="yt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        </div>
+        <figcaption class="video-caption">▶ Jak budować mięśnie po 40-tce: serie, powtórzenia, ciężary</figcaption>
+      </figure>
+      <figure>
+        <div class="video-embed yt-facade" data-id="Qq2CHz25u9I" role="button" tabindex="0" aria-label="Odtwórz film: rozmowa z Szymonem Domagałą">
+          <img class="yt-thumb" src="https://i.ytimg.com/vi/Qq2CHz25u9I/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/Qq2CHz25u9I/hqdefault.jpg'" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność – rozmowa o treningu i długowieczności" loading="lazy">
+          <span class="yt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        </div>
+        <figcaption class="video-caption">▶ Rozmowa z Szymonem Domagałą o treningu i długowieczności</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STUDIO ─── -->
+<section id="studio" class="section">
+  <div class="container">
+    <div class="studio-grid">
+      <div data-reveal>
+        <div class="eyebrow">Studio</div>
+        <h2 class="headline">Fit and Health<br><em>Studio Treningów</em></h2>
+        <p class="lead" style="margin-bottom:8px;">
+          Własne studio treningowe na Retkini – wyposażone pod trening funkcjonalny
+          i siłowy dla dorosłych. Bez tłumów, bez kolejek, z pełną uwagą trenera.
+        </p>
+        <div class="studio-features">
+          <div class="studio-feat"><div class="ic">🏋️</div><div><strong>Sprzęt funkcjonalny</strong><span>Hantle, kettlebells, maczugi, TRX, BOSU, Gravity System</span></div></div>
+          <div class="studio-feat"><div class="ic">☕</div><div><strong>Kawa w cenie</strong><span>Bo dobry trening zaczyna się od dobrego rytuału.</span></div></div>
+          <div class="studio-feat"><div class="ic">❄️</div><div><strong>Klimatyzacja</strong><span>Komfort przez cały rok, również latem</span></div></div>
+          <div class="studio-feat"><div class="ic">🚿</div><div><strong>Szatnie z prysznicami</strong><span>Trening o 7:00, biuro o 9:00. Prysznic i szatnia czekają.</span></div></div>
+          <div class="studio-feat"><div class="ic">🅿️</div><div><strong>Bezpłatny parking</strong><span>Bez stresu z miejscem przy studio</span></div></div>
+          <div class="studio-feat"><div class="ic">📅</div><div><strong>Poniedziałek – Sobota</strong><span>Elastyczne godziny treningów</span></div></div>
+        </div>
+        <div class="studio-address">
+          <div class="ic">📍</div>
+          <div>
+            <div class="main">Armii Krajowej 32a</div>
+            <div class="sub">94-046 Łódź, Retkinia</div>
+            <a href="https://maps.google.com/?q=Armii+Krajowej+32a,+Łódź" target="_blank" rel="noopener" class="btn btn-outline">Otwórz w Mapach</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="studio-gallery" data-reveal="img">
+        <div class="studio-photo"><img src="/images/studio-1.jpeg" alt="Fit and Health Studio – strefa treningowa" loading="lazy" decoding="async" width="1600" height="1200"></div>
+        <div class="studio-photo"><img src="/images/studio-2.jpeg" alt="Studio – sprzęt funkcjonalny i wolne ciężary" loading="lazy" decoding="async" width="1600" height="1200"></div>
+        <div class="studio-photo"><img src="/images/studio-3.jpeg" alt="Studio – strefa cardio i rozgrzewki" loading="lazy" decoding="async" width="1600" height="1200"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BANER AKCJI ─── -->
+<section class="action-band">
+  <div class="action-band-img" aria-hidden="true"><img src="/images/szymon-trening.jpeg" alt="Szymon Domagała podczas treningu na siłowni" loading="lazy" decoding="async" width="1200" height="1600"></div>
+  <div class="action-band-overlay" aria-hidden="true"></div>
+  <div class="container action-inner">
+    <div data-reveal>
+      <div class="eyebrow">Zacznij dziś</div>
+      <h2 class="action-title">Najlepszy moment, by zadbać o sprawność, był 20 lat temu. <em>Drugi najlepszy jest dziś.</em></h2>
+      <p class="action-sub">Jeden telefon dzieli Cię od pierwszego treningu. Bezpłatna rozmowa wstępna, bez zobowiązań – sprawdź, czy to dla Ciebie.</p>
+      <div class="hero-ctas">
+        <a href="#kontakt" class="btn btn-primary">Umów rozmowę wstępną</a>
+        <a href="tel:+48502338373" class="btn btn-outline">502 338 373</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SOCIAL ─── -->
+<div class="social-strip">
+  <div class="container social-inner">
+    <div class="social-text">
+      <strong>Śledź mnie w mediach społecznościowych</strong>
+      Treningi, porady o longevity i kulisy pracy z klientami
+    </div>
+    <div class="social-links">
+      <a href="https://www.facebook.com/SzymTrener" target="_blank" rel="noopener" class="social-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>Facebook
+      </a>
+      <a href="https://instagram.com/szymtrener" target="_blank" rel="noopener" class="social-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>@szymtrener
+      </a>
+      <a href="https://tiktok.com/@szymtrener" target="_blank" rel="noopener" class="social-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.31 6.31 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>@szymtrener
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FAQ ─── -->
+<section id="faq" class="section">
+  <div class="container">
+    <div data-reveal style="margin-bottom:8px;">
+      <div class="eyebrow">FAQ</div>
+      <h2 class="headline">Najczęściej zadawane <em>pytania</em></h2>
+      <p class="lead">Wszystko, co warto wiedzieć przed pierwszym treningiem personalnym – oferta, ceny, lokalizacja i współpraca online.</p>
+    </div>
+
+    <div class="faq-list" data-reveal>
+      <article class="faq-item">
+        <h3 class="faq-q">Dla kogo są treningi personalne u Szymona Domagały?</h3>
+        <p class="faq-a">Przede wszystkim dla osób w wieku 35–55 lat, które chcą zachować siłę i sprawność na kolejne dekady. Trenuję zarówno osoby początkujące i wracające do aktywności po przerwie, jak i te, które ćwiczą od lat, a szukają mądrego, bezpiecznego prowadzenia ukierunkowanego na zdrowie i długowieczność.</p>
+      </article>
+
+      <article class="faq-item">
+        <h3 class="faq-q">Ile kosztuje trening personalny w Łodzi?</h3>
+        <p class="faq-a">Pojedynczy trening stacjonarny kosztuje 190 zł, a w pakietach cena spada do 150 zł za trening (pakiet 12). Treningi dla par to od 200 do 240 zł za sesję. Prowadzenie online zaczyna się od 139 zł miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł.</p>
+        <table class="price-table">
+          <caption>Cennik treningów personalnych – 1 osoba (stan: czerwiec 2026)</caption>
+          <thead>
+            <tr><th scope="col">Pakiet</th><th scope="col">Cena za trening</th><th scope="col">Razem</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Pojedynczy trening</td><td>190 zł</td><td>190 zł</td></tr>
+            <tr><td>Pakiet 4 treningów</td><td>170 zł</td><td>680 zł</td></tr>
+            <tr><td>Pakiet 8 treningów</td><td>160 zł</td><td>1 280 zł</td></tr>
+            <tr><td>Pakiet 12 treningów</td><td>150 zł</td><td>1 800 zł</td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="faq-item">
+        <h3 class="faq-q">Gdzie odbywają się treningi stacjonarne?</h3>
+        <p class="faq-a">Treningi prowadzę w moim własnym studiu Fit and Health przy ulicy Armii Krajowej 32a na Retkini w Łodzi. Studio jest wyposażone w sprzęt funkcjonalny i siłowy, ma klimatyzację, szatnie z prysznicami oraz bezpłatny parking. Trenujesz bez tłumów i kolejek, z moją pełną uwagą.</p>
+      </article>
+
+      <article class="faq-item">
+        <h3 class="faq-q">Czy prowadzisz treningi online w całej Polsce?</h3>
+        <p class="faq-a">Tak. Treningi online prowadzę dla klientów z dowolnego miejsca w Polsce, już od 139 zł miesięcznie. Otrzymujesz ode mnie spersonalizowany plan treningowy, stały kontakt oraz regularną analizę postępów, dzięki czemu trenujesz skutecznie w domu lub na dowolnej siłowni.</p>
+      </article>
+
+      <article class="faq-item">
+        <h3 class="faq-q">Czym jest trening longevity (długowieczność)?</h3>
+        <p class="faq-a">To trening nastawiony na zdrowie i sprawność za 10, 20 i 30 lat, a nie na szybką metamorfozę. Według badań nad sarkopenią po 30. roku życia tracimy od 3 do 8% masy mięśniowej na dekadę, dlatego buduję z Tobą siłę i masę mięśniową, które działają jak polisa na samodzielne, aktywne życie. Mięśnie wpływają na:</p>
+        <ul>
+          <li>metabolizm i gospodarkę cukrową,</li>
+          <li>równowagę i odporność na upadki oraz kontuzje,</li>
+          <li>samodzielność i jakość życia w starszym wieku.</li>
+        </ul>
+      </article>
+
+      <article class="faq-item">
+        <h3 class="faq-q">Jak zacząć współpracę z trenerem?</h3>
+        <p class="faq-a">Najlepiej zacząć od umówienia się na konsultację. Zadzwoń pod numer 502 338 373, napisz na szymtrener@gmail.com lub wypełnij formularz na stronie. Porozmawiamy o Twoim wieku, celu i poziomie aktywności, a następnie dobiorę dla Ciebie odpowiednią formę treningu – stacjonarnie w Łodzi lub online.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─── KONTAKT ─── -->
+<section id="kontakt" class="section">
+  <div class="container">
+    <div data-reveal style="margin-bottom:56px;">
+      <div class="eyebrow">Kontakt</div>
+      <h2 class="headline">Zacznijmy <em>rozmawiać</em></h2>
+      <p class="lead">Zadzwoń, napisz lub wypełnij formularz. Porozmawiamy o tym, czego szukasz i sprawdzimy, czy możemy razem pracować.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div data-reveal>
+        <div class="contact-info-item">
+          <div class="ic">📞</div>
+          <div><div class="ci-label">Telefon</div><div class="ci-value"><a href="tel:+48502338373">502 338 373</a></div></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ic">✉️</div>
+          <div><div class="ci-label">E-mail</div><div class="ci-value"><a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a></div></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ic">📍</div>
+          <div><div class="ci-label">Adres studia</div><div class="ci-value">Armii Krajowej 32a<br><span style="font-size:var(--fs-sm); color:var(--text-muted);">94-046 Łódź, Retkinia</span></div></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="ic">🕐</div>
+          <div><div class="ci-label">Godziny pracy</div><div class="ci-value">Pon – Sob · elastyczne godziny</div></div>
+        </div>
+        <div class="offer-note" style="margin-top:28px;">
+          <p>🌐 <strong>Prowadzenie online</strong> dostępne dla klientów z całej Polski.<br>Bez znaczenia, gdzie jesteś – możemy razem pracować.</p>
+        </div>
+      </div>
+
+      <div data-reveal>
+        <form class="contact-form" data-endpoint="/api/zgloszenia/kontakt" onsubmit="handleFormSubmit(event)">
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Imię i nazwisko</label>
+              <input type="text" id="name" name="name" placeholder="Jan Kowalski" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Telefon</label>
+              <input type="tel" id="phone" name="phone" placeholder="500 000 000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Adres e-mail</label>
+            <input type="email" id="email" name="email" placeholder="jan@email.pl" required>
+          </div>
+          <div class="form-group">
+            <label for="service">Co Cię interesuje?</label>
+            <select id="service" name="interest">
+              <option value="">Wybierz opcję</option>
+              <option>Treningi personalne stacjonarne – Łódź</option>
+              <option>Treningi dla par – stacjonarnie</option>
+              <option>Prowadzenie online</option>
+              <option>Jadłospis dietetyczny</option>
+              <option>Rozmowa wstępna</option>
+              <option>Inne</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Napisz kilka słów o sobie</label>
+            <textarea id="message" name="message" placeholder="Np. wiek, cel, aktualny poziom aktywności, pytania…"></textarea>
+          </div>
+          <label class="form-consent">
+            <input type="checkbox" id="consent" name="consent" required>
+            <span class="consent-text">Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w formularzu w celu udzielenia odpowiedzi na zapytanie, zgodnie z <a href="/polityka-prywatnosci">Polityką prywatności</a>.</span>
+          </label>
+          <button type="submit" class="btn btn-primary">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            Wyślij wiadomość
+          </button>
+          <div class="form-success" id="form-success">✅ Wiadomość wysłana! Odezwę się najszybciej jak mogę.</div>
+          <div class="form-error" id="form-error">⚠️ Coś poszło nie tak. Zadzwoń pod <a href="tel:+48502338373">502 338 373</a> lub napisz na <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>
