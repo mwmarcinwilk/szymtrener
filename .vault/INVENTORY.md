@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
 > AUTO-GENEROWANY 2026-08-27 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 43 · Endpointy: 48 · Metody: 662 · Front: 0
+> Beany: 43 · Endpointy: 48 · Metody: 670 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -179,8 +179,18 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [pub] getCreatedAt(): Instant  :46
 
 ### AdminUserDetailsService  (src/main/java/pl/szymtrener/admin/AdminUserDetailsService.java)
-- [pub] loadUserByUsername(String username): UserDetails  :17
-- [   ] empty(): InMemoryUserDetailsManager  :28
+- [pub] loadUserByUsername(String username): UserDetails  :43
+- [prv] matchesEnvironment(String login): boolean  :64
+- [prv] trim(String value): String  :73
+
+### AdminUserDetailsServiceTest  (src/test/java/pl/szymtrener/admin/AdminUserDetailsServiceTest.java)
+- [prv] service(String envEmail, String envPassword, AdminUser... inDatabase): AdminUserDetailsService  :31
+- [prv] account(String email, String password): AdminUser  :49
+- [   ] environmentWinsOverDatabase(): void  :59
+- [   ] environmentWorksWithEmptyDatabase(): void  :71
+- [   ] loginIsTrimmedAndCaseInsensitive(): void  :82
+- [   ] fallsBackToDatabaseWhenEnvIncomplete(): void  :90
+- [   ] unknownAccountIsRejected(): void  :101
 
 ### AdminUserRepository  (src/main/java/pl/szymtrener/admin/AdminUserRepository.java)
 - [   ] findByEmailIgnoreCase(String email): Optional<AdminUser>  :7
