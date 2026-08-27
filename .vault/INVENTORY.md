@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
 > AUTO-GENEROWANY 2026-08-27 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 43 · Endpointy: 48 · Metody: 661 · Front: 0
+> Beany: 43 · Endpointy: 48 · Metody: 662 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -102,9 +102,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### AdminAccountInitializer  (src/main/java/pl/szymtrener/admin/AdminAccountInitializer.java)
 - [   ] syncAdminAccount(AdminUserRepository repo, PasswordEncoder encoder, AppProperties props, SettingsService settings): ApplicationRunner  :41
-- [prv] resolveAccount(AdminUserRepository repo, String email): AdminUser  :97
-- [prv] fingerprint(String email, String password): String  :105
-- [prv] trim(String value): String  :115
+- [prv] resolveAccount(AdminUserRepository repo, String email): AdminUser  :104
+- [prv] addresses(AdminUserRepository repo): String  :112
+- [prv] fingerprint(String email, String password): String  :119
+- [prv] trim(String value): String  :129
 
 ### AdminAccountSyncIT  (src/test/java/pl/szymtrener/admin/AdminAccountSyncIT.java)
 - [prv] sync(String email, String password): void  :29
