@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
 > AUTO-GENEROWANY 2026-08-27 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 42 · Endpointy: 48 · Metody: 658 · Front: 0
+> Beany: 43 · Endpointy: 48 · Metody: 661 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -14,6 +14,7 @@
 @Component      EditorHtml — src/main/java/pl/szymtrener/content/EditorHtml.java
 @Component      HtmlSanitizer — src/main/java/pl/szymtrener/content/HtmlSanitizer.java
 @Component      LegacyDocConverter — src/main/java/pl/szymtrener/docimport/LegacyDocConverter.java
+@Component      LoginAuditListener — src/main/java/pl/szymtrener/admin/LoginAuditListener.java
 @Component      PostPageModel — src/main/java/pl/szymtrener/web/PostPageModel.java
 @Component      PublishScheduler — src/main/java/pl/szymtrener/scheduler/PublishScheduler.java
 @Component      RateLimiter — src/main/java/pl/szymtrener/submission/RateLimiter.java
@@ -427,6 +428,11 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### LegacyDocConverter  (src/main/java/pl/szymtrener/docimport/LegacyDocConverter.java)
 - [pub] convert(InputStream in): ImportResult  :22
+
+### LoginAuditListener  (src/main/java/pl/szymtrener/admin/LoginAuditListener.java)
+- [pub] onSuccess(AuthenticationSuccessEvent event): void  :34
+- [pub] onFailure(AbstractAuthenticationFailureEvent event): void  :39
+- [prv] existingAddresses(): String  :54
 
 ### MailConfig  (src/main/java/pl/szymtrener/config/MailConfig.java)
 - [   ] reportConfiguration(): void  :46
