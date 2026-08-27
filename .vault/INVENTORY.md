@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
 > AUTO-GENEROWANY 2026-08-27 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 43 · Endpointy: 48 · Metody: 670 · Front: 0
+> Beany: 44 · Endpointy: 51 · Metody: 674 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -29,6 +29,7 @@
 @Controller     AdminStatsController — src/main/java/pl/szymtrener/admin/AdminStatsController.java
 @Controller     AdminSubmissionController — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 @Controller     AdminTraineeController — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+@Controller     AdminUsersController — src/main/java/pl/szymtrener/admin/AdminUsersController.java
 @Controller     BlogController — src/main/java/pl/szymtrener/web/BlogController.java
 @Controller     HomeController — src/main/java/pl/szymtrener/web/HomeController.java
 @RestController AdminApiController — src/main/java/pl/szymtrener/admin/AdminApiController.java
@@ -51,6 +52,7 @@
 ## Endpointy REST
 GET     /                                             HomeController.home() — src/main/java/pl/szymtrener/web/HomeController.java
 GET     /admin                                        AdminController.dashboard() — src/main/java/pl/szymtrener/admin/AdminController.java
+GET     /admin/administratorzy                        AdminUsersController.list() — src/main/java/pl/szymtrener/admin/AdminUsersController.java
 GET     /admin/api/media                              AdminApiController.list() — src/main/java/pl/szymtrener/admin/AdminApiController.java
 GET     /admin/haslo                                  AdminController.passwordForm() — src/main/java/pl/szymtrener/admin/AdminController.java
 GET     /admin/klienci                                AdminTraineeController.list() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
@@ -79,6 +81,8 @@ GET     /polityka-prywatnosci                         HomeController.privacy() �
 GET     /robots.txt                                   SeoController.robots() — src/main/java/pl/szymtrener/seo/SeoController.java
 GET     /sitemap.xml                                  SeoController.sitemap() — src/main/java/pl/szymtrener/seo/SeoController.java
 GET     /{key}.txt                                    SeoController.indexNowKey() — src/main/java/pl/szymtrener/seo/SeoController.java
+POST    /admin/administratorzy                        AdminUsersController.add() — src/main/java/pl/szymtrener/admin/AdminUsersController.java
+POST    /admin/administratorzy/{id}/usun              AdminUsersController.delete() — src/main/java/pl/szymtrener/admin/AdminUsersController.java
 POST    /admin/api/import-docx                        AdminApiController.importDocument() — src/main/java/pl/szymtrener/admin/AdminApiController.java
 POST    /admin/api/media                              AdminApiController.upload() — src/main/java/pl/szymtrener/admin/AdminApiController.java
 POST    /admin/haslo                                  AdminController.changePassword() — src/main/java/pl/szymtrener/admin/AdminController.java
@@ -101,19 +105,20 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 ## Metody (per klasa)
 
 ### AdminAccountInitializer  (src/main/java/pl/szymtrener/admin/AdminAccountInitializer.java)
-- [   ] syncAdminAccount(AdminUserRepository repo, PasswordEncoder encoder, AppProperties props, SettingsService settings): ApplicationRunner  :41
-- [prv] resolveAccount(AdminUserRepository repo, String email): AdminUser  :111
-- [prv] addresses(AdminUserRepository repo): String  :119
-- [prv] fingerprint(String email, String password): String  :126
-- [prv] trim(String value): String  :136
+- [   ] syncAdminAccount(AdminUserRepository repo, PasswordEncoder encoder, AppProperties props, SettingsService settings, ConfigurableEnvironment environment): ApplicationRunner  :43
+- [prv] resolveAccount(AdminUserRepository repo, String email): AdminUser  :115
+- [prv] sourceOf(ConfigurableEnvironment environment, String name): String  :127
+- [prv] addresses(AdminUserRepository repo): String  :135
+- [prv] fingerprint(String email, String password): String  :142
+- [prv] trim(String value): String  :152
 
 ### AdminAccountSyncIT  (src/test/java/pl/szymtrener/admin/AdminAccountSyncIT.java)
-- [prv] sync(String email, String password): void  :29
-- [   ] clean(): void  :40
-- [   ] createsAccountOnFirstRun(): void  :47
-- [   ] updatesPassword(): void  :57
-- [   ] renamesInsteadOfDuplicating(): void  :69
-- [   ] panelPasswordSurvivesRestart(): void  :80
+- [prv] sync(String email, String password): void  :30
+- [   ] clean(): void  :41
+- [   ] createsAccountOnFirstRun(): void  :48
+- [   ] updatesPassword(): void  :58
+- [   ] renamesInsteadOfDuplicating(): void  :70
+- [   ] panelPasswordSurvivesRestart(): void  :81
 
 ### AdminApiController  (src/main/java/pl/szymtrener/admin/AdminApiController.java)
 - [prv] describe(MediaFile file): Map<String, Object>  :62
@@ -194,6 +199,11 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### AdminUserRepository  (src/main/java/pl/szymtrener/admin/AdminUserRepository.java)
 - [   ] findByEmailIgnoreCase(String email): Optional<AdminUser>  :7
+
+### AdminUsersController  (src/main/java/pl/szymtrener/admin/AdminUsersController.java)
+- [pub] list(Model model, Authentication auth): String  :49
+- [pub] delete(@PathVariable Long id, Authentication auth, RedirectAttributes flash): String  :88
+- [prv] fill(Model model, Authentication auth): void  :108
 
 ### AiReadinessAnalyzer  (src/main/java/pl/szymtrener/seo/AiReadinessAnalyzer.java)
 - [pub] analyse(Post post): Report  :37

@@ -22,6 +22,7 @@
 
 ## Panel
 - `AdminAccountInitializer.syncAdminAccount(...)` — admin/ — trzyma konto zgodne z `ADMIN_EMAIL`/`ADMIN_PASSWORD`: zmiana zmiennej i restart AKTUALIZUJĄ konto (zmiana adresu zamiast duplikatu). Hasło ustawione w panelu przeżywa restart, bo porównywany jest odcisk SHA-256 ostatnio zastosowanej pary (`app_setting`, `admin.env.fingerprint`). Pilnuje tego `AdminAccountSyncIT` — cztery scenariusze, w tym „panel wygrywa, gdy env bez zmian".
+- `AdminUsersController` — admin/ — `/admin/administratorzy`: dodawanie i usuwanie kont z dostępem do panelu (link z Ustawień). Trzy blokady: nie da się usunąć ostatniego konta, nie da się usunąć konta, na którym się pracuje, hasło min. 12 znaków. Konto ze zmiennych środowiskowych jest na tym ekranie pokazane jako awaryjne wejście z instrukcją wyłączenia — inaczej „usunąłem konto, a dalej działa" wyglądałoby jak awaria.
 - `AdminController.changePassword()` — admin/ — `GET/POST /admin/haslo`; min. 12 znaków, po zmianie unieważnia sesję.
 - `AdminPostController.preview(id)` — admin/ — `GET /admin/posty/{id}/podglad`: szkic w wyglądzie strony, z noindex.
 - `AdminStatsController` — admin/ — `/admin/statystyki?dni=`; KPI z trendem, wykres CSS, top ścieżki, źródła, urządzenia i **wizyty botów AI**.

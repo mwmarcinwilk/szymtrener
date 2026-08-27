@@ -9,6 +9,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.szymtrener.PostgresTestBase;
 import pl.szymtrener.config.AppProperties;
+import org.springframework.core.env.StandardEnvironment;
 import pl.szymtrener.settings.SettingsService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +33,7 @@ class AdminAccountSyncIT extends PostgresTestBase {
                 new AppProperties.Admin(email, password),
                 props.media(), props.indexnow(), props.analytics());
         ApplicationRunner runner = new AdminAccountInitializer()
-                .syncAdminAccount(accounts, encoder, custom, settings);
+                .syncAdminAccount(accounts, encoder, custom, settings, new StandardEnvironment());
         runner.run((ApplicationArguments) null);
     }
 
