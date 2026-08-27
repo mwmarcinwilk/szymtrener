@@ -36,6 +36,9 @@
     <div class="side-group">Analiza</div>
     <a class="side-link" th:classappend="${active == 'stats'} ? ' on'" href="/admin/statystyki"><svg><use href="#i-chart"/></svg>Statystyki</a>
     <a class="side-link" th:classappend="${active == 'settings'} ? ' on'" href="/admin/ustawienia"><svg><use href="#i-cog"/></svg>Ustawienia</a>
+    <!--/* Pozycji nie ma w makiecie, ale zarządzanie kontami musi być widoczne —
+           schowane w karcie „Hasło" było nie do znalezienia. */-->
+    <a class="side-link" th:classappend="${active == 'admins'} ? ' on'" href="/admin/administratorzy"><svg><use href="#i-users"/></svg>Administratorzy</a>
   </nav>
   <div class="side-foot">
     <div class="avatar">SD</div>
