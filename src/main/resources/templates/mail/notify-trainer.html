@@ -24,6 +24,17 @@
         <div style="font-size:13px;color:#5A6B7A;margin-bottom:18px"
              th:text="${s.type.label()} + ' · ' + ${s.createdLabel}">Formularz · data</div>
 
+        <!--/* Brief v2.2 pkt 3: z ktorej sciezki i z ktorego pakietu przyszlo zgloszenie.
+               Nad tabela pol, bo to informacja, ktora decyduje o tresci rozmowy. */-->
+        <table th:if="${s.offerContext() != null}" role="presentation" width="100%" cellpadding="0" cellspacing="0"
+               style="margin:0 0 18px;background:#EAF7F1;border-left:3px solid #1D9E75;border-radius:6px">
+          <tr><td style="padding:11px 14px">
+            <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#1D9E75;font-weight:bold;margin-bottom:3px">
+              Kliknięte CTA</div>
+            <div style="font-size:14px;font-weight:bold" th:text="${s.offerContext()}">Ścieżka</div>
+          </td></tr>
+        </table>
+
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;line-height:1.6">
           <!--/* Puste pola pomijamy: ankieta kontaktowa ma inny zestaw niż zgłoszenie online. */-->
           <tr th:if="${s.email != null}">

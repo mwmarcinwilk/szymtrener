@@ -485,6 +485,118 @@ body.menu-open .mobile-menu a:nth-child(5) { transition-delay: .43s; }
 .btn-online-ghost { background: transparent; color: var(--o-navy); border: 1.5px solid rgba(26,43,60,.28); }
 .btn-online-ghost:hover { border-color: var(--o-navy); background: var(--o-navy); color: #fff; }
 
+/* ─── DWIE ŚCIEŻKI OFERTY (brief 2.1 / 2.2) ─── */
+/* Ścieżka 2 jest produktem głównym, więc dostaje ciemne tło i szerszą kolumnę —
+   dwie równorzędne karty kazałyby klientowi wybierać między nimi jak z menu. */
+.paths { display: grid; grid-template-columns: 1fr 1.15fr; gap: 22px; margin-top: clamp(36px, 5vw, 54px); align-items: stretch; }
+.path { display: flex; flex-direction: column; gap: 14px; border-radius: var(--radius-lg); padding: clamp(26px, 3.4vw, 38px); }
+.path-1 { background: var(--o-grey); border: 1px solid rgba(26,43,60,.12); }
+.path-2 { background: var(--o-navy); color: #fff; border: 2px solid var(--o-mint); }
+.path-badge { align-self: flex-start; background: var(--o-mint); color: #fff; font-size: var(--fs-xs); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 6px 14px; border-radius: 99px; }
+.path-badge.alt { background: rgba(78,203,163,.16); color: var(--mint); }
+.path h3 { font-size: clamp(1.25rem, 2.4vw, 1.65rem); font-weight: 900; letter-spacing: -.02em; line-height: 1.15; }
+.path-1 h3 { color: var(--o-navy); }
+.path-sub { font-size: var(--fs-md); line-height: 1.6; color: #4A5B6B; }
+.path-2 .path-sub { color: var(--off-white); }
+.path-list { display: grid; gap: 11px; margin-top: 4px; }
+.path-list li { display: grid; grid-template-columns: auto 1fr; gap: 11px; font-size: var(--fs-sm); line-height: 1.55; color: #4A5B6B; }
+.path-2 .path-list li { color: var(--off-white); }
+.path-list li::before { content: ''; width: 17px; height: 17px; margin-top: 2px; border-radius: 50%; background: rgba(29,158,117,.14) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231D9E75' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") center/11px no-repeat; }
+.path-2 .path-list li::before { background-color: rgba(78,203,163,.18); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ECBA3' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E"); }
+.path-price { display: flex; align-items: baseline; gap: 9px; margin-top: 6px; }
+.pp-amount { font-size: clamp(1.9rem, 3.4vw, 2.4rem); font-weight: 900; color: var(--o-navy); line-height: 1; }
+.pp-unit { font-size: var(--fs-sm); color: #6C7C8B; font-weight: 600; }
+/* Wyróżnik ze zdania z briefu — ma być widoczny, nie drobnym drukiem. */
+.path-hook { font-size: var(--fs-md); font-weight: 700; color: var(--o-mint); line-height: 1.55; }
+.path .btn { margin-top: auto; align-self: flex-start; }
+
+/* ─── PAKIETY ─── */
+.packs-wrap { margin-top: clamp(44px, 6vw, 68px); scroll-margin-top: 96px; }
+.packs-title { font-size: clamp(1.4rem, 2.8vw, 1.9rem); font-weight: 900; color: var(--o-navy); letter-spacing: -.02em; margin-bottom: 22px; }
+.packs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; }
+/* Karty ciągną się do równej wysokości, a CTA jest dosunięte do dołu przez
+   margin-top:auto — dzięki temu ukrycie badge’a czy licznika miejsc po zamknięciu
+   naboru nie zostawia dziury w środku karty (brief 2.4). */
+.pack { display: flex; flex-direction: column; gap: 7px; background: #fff; border: 1px solid rgba(26,43,60,.14); border-radius: var(--radius-lg); padding: clamp(22px, 2.6vw, 30px); }
+.pack.hi { border: 2px solid var(--o-mint); box-shadow: 0 18px 44px rgba(29,158,117,.14); }
+.pack-badge { align-self: flex-start; background: var(--o-mint); color: #fff; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: 5px 12px; border-radius: 99px; margin-bottom: 4px; }
+.pack h4 { font-size: var(--fs-xl); font-weight: 900; color: var(--o-navy); letter-spacing: -.02em; }
+.pack-dur { font-size: var(--fs-sm); color: #6C7C8B; font-weight: 600; }
+.pack-price { font-size: clamp(1.8rem, 3.2vw, 2.3rem); font-weight: 900; color: var(--o-navy); line-height: 1.05; margin-top: 8px; }
+.pack-monthly { font-size: var(--fs-md); color: #6C7C8B; font-weight: 600; }
+.pack-target { font-size: var(--fs-sm); color: #777777; line-height: 1.5; margin-top: 8px; }
+.pack-seats { font-size: var(--fs-sm); color: var(--o-mint); font-weight: 800; line-height: 1.5; }
+.pack-cond { font-size: var(--fs-xs); color: #777777; line-height: 1.55; }
+.pack .btn { margin-top: 18px; width: 100%; justify-content: center; }
+.packs-cta { margin-top: 30px; text-align: center; }
+.packs-cta p { font-size: var(--fs-sm); color: #6C7C8B; margin-top: 12px; }
+
+/* ─── OPINIE ─── */
+.reviews { --o-navy: #1A2B3C; --o-mint: #1D9E75; --o-grey: #F5F5F5; background: var(--o-grey); color: var(--o-navy); border-bottom: 1px solid rgba(26,43,60,.12); }
+.rv-head { max-width: 720px; margin-bottom: 34px; }
+.rv-head h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; letter-spacing: -.025em; color: var(--o-navy); line-height: 1.12; }
+/* auto-fit: sekcja wygląda tak samo dobrze przy jednej opinii i przy sześciu
+   (brief 5.3) — nie ma potrzeby przebudowy przy dokładaniu kolejnych. */
+.rv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; align-items: start; }
+.rv { background: #fff; border: 1px solid rgba(26,43,60,.12); border-radius: var(--radius-lg); padding: clamp(24px, 3vw, 32px); }
+.rv-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.rv-ini { width: 46px; height: 46px; flex: 0 0 46px; border-radius: 50%; background: var(--o-mint); color: #fff; display: grid; place-content: center; font-size: var(--fs-lg); font-weight: 900; }
+.rv-name { font-size: var(--fs-md); font-weight: 800; color: var(--o-navy); }
+.rv-sig { font-size: var(--fs-sm); font-weight: 700; color: var(--o-mint); margin-top: 2px; }
+.rv-body { font-size: var(--fs-md); line-height: 1.75; color: #4A5B6B; }
+
+/* Na telefonie opinie jadą poziomo (brief 5.3: karuzela na mobile, siatka na
+   desktopie) — przy sześciu opiniach kolumna miałaby kilka ekranów wysokości.
+   Sam CSS: scroll-snap zamiast biblioteki. :has() włącza to dopiero od drugiej
+   opinii — pojedyncza karta w przewijanym pasie wyglądałaby jak usterka. */
+@media (max-width: 720px) {
+  .rv-grid:has(> :nth-child(2)) {
+    display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
+    margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter);
+    padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .rv-grid:has(> :nth-child(2))::-webkit-scrollbar { display: none; }
+  .rv-grid:has(> :nth-child(2)) > .rv { flex: 0 0 min(86%, 380px); scroll-snap-align: start; }
+}
+
+/* ─── FAQ OFERTY ─── */
+.ofaq { --o-navy: #1A2B3C; --o-mint: #1D9E75; background: var(--white); color: var(--o-navy); border-bottom: 1px solid rgba(26,43,60,.12); }
+.ofaq-head { max-width: 720px; margin-bottom: 30px; }
+.ofaq-head h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; letter-spacing: -.025em; color: var(--o-navy); }
+.ofaq-list { display: grid; gap: 11px; }
+.ofaq-item { border: 1px solid rgba(26,43,60,.14); border-radius: var(--radius); background: #fff; overflow: hidden; }
+.ofaq-item summary { cursor: pointer; list-style: none; padding: 20px clamp(20px, 3vw, 26px); font-size: var(--fs-lg); font-weight: 800; color: var(--o-navy); line-height: 1.35; display: flex; align-items: center; gap: 14px; min-height: 62px; }
+.ofaq-item summary::-webkit-details-marker { display: none; }
+.ofaq-item summary::after { content: '+'; margin-left: auto; flex: 0 0 auto; font-size: 1.5rem; font-weight: 400; color: var(--o-mint); line-height: 1; transition: transform .25s var(--ease); }
+.ofaq-item[open] summary::after { transform: rotate(45deg); }
+.ofaq-item:hover { border-color: rgba(29,158,117,.5); }
+.ofaq-a { padding: 0 clamp(20px, 3vw, 26px) 22px; font-size: var(--fs-md); line-height: 1.75; color: #4A5B6B; white-space: pre-line; }
+
+/* ─── WYBRANA ŚCIEŻKA W FORMULARZU ─── */
+.of-pick { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: rgba(29,158,117,.09); border: 1px solid rgba(29,158,117,.28); border-radius: 12px; padding: 12px 16px; }
+.of-pick-label { font-size: var(--fs-xs); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--o-mint); }
+.of-pick-value { font-size: var(--fs-sm); font-weight: 700; color: var(--o-navy); }
+.of-pick-clear { margin-left: auto; background: none; border: none; font: inherit; font-size: var(--fs-xs); font-weight: 700; color: #6C7C8B; text-decoration: underline; cursor: pointer; padding: 4px; }
+.of-pick-clear:hover { color: var(--o-navy); }
+
+/* ─── STICKY CTA (tylko telefon) ─── */
+/* Główna ścieżka konwersji na mobile (brief 2.6): pasek pojawia się dopiero
+   w sekcji oferty i znika przy formularzu, żeby nie zasłaniać jego pól. */
+.sticky-cta { display: none; }
+@media (max-width: 900px) {
+  .sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; display: block; padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.96); backdrop-filter: blur(10px); border-top: 1px solid rgba(26,43,60,.14); transform: translateY(115%); transition: transform .3s var(--ease-out); }
+  .sticky-cta.on { transform: translateY(0); }
+  .sticky-cta .btn { width: 100%; justify-content: center; background: #1D9E75; color: #fff; }
+}
+@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
+
+@media (max-width: 1000px) {
+  .paths { grid-template-columns: 1fr; }
+  .packs { grid-template-columns: 1fr; }
+  /* Wyróżniony pakiet ma być na telefonie PIERWSZY, nie ostatni (brief 2.3). */
+  .pack.hi { order: -1; }
+}
+
 /* formularz online */
 #online-form { --o-navy: #1A2B3C; --o-mint: #1D9E75; background: var(--o-grey, #F5F5F5); color: var(--o-navy); border-bottom: 1px solid rgba(26,43,60,.12); }
 .of-wrap { max-width: 780px; margin: 0 auto; }

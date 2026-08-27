@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('offer')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+
+      <div class="page-h">
+        <div>
+          <div class="top-crumb">Oferta online / Opinia</div>
+          <h2 th:text="${op.name}">Kacper</h2>
+        </div>
+        <div class="r">
+          <a class="btn btn-o" href="/admin/oferta"><svg><use href="#i-back"/></svg>Wróć</a>
+        </div>
+      </div>
+
+      <form method="post" th:action="@{/admin/oferta/opinie/{id}(id=${op.id})}">
+        <div class="grid-15-1">
+          <div class="card">
+            <div class="card-h"><h2>Treść opinii</h2></div>
+            <div class="card-b">
+              <div class="f-row">
+                <div class="fld" style="flex:1">
+                  <label for="name">Imię</label>
+                  <input type="text" id="name" name="name" th:value="${op.name}" required>
+                </div>
+                <div class="fld" style="flex:1">
+                  <label for="city">Miasto</label>
+                  <input type="text" id="city" name="city" th:value="${op.city}" placeholder="np. Łódź">
+                </div>
+              </div>
+
+              <!--/* Podpis pod imieniem to osobna warstwa dowodu (brief 5.1). Oba pola
+                     mogą zostać puste — wtedy podpis się nie renderuje i layout stoi. */-->
+              <div class="f-row" style="margin-top:14px">
+                <div class="fld" style="flex:1">
+                  <label for="cooperationFormat">Format współpracy</label>
+                  <input type="text" id="cooperationFormat" name="cooperationFormat"
+                         th:value="${op.cooperationFormat}" placeholder="np. prowadzenie online">
+                </div>
+                <div class="fld" style="flex:1">
+                  <label for="durationLabel">Czas współpracy</label>
+                  <input type="text" id="durationLabel" name="durationLabel"
+                         th:value="${op.durationLabel}" placeholder="np. 1,5 roku współpracy">
+                </div>
+              </div>
+              <div class="hint" style="margin:-4px 0 14px;font-size:10.5px;color:var(--ink-3)">
+                <span>Oba pola mogą zostać puste. Wtedy podpis pod imieniem się nie pokaże.</span>
+              </div>
+
+              <div class="fld">
+                <label for="body">Opinia</label>
+                <textarea id="body" name="body" rows="9" th:text="${op.body}" required></textarea>
+                <div class="hint"><span>Publikuj dokładnie w brzmieniu, na które klient wyraził zgodę</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Publikacja</h2></div>
+            <div class="card-b">
+              <div class="fld">
+                <label for="sortOrder">Kolejność</label>
+                <input type="number" id="sortOrder" name="sortOrder" th:value="${op.sortOrder}" min="0">
+                <div class="hint"><span>Niższa liczba, wyżej w sekcji</span></div>
+              </div>
+              <div class="fld">
+                <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                  <input type="checkbox" name="visible" value="true" th:checked="${op.visible}" style="width:auto">
+                  Widoczna na stronie
+                </label>
+              </div>
+              <div class="qa" style="padding-top:4px">
+                <div class="q">Podgląd podpisu</div>
+                <div class="a" style="font-size:13.5px;color:var(--mint-2);font-weight:700"
+                     th:text="${op.signature()} ?: '— brak podpisu —'">prowadzenie online · 1,5 roku</div>
+              </div>
+              <button class="btn btn-p" type="submit" style="width:100%;justify-content:center">
+                <svg><use href="#i-check"/></svg>Zapisz opinię
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

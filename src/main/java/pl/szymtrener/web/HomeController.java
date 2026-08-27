@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import pl.szymtrener.config.AppProperties;
 import pl.szymtrener.content.PostRepository;
+import pl.szymtrener.offer.OnlineOfferService;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -18,10 +19,12 @@ public class HomeController {
 
     private final PostRepository posts;
     private final AppProperties props;
+    private final OnlineOfferService offer;
 
-    public HomeController(PostRepository posts, AppProperties props) {
+    public HomeController(PostRepository posts, AppProperties props, OnlineOfferService offer) {
         this.posts = posts;
         this.props = props;
+        this.offer = offer;
     }
 
     @GetMapping("/")
@@ -36,6 +39,16 @@ public class HomeController {
         model.addAttribute("lastModifiedLabel", PL.format(modified));
         model.addAttribute("year", Year.now(ZONE).getValue());
         model.addAttribute("canonical", props.absolute("/"));
+
+        // Oferta online: ceny, opinie i FAQ pochodza z bazy, zeby Szymon mogl je
+        // zmieniac z panelu. Pusta lista = sekcja chowa sie w calosci, bez placeholdera.
+        model.addAttribute("packages", offer.packages());
+        model.addAttribute("consult", offer.consultation());
+        model.addAttribute("testimonials", offer.testimonials());
+        model.addAttribute("onlineFaq", offer.faq());
+        // Cena w danych strukturalnych musi zgadzac sie z ta na stronie — rozbieznosc
+        // jest gorsza niz jej brak.
+        model.addAttribute("lowestMonthly", offer.lowestMonthly());
         return "index";
     }
 

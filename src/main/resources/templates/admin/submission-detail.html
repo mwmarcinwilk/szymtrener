@@ -42,6 +42,11 @@
             <div class="card-b" style="padding-top:6px">
               <!--/* Puste pola pomijamy zamiast pokazywać rząd myślników: ankieta
                      kontaktowa ma inny zestaw pól niż zgłoszenie na prowadzenie. */-->
+              <!--/* Kliknięte CTA jako pierwsze — to ono mówi, o czym będzie rozmowa. */-->
+              <div class="qa" th:if="${item.offerContext() != null}">
+                <div class="q">Kliknięte CTA</div>
+                <div class="a" style="color:var(--mint-2);font-weight:700" th:text="${item.offerContext()}">Ścieżka 2</div>
+              </div>
               <div class="qa" th:if="${item.city != null}">
                 <div class="q">Skąd jesteś?</div><div class="a" th:text="${item.city}">Łódź</div>
               </div>

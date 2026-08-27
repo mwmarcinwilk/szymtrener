@@ -84,6 +84,76 @@ public class AdminUsersController {
         return "redirect:/admin/administratorzy";
     }
 
+    @GetMapping("/admin/administratorzy/{id}")
+    public String edit(@PathVariable Long id, Model model, Authentication auth) {
+        AdminUser account = accounts.findById(id)
+                .orElseThrow(() -> new NotFoundException("Nie ma konta " + id));
+        model.addAttribute("account", account);
+        model.addAttribute("self", auth != null && account.getEmail().equalsIgnoreCase(auth.getName()));
+        model.addAttribute("minLength", MIN_PASSWORD_LENGTH);
+        model.addAttribute("title", "Konto: " + account.getEmail());
+        return "admin/admin-edit";
+    }
+
+    /**
+     * Zapis zmian. Haslo jest opcjonalne — puste pole zostawia dotychczasowe,
+     * bo edycja nazwy nie moze wymuszac ustawiania hasla od nowa.
+     */
+    @PostMapping("/admin/administratorzy/{id}")
+    public String update(@PathVariable Long id,
+                         @RequestParam String email,
+                         @RequestParam(required = false) String displayName,
+                         @RequestParam(required = false) String password,
+                         @RequestParam(defaultValue = "false") boolean enabled,
+                         Authentication auth,
+                         RedirectAttributes flash) {
+
+        AdminUser account = accounts.findById(id)
+                .orElseThrow(() -> new NotFoundException("Nie ma konta " + id));
+        boolean self = auth != null && account.getEmail().equalsIgnoreCase(auth.getName());
+
+        String address = email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+        if (address.isBlank() || !address.contains("@")) {
+            flash.addFlashAttribute("error", "Podaj poprawny adres e-mail.");
+            return "redirect:/admin/administratorzy/" + id;
+        }
+        if (accounts.findByEmailIgnoreCase(address).filter(other -> !other.getId().equals(id)).isPresent()) {
+            flash.addFlashAttribute("error", "Inne konto ma juz adres " + address + ".");
+            return "redirect:/admin/administratorzy/" + id;
+        }
+        if (password != null && !password.isBlank() && password.length() < MIN_PASSWORD_LENGTH) {
+            flash.addFlashAttribute("error", "Hasło musi mieć co najmniej " + MIN_PASSWORD_LENGTH + " znaków.");
+            return "redirect:/admin/administratorzy/" + id;
+        }
+        // Wylaczenie wlasnego konta odcieloby od panelu w trakcie pracy.
+        if (!enabled && self) {
+            flash.addFlashAttribute("error", "Nie wyłączysz konta, na którym jesteś zalogowany.");
+            return "redirect:/admin/administratorzy/" + id;
+        }
+        if (!enabled && account.isEnabled() && accounts.findAll().stream().filter(AdminUser::isEnabled).count() <= 1) {
+            flash.addFlashAttribute("error", "To jedyne aktywne konto — najpierw włącz albo dodaj inne.");
+            return "redirect:/admin/administratorzy/" + id;
+        }
+
+        boolean emailChanged = !account.getEmail().equalsIgnoreCase(address);
+        account.setEmail(address);
+        account.setDisplayName(displayName == null || displayName.isBlank() ? address : displayName.trim());
+        account.setEnabled(enabled);
+        if (password != null && !password.isBlank()) {
+            account.setPasswordHash(encoder.encode(password));
+        }
+        accounts.save(account);
+        log.info("Zaktualizowano konto administratora: {}", address);
+
+        if (self && emailChanged) {
+            // Adres jest loginem — dotychczasowa sesja wskazuje na nieistniejacy juz login.
+            flash.addFlashAttribute("info", "Zapisano. Adres logowania się zmienił — zaloguj się ponownie.");
+            return "redirect:/admin/wyloguj";
+        }
+        flash.addFlashAttribute("info", "Zapisano zmiany w koncie " + address + ".");
+        return "redirect:/admin/administratorzy";
+    }
+
     @PostMapping("/admin/administratorzy/{id}/usun")
     public String delete(@PathVariable Long id, Authentication auth, RedirectAttributes flash) {
         AdminUser account = accounts.findById(id)

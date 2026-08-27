@@ -16,6 +16,10 @@ public final class FormRequests {
             @NotBlank @Size(max = 2000) String goal,
             @NotBlank @Size(max = 120) String equipment,
             @Size(max = 120) String source,
+            // Wypelniane ukrytymi polami przez CTA — klient tego nie wpisuje,
+            // wiec nie ma tu walidacji poza dlugoscia.
+            @Size(max = 40) String offerPath,
+            @Size(max = 60) String offerPackage,
             @AssertTrue(message = "Wymagana jest zgoda na przetwarzanie danych") boolean consent,
             Boolean botcheck
     ) {}

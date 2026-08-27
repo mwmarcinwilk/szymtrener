@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('admins')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+
+      <div class="page-h">
+        <div>
+          <div class="top-crumb">Administratorzy / Edycja</div>
+          <h2 th:text="${account.email}">adres@example.pl</h2>
+        </div>
+        <div class="r">
+          <a class="btn btn-o" href="/admin/administratorzy"><svg><use href="#i-back"/></svg>Wróć</a>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-h"><h2>Dane konta</h2></div>
+          <div class="card-b">
+            <form method="post" th:action="@{/admin/administratorzy/{id}(id=${account.id})}">
+              <div class="fld">
+                <label for="displayName">Nazwa wyświetlana</label>
+                <input type="text" id="displayName" name="displayName" th:value="${account.displayName}"
+                       placeholder="np. Szymon Domagała">
+                <div class="hint"><span>Widoczna w stopce menu panelu.</span></div>
+              </div>
+
+              <div class="fld">
+                <label for="email">Adres e-mail (login)</label>
+                <input type="email" id="email" name="email" th:value="${account.email}" required>
+                <div class="hint" th:if="${self}">
+                  <span>To Twój login — po zmianie zostaniesz wylogowany.</span>
+                </div>
+              </div>
+
+              <div class="fld">
+                <label for="password">Nowe hasło</label>
+                <input type="password" id="password" name="password" autocomplete="new-password"
+                       th:attr="minlength=${minLength}" placeholder="zostaw puste, żeby nie zmieniać">
+                <div class="hint">
+                  <span th:text="'Puste pole = bez zmian. Nowe hasło: min. ' + ${minLength} + ' znaków'">Puste = bez zmian</span>
+                </div>
+              </div>
+
+              <!--/* Własnego konta nie da się wyłączyć — pole zostaje widoczne,
+                     ale zablokowane, żeby powód był oczywisty. */-->
+              <div class="fld">
+                <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                  <input type="checkbox" name="enabled" value="true" th:checked="${account.enabled}"
+                         th:disabled="${self}" style="width:auto">
+                  Konto aktywne
+                </label>
+                <div class="hint" th:if="${self}">
+                  <span>Nie wyłączysz konta, na którym jesteś zalogowany.</span>
+                </div>
+              </div>
+              <!--/* Przy własnym koncie checkbox jest disabled, więc nie wysłałby wartości
+                     i zapis wyłączyłby konto. Stąd ukryte pole podtrzymujące stan. */-->
+              <input th:if="${self}" type="hidden" name="enabled" value="true">
+
+              <button class="btn btn-p" type="submit" style="width:100%;justify-content:center">
+                <svg><use href="#i-check"/></svg>Zapisz zmiany
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h2>O tym koncie</h2></div>
+          <div class="card-b">
+            <div class="qa" style="padding-top:0">
+              <div class="q">Status</div>
+              <div class="a">
+                <span class="bg" th:classappend="${account.enabled} ? 'pub' : 'arch'"
+                      th:text="${account.enabled} ? 'Aktywne' : 'Wyłączone'">Aktywne</span>
+              </div>
+            </div>
+            <div class="qa">
+              <div class="q">Rola</div>
+              <div class="a" style="font-size:13.5px" th:text="${account.role}">ADMIN</div>
+            </div>
+            <div class="qa" style="border:none" th:if="${self}">
+              <div class="q">Uwaga</div>
+              <div class="a" style="font-size:13.5px">To konto, na którym pracujesz w tej chwili.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

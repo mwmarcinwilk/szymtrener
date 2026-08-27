@@ -29,6 +29,10 @@
        class="cnt" th:with="n=${@adminNav.publishedPosts()}" th:if="${n > 0}" th:text="${n}">0</span></a>
     <a class="side-link" th:classappend="${active == 'editor'} ? ' on'" href="/admin/posty/nowy"><svg><use href="#i-edit"/></svg>Nowy post</a>
     <a class="side-link" th:classappend="${active == 'media'} ? ' on'" href="/admin/media"><svg><use href="#i-media"/></svg>Media</a>
+    <div class="side-group">Oferta</div>
+    <!--/* Ceny, opinie i FAQ w jednym miejscu — brief v2.2 wymaga, żeby dało się je
+           zmienić bez wdrożenia. */-->
+    <a class="side-link" th:classappend="${active == 'offer'} ? ' on'" href="/admin/oferta"><svg><use href="#i-list"/></svg>Oferta online</a>
     <div class="side-group">Klienci</div>
     <a class="side-link" th:classappend="${active == 'subs'} ? ' on'" href="/admin/zgloszenia"><svg><use href="#i-inbox"/></svg>Zgłoszenia<span
        class="cnt" th:with="n=${@adminNav.newSubmissions()}" th:if="${n > 0}" th:text="${n}">0</span></a>
@@ -41,9 +45,9 @@
     <a class="side-link" th:classappend="${active == 'admins'} ? ' on'" href="/admin/administratorzy"><svg><use href="#i-users"/></svg>Administratorzy</a>
   </nav>
   <div class="side-foot">
-    <div class="avatar">SD</div>
+    <div class="avatar" th:text="${@adminNav.currentInitials()}">SD</div>
     <div>
-      <div class="nm" sec:authentication="name" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">Szymon Domagała</div>
+      <div class="nm" th:text="${@adminNav.currentName()}">Szymon Domagała</div>
       <div class="rl"><a href="/admin/haslo" style="color:inherit">Hasło</a> ·
         <a href="/admin/wyloguj" style="color:inherit">Wyloguj</a></div>
     </div>

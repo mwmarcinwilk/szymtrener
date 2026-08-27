@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('offer')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+
+      <div class="page-h">
+        <div>
+          <div class="top-crumb">Oferta online / Pakiet</div>
+          <h2 th:text="${pkg.name}">Start</h2>
+        </div>
+        <div class="r">
+          <a class="btn btn-o" href="/admin/oferta"><svg><use href="#i-back"/></svg>Wróć</a>
+        </div>
+      </div>
+
+      <form method="post" th:action="@{/admin/oferta/pakiety/{id}(id=${pkg.id})}">
+        <div class="grid-15-1">
+          <div>
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-h"><h2>Nazwa i czas trwania</h2></div>
+              <div class="card-b">
+                <div class="f-row">
+                  <div class="fld" style="flex:1">
+                    <label for="name">Nazwa pakietu</label>
+                    <input type="text" id="name" name="name" th:value="${pkg.name}" required>
+                  </div>
+                  <div class="fld" style="flex:1">
+                    <label for="durationLabel">Czas trwania</label>
+                    <input type="text" id="durationLabel" name="durationLabel" th:value="${pkg.durationLabel}"
+                           required placeholder="np. 3 miesiące">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--/* Dwa poziomy cenowe — kluczowa zmiana briefu v2.2 względem 2.0.
+                   Kwoty wpisuje się w złotych; baza trzyma grosze. */-->
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-h">
+                <h2>Cena startowa</h2>
+                <span class="sub">obowiązuje w naborze założycielskim</span>
+              </div>
+              <div class="card-b">
+                <div class="f-row">
+                  <div class="fld" style="flex:1">
+                    <label for="currentTotal">Za cały pakiet</label>
+                    <input type="text" id="currentTotal" name="currentTotal" th:value="${currentTotal}" inputmode="decimal" required>
+                    <div class="hint"><span>w złotych, np. 597</span></div>
+                  </div>
+                  <div class="fld" style="flex:1">
+                    <label for="currentMonthly">Miesięcznie</label>
+                    <input type="text" id="currentMonthly" name="currentMonthly" th:value="${currentMonthly}" inputmode="decimal" required>
+                    <div class="hint"><span>kwota pokazywana pod ceną główną</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-h">
+                <h2>Cena docelowa</h2>
+                <span class="sub">cena przyszła, nigdy nie jest przekreślana</span>
+              </div>
+              <div class="card-b">
+                <div class="f-row">
+                  <div class="fld" style="flex:1">
+                    <label for="targetTotal">Za cały pakiet</label>
+                    <input type="text" id="targetTotal" name="targetTotal" th:value="${targetTotal}" inputmode="decimal" required>
+                  </div>
+                  <div class="fld" style="flex:1">
+                    <label for="targetMonthly">Miesięcznie</label>
+                    <input type="text" id="targetMonthly" name="targetMonthly" th:value="${targetMonthly}" inputmode="decimal" required>
+                  </div>
+                </div>
+                <div class="note-bar" style="margin:14px 0 0">
+                  <svg><use href="#i-info"/></svg>
+                  <div>Cena docelowa nigdy wcześniej nie obowiązywała, więc na stronie pokazujemy ją
+                    jako cenę przyszłą — <b>bez przekreślenia</b>. Przekreślona cena „przed obniżką”
+                    byłaby ryzykowna pod kątem dyrektywy Omnibus.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h"><h2>Nabór i etap ceny</h2></div>
+              <div class="card-b">
+                <div class="f-row">
+                  <div class="fld" style="width:220px">
+                    <label for="pricingMode">Która cena obowiązuje</label>
+                    <select id="pricingMode" name="pricingMode">
+                      <option th:each="m : ${modes}" th:value="${m.name()}" th:text="${m.label()}"
+                              th:selected="${m == pkg.pricingMode}">Cena startowa</option>
+                    </select>
+                  </div>
+                  <div class="fld" style="width:150px">
+                    <label for="seatsTaken">Miejsca zajęte</label>
+                    <input type="number" id="seatsTaken" name="seatsTaken" th:value="${pkg.seatsTaken}" min="0" required>
+                  </div>
+                  <div class="fld" style="width:150px">
+                    <label for="seatsTotal">Miejsca razem</label>
+                    <input type="number" id="seatsTotal" name="seatsTotal" th:value="${pkg.seatsTotal}" min="0" required>
+                  </div>
+                </div>
+                <div class="note-bar" style="margin:14px 0 0;background:var(--mint-pale);border-color:rgba(29,158,117,.22);color:var(--mint-2)">
+                  <svg><use href="#i-info"/></svg>
+                  <div>Gdy zajęte zrównają się z liczbą miejsc razem, strona <b>sama</b> przechodzi na cenę
+                    docelową i chowa badge, licznik miejsc oraz zdanie o opinii. Nie musisz nic przestawiać.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-h"><h2>Wygląd na stronie</h2></div>
+              <div class="card-b">
+                <div class="fld">
+                  <label for="badgeText">Tekst plakietki</label>
+                  <input type="text" id="badgeText" name="badgeText" th:value="${pkg.badgeText}"
+                         placeholder="np. CENA STARTOWA">
+                </div>
+                <div class="fld">
+                  <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                    <input type="checkbox" name="badgeVisible" value="true" th:checked="${pkg.badgeVisible}" style="width:auto">
+                    Pokazuj plakietkę
+                  </label>
+                </div>
+                <div class="fld">
+                  <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                    <input type="checkbox" name="badgePromotional" value="true" th:checked="${pkg.badgePromotional}" style="width:auto">
+                    Plakietka dotyczy ceny startowej
+                  </label>
+                  <div class="hint"><span>Zaznaczone: zniknie sama po zamknięciu naboru. Odznacz dla „Najlepszy wybór”.</span></div>
+                </div>
+                <div class="fld">
+                  <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                    <input type="checkbox" name="highlighted" value="true" th:checked="${pkg.highlighted}" style="width:auto">
+                    Wyróżnij ten pakiet
+                  </label>
+                  <div class="hint"><span>Zielona ramka; na telefonie ląduje jako pierwszy</span></div>
+                </div>
+                <div class="fld">
+                  <label for="sortOrder">Kolejność</label>
+                  <input type="number" id="sortOrder" name="sortOrder" th:value="${pkg.sortOrder}" min="0">
+                  <div class="hint"><span>Niższa liczba, wyżej na liście</span></div>
+                </div>
+                <div class="fld">
+                  <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                    <input type="checkbox" name="visible" value="true" th:checked="${pkg.visible}" style="width:auto">
+                    Widoczny na stronie
+                  </label>
+                </div>
+                <button class="btn btn-p" type="submit" style="width:100%;justify-content:center">
+                  <svg><use href="#i-check"/></svg>Zapisz pakiet
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h"><h2>Co widzi klient</h2></div>
+              <div class="card-b">
+                <div class="qa" style="padding-top:0">
+                  <div class="q">Obowiązuje dziś</div>
+                  <div class="a" th:text="${pkg.effectiveMode().label()}">Cena startowa</div>
+                </div>
+                <div class="qa">
+                  <div class="q">Wolne miejsca</div>
+                  <div class="a" th:text="${pkg.seatsLeft()} + ' z ' + ${pkg.seatsTotal}">3 z 5</div>
+                </div>
+                <div class="qa" style="border:none">
+                  <div class="q">Cena główna</div>
+                  <div class="a" th:text="${pkg.startingPrice()}
+                        ? ${T(pl.szymtrener.offer.OnlineOfferService).money(pkg.currentTotalGr)}
+                        : ${T(pl.szymtrener.offer.OnlineOfferService).money(pkg.targetTotalGr)}">597 zł</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

@@ -6,17 +6,6 @@
 (function () {
   'use strict';
 
-  /* ╔══════════════════════════════════════════════════════════════════╗
-     ║  KONFIGURACJA WYSYŁKI FORMULARZA (Web3Forms)                      ║
-     ║                                                                  ║
-     ║  1. Wejdź na https://web3forms.com                               ║
-     ║  2. Wpisz adres: szymtrener@gmail.com i kliknij "Create"          ║
-     ║  3. Na maila przyjdzie ACCESS KEY (np. a1b2c3d4-....)             ║
-     ║  4. Wklej go poniżej w miejsce WKLEJ-TUTAJ-ACCESS-KEY             ║
-     ║                                                                  ║
-     ║  Dopóki klucz nie jest wklejony, formularz działa awaryjnie      ║
-     ║  przez program pocztowy (mailto).                                ║
-     ╚══════════════════════════════════════════════════════════════════╝ */
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
@@ -209,6 +198,62 @@
   const csrfToken  = document.querySelector('meta[name="_csrf"]')?.content;
   const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
 
+  /* ── Kontekst oferty przenoszony do formularza ──────────────────────
+     Brief 3: Szymon ma wiedzieć, z której ścieżki i z którego pakietu
+     przyszło zgłoszenie, ZANIM oddzwoni. CTA niosą to w data-*, a tutaj
+     ląduje w ukrytych polach formularza. */
+  const PATH_LABELS = {
+    KONSULTACJA: 'Konsultacja + Plan treningowy',
+    PROWADZENIE: 'Prowadzenie online 1:1'
+  };
+
+  const pathField = $('#o-path');
+  const packField = $('#o-package');
+  const pickBox   = $('#of-pick');
+  const pickValue = $('#of-pick-value');
+
+  function setOfferContext(path, pack) {
+    if (!pathField || !packField) return;
+    pathField.value = path || '';
+    packField.value = pack || '';
+    if (!pickBox || !pickValue) return;
+    const label = PATH_LABELS[path] || '';
+    if (!label) { pickBox.hidden = true; return; }
+    pickValue.textContent = pack ? label + ' · pakiet ' + pack : label;
+    pickBox.hidden = false;
+  }
+
+  document.querySelectorAll('a[data-path]').forEach(link => {
+    link.addEventListener('click', () => {
+      setOfferContext(link.dataset.path, link.dataset.package);
+    });
+  });
+
+  const pickClear = $('#of-pick-clear');
+  if (pickClear) pickClear.addEventListener('click', () => setOfferContext('', ''));
+
+  /* ── Sticky CTA na telefonie ────────────────────────────────────────
+     Pokazujemy dopiero, gdy klient dotarł do oferty, i chowamy przy
+     formularzu — inaczej pasek zasłaniałby pola, które ma wypełnić. */
+  const sticky = $('#sticky-cta');
+  const offerSection = $('#online');
+  const formSection = $('#online-form');
+  if (sticky && offerSection && formSection && 'IntersectionObserver' in window) {
+    let pastOffer = false, atForm = false;
+    const sync = () => sticky.classList.toggle('on', pastOffer && !atForm);
+
+    new IntersectionObserver(([entry]) => {
+      // boundingClientRect.top < 0 → sekcja oferty jest już nad ekranem
+      pastOffer = entry.isIntersecting || entry.boundingClientRect.top < 0;
+      sync();
+    }, { threshold: 0 }).observe(offerSection);
+
+    new IntersectionObserver(([entry]) => {
+      atForm = entry.isIntersecting;
+      sync();
+    }, { threshold: 0 }).observe(formSection);
+  }
+
   window.handleFormSubmit = async function (e) {
     e.preventDefault();
     const form = e.target;
@@ -241,6 +286,8 @@
       if (!res.ok || !data.ok) throw new Error(data.message || 'Błąd wysyłki');
       if (ok) ok.style.display = 'block';
       form.reset();
+      // reset() czyści też ukryte pola, więc plakietka wyboru musi zniknąć razem z nimi
+      if (online && pickBox) pickBox.hidden = true;
     } catch (_) {
       if (err) err.style.display = 'block';
     } finally {

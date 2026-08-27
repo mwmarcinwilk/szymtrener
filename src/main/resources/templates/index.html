@@ -139,7 +139,7 @@
           "name": "Ile kosztuje trening personalny w Łodzi?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Pojedynczy trening stacjonarny kosztuje 190 zł, a w pakietach cena spada do 150 zł za trening (pakiet 12). Treningi dla par to od 200 do 240 zł za sesję. Prowadzenie online zaczyna się od 139 zł miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł."
+            "text": "Pojedynczy trening stacjonarny kosztuje 190 zł, a w pakietach cena spada do 150 zł za trening (pakiet 12). Treningi dla par to od 200 do 240 zł za sesję. Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł."
           }
         },
         {
@@ -155,7 +155,7 @@
           "name": "Czy prowadzisz treningi online w całej Polsce?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Tak. Treningi online prowadzę dla klientów z dowolnego miejsca w Polsce, już od 139 zł miesięcznie. Otrzymujesz ode mnie spersonalizowany plan treningowy, stały kontakt oraz regularną analizę postępów, dzięki czemu trenujesz skutecznie w domu lub na dowolnej siłowni."
+            "text": "Tak. Treningi online prowadzę dla klientów z dowolnego miejsca w Polsce, już od [[${lowestMonthly} ?: '149 zł']] miesięcznie. Otrzymujesz ode mnie spersonalizowany plan treningowy, stały kontakt oraz regularną analizę postępów, dzięki czemu trenujesz skutecznie w domu lub na dowolnej siłowni."
           }
         },
         {
@@ -423,7 +423,8 @@
         <div class="online-card">
           <div class="ic">💻</div>
           <h3>Prowadzenie online</h3>
-          <div class="online-price">od 139 <span>zł / miesiąc</span></div>
+          <!--/* Kwota z panelu, nie z HTML — brief 2.5 zakazuje kopii ceny w kilku miejscach. */-->
+          <div class="online-price" th:if="${lowestMonthly} != null">od <span th:text="${lowestMonthly}">149 zł</span> <span>/ miesiąc</span></div>
           <p>Spersonalizowany plan treningowy, dostęp do aplikacji treningowej na telefon, stały kontakt i analiza postępów. Pracujesz z dowolnego miejsca w Polsce.</p>
           <a href="#online" class="btn btn-outline">Poznaj szczegóły online</a>
         </div>
@@ -451,7 +452,72 @@
     <div class="online-head" data-reveal>
       <div class="online-badge">Cała Polska</div>
       <h2>Trening ze mną — bez znaczenia gdzie jesteś</h2>
-      <p>Nie musisz mieszkać w Łodzi. Pracuję zdalnie z klientami z całej Polski. Dostajesz spersonalizowany plan, stały kontakt i kogoś kto pilnuje czy idziesz w dobrym kierunku.</p>
+      <p>Nie musisz mieszkać w Łodzi. Pracuję zdalnie z klientami z całej Polski. Wybierz ścieżkę, która pasuje do tego, czego teraz potrzebujesz.</p>
+    </div>
+
+    <!--/* Dwie ścieżki (brief 2.1 i 2.2). Ścieżka 2 jest produktem głównym, więc ma
+           ciemne tło i większą wagę wizualną — nie jest równorzędną alternatywą. */-->
+    <div class="paths" data-reveal>
+      <article class="path path-1" th:if="${consult.visible()}">
+        <div class="path-badge">Jednorazowo</div>
+        <h3>Konsultacja + Plan treningowy</h3>
+        <p class="path-sub">Dla kogoś, kto chce konkretny plan i ruszy samodzielnie.</p>
+        <ul class="path-list">
+          <li>30-minutowa rozmowa przed startem</li>
+          <li>Spersonalizowany plan treningowy w PDF</li>
+          <li>14 dni kontaktu mailowego lub przez WhatsApp</li>
+        </ul>
+        <div class="path-price">
+          <span class="pp-amount" th:text="${consult.price()}">349 zł</span>
+          <span class="pp-unit">jednorazowo</span>
+        </div>
+        <p class="path-hook">„Plan powstaje po rozmowie z Tobą, nie z samej ankiety."</p>
+        <a href="#online-form" class="btn btn-online path-cta" data-path="KONSULTACJA">Zamów konsultację</a>
+      </article>
+
+      <article class="path path-2">
+        <div class="path-badge alt">Produkt główny</div>
+        <h3>Prowadzenie online 1:1</h3>
+        <p class="path-sub">Dla kogoś, kto chce stałą opiekę i kogoś, kto pilnuje postępów.</p>
+        <ul class="path-list">
+          <li>Bezpłatna rozmowa wstępna przed startem</li>
+          <li>Spersonalizowany plan treningowy</li>
+          <li>Dostęp do aplikacji treningowej na telefon</li>
+          <li>Stały kontakt i możliwość zadawania pytań na bieżąco</li>
+          <li>Regularna analiza postępów</li>
+          <li>Korekta planu, gdy zajdzie potrzeba</li>
+        </ul>
+        <a href="#pakiety" class="btn btn-online path-cta">Zobacz pakiety</a>
+      </article>
+    </div>
+
+    <!--/* Ceny pochodzą z panelu (brief 2.5) — pusta lista chowa całą tabelę
+           zamiast pokazywać pustą ramkę. */-->
+    <div id="pakiety" class="packs-wrap" th:if="${!packages.isEmpty()}">
+      <h3 class="packs-title" data-reveal>Pakiety prowadzenia 1:1</h3>
+      <div class="packs" data-reveal>
+        <article class="pack" th:each="p : ${packages}" th:classappend="${p.highlighted()} ? ' hi'">
+          <div class="pack-badge" th:if="${p.badge()} != null" th:text="${p.badge()}">CENA STARTOWA</div>
+          <h4 th:text="${p.name()}">Start</h4>
+          <div class="pack-dur" th:text="${p.durationLabel()}">3 miesiące</div>
+          <div class="pack-price" th:text="${p.price()}">597 zł</div>
+          <div class="pack-monthly" th:text="${p.monthly()}">199 zł/mies.</div>
+          <!--/* Cena docelowa jako cena PRZYSZŁA, nigdy przekreślona — dyrektywa
+                 Omnibus zakazuje pokazywania jako „ceny przed obniżką” czegoś,
+                 co nigdy nie obowiązywało (brief 2.4). */-->
+          <div class="pack-target" th:if="${p.targetLine()} != null" th:text="${p.targetLine()}">Cena docelowa: 747 zł</div>
+          <div class="pack-seats" th:if="${p.seatsLine()} != null" th:text="${p.seatsLine()}">Zostało 3 z 5 miejsc</div>
+          <div class="pack-cond" th:if="${p.conditionLine()} != null" th:text="${p.conditionLine()}">Cena startowa w zamian za opinię.</div>
+          <a href="#online-form" class="btn btn-online pack-cta"
+             data-path="PROWADZENIE" th:attr="data-package=${p.name()}"
+             th:aria-label="'Wybieram pakiet ' + ${p.name()}">Wybieram ten pakiet</a>
+        </article>
+      </div>
+
+      <div class="packs-cta" data-reveal>
+        <a href="#online-form" class="btn btn-online" data-path="PROWADZENIE">Umów bezpłatną rozmowę wstępną</a>
+        <p>Rozmowa nic nie kosztuje i do niczego nie zobowiązuje. Sprawdzamy, czy mogę Ci realnie pomóc.</p>
+      </div>
     </div>
 
     <div class="online-body">
@@ -487,31 +553,57 @@
       </div>
 
       <div class="online-cards" data-reveal>
-        <div class="o-card-price">
-          <h3>Prowadzenie online</h3>
-          <div class="o-price">od 139 <span>zł / miesiąc</span></div>
-          <ul class="o-list">
-            <li>Spersonalizowany plan treningowy</li>
-            <li>Dostęp do aplikacji treningowej na telefon</li>
-            <li>Stały kontakt i możliwość pytań</li>
-            <li>Regularna analiza postępów</li>
-            <li>Korekta planu gdy zajdzie potrzeba</li>
-          </ul>
-        </div>
         <div class="o-card-who">
           <h3>Dla kogo</h3>
           <ul class="o-who-list">
-            <li>Osoby 35-55 lat które chcą trenować mądrze i długoterminowo</li>
-            <li>Brak dobrego trenera w swoim mieście</li>
-            <li>Potrzebujesz elastyczności — trening rano, wieczorem, w podróży</li>
+            <li>Osoby 35–55 lat, które chcą trenować mądrze i długoterminowo</li>
+            <li>Brak dobrego trenera w swoim mieście albo potrzeba elastyczności</li>
+            <li>Osoby, które myślą o zdrowiu za 10, 20 i 30 lat — nie o metamorfozie na lato</li>
           </ul>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="online-ctas" data-reveal>
-      <a href="#online-form" class="btn btn-online">Umów bezpłatną rozmowę wstępną</a>
-      <a href="#oferta" class="btn btn-online-ghost">Zobacz pełną ofertę</a>
+<!--/* Opinie tuż pod ofertą — brief 5: mają być widoczne w momencie, w którym
+       klient patrzy na cenę, nie na dole strony. Brak opinii = brak sekcji,
+       bez placeholdera „opinie wkrótce”. */-->
+<section id="opinie" class="section reviews" th:if="${!testimonials.isEmpty()}">
+  <div class="container">
+    <div class="rv-head" data-reveal>
+      <div class="online-badge">Opinie</div>
+      <h2>Co mówią osoby, które ze mną trenują</h2>
+    </div>
+    <div class="rv-grid" data-reveal>
+      <figure class="rv" th:each="t : ${testimonials}">
+        <div class="rv-top">
+          <div class="rv-ini" aria-hidden="true" th:text="${t.initial()}">K</div>
+          <figcaption>
+            <div class="rv-name" th:text="${t.name} + (${t.city} != null ? ' · ' + ${t.city} : '')">Kacper · Łódź</div>
+            <div class="rv-sig" th:if="${t.signature()} != null" th:text="${t.signature()}">prowadzenie online · 1,5 roku współpracy</div>
+          </figcaption>
+        </div>
+        <blockquote class="rv-body" th:text="${t.body}">Treść opinii.</blockquote>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!--/* FAQ oferty online — osobne od FAQ ogólnego niżej na stronie.
+       <details>/<summary>: akordeon działa bez JavaScriptu, a treść jest w HTML,
+       więc czytają ją też boty wyszukiwarek i asystentów AI. */-->
+<section id="faq-online" class="section ofaq" th:if="${!onlineFaq.isEmpty()}">
+  <div class="container">
+    <div class="ofaq-head" data-reveal>
+      <div class="online-badge">Pytania i odpowiedzi</div>
+      <h2>Zanim się zdecydujesz</h2>
+    </div>
+    <div class="ofaq-list" data-reveal>
+      <details class="ofaq-item" th:each="q : ${onlineFaq}">
+        <summary th:text="${q.question}">Dla kogo jest prowadzenie online?</summary>
+        <div class="ofaq-a" th:text="${q.answer}">Odpowiedź.</div>
+      </details>
     </div>
   </div>
 </section>
@@ -526,6 +618,17 @@
 
     <form class="of-form" data-reveal data-endpoint="/api/zgloszenia/online" onsubmit="handleFormSubmit(event)">
       <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+
+      <!--/* Kontekst kliknięcia (brief 3): Szymon ma wiedzieć, o czym rozmawiać,
+             zanim oddzwoni. Ustawiane przez CTA w sekcji oferty, nie przez klienta. */-->
+      <input type="hidden" name="offerPath" id="o-path" value="">
+      <input type="hidden" name="offerPackage" id="o-package" value="">
+      <div class="of-pick" id="of-pick" hidden>
+        <span class="of-pick-label">Twój wybór</span>
+        <span class="of-pick-value" id="of-pick-value"></span>
+        <button type="button" class="of-pick-clear" id="of-pick-clear">zmień</button>
+      </div>
+
       <div class="of-row">
         <div class="of-group">
           <label for="o-name">Imię <span class="req">*</span></label>
@@ -726,7 +829,7 @@
 
       <article class="faq-item">
         <h3 class="faq-q">Ile kosztuje trening personalny w Łodzi?</h3>
-        <p class="faq-a">Pojedynczy trening stacjonarny kosztuje 190 zł, a w pakietach cena spada do 150 zł za trening (pakiet 12). Treningi dla par to od 200 do 240 zł za sesję. Prowadzenie online zaczyna się od 139 zł miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł.</p>
+        <p class="faq-a" th:inline="text">Pojedynczy trening stacjonarny kosztuje 190 zł, a w pakietach cena spada do 150 zł za trening (pakiet 12). Treningi dla par to od 200 do 240 zł za sesję. Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł.</p>
         <table class="price-table">
           <caption>Cennik treningów personalnych – 1 osoba (stan: czerwiec 2026)</caption>
           <thead>
@@ -748,7 +851,7 @@
 
       <article class="faq-item">
         <h3 class="faq-q">Czy prowadzisz treningi online w całej Polsce?</h3>
-        <p class="faq-a">Tak. Treningi online prowadzę dla klientów z dowolnego miejsca w Polsce, już od 139 zł miesięcznie. Otrzymujesz ode mnie spersonalizowany plan treningowy, stały kontakt oraz regularną analizę postępów, dzięki czemu trenujesz skutecznie w domu lub na dowolnej siłowni.</p>
+        <p class="faq-a" th:inline="text">Tak. Treningi online prowadzę dla klientów z dowolnego miejsca w Polsce, już od [[${lowestMonthly} ?: '149 zł']] miesięcznie. Otrzymujesz ode mnie spersonalizowany plan treningowy, stały kontakt oraz regularną analizę postępów, dzięki czemu trenujesz skutecznie w domu lub na dowolnej siłowni.</p>
       </article>
 
       <article class="faq-item">
@@ -852,6 +955,13 @@
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<!--/* Sticky CTA na telefonie — główna ścieżka konwersji (brief 2.6).
+       Pokazuje się dopiero, gdy klient dotarł do oferty; nie ma go, gdy nie ma
+       czego oferować (brak pakietów i ukryta ścieżka 1). */-->
+<div class="sticky-cta" id="sticky-cta" th:if="${!packages.isEmpty() or consult.visible()}">
+  <a href="#online-form" class="btn" data-path="PROWADZENIE">Umów bezpłatną rozmowę wstępną</a>
+</div>
 
 </body>
 </html>

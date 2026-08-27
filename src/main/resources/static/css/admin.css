@@ -386,3 +386,10 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .q-dlg .q-mf{justify-content:flex-end}
 .q-dlg .q-mf .btn{flex:0 0 auto;min-width:120px;justify-content:center}
 
+
+/* Wiersz pól formularza — kilka krótkich pól obok siebie (ceny, liczniki miejsc).
+   Na wąskim ekranie zawija się do kolumny, żeby pola nie robiły się nieczytelne. */
+.f-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.f-row .fld{margin-bottom:0}
+.f-row>.btn{margin-bottom:0}
+@media(max-width:620px){.f-row{flex-direction:column;align-items:stretch}.f-row .fld{width:100%}}

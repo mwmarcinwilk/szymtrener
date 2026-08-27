@@ -30,6 +30,13 @@ public class SettingsService {
     public static final String MAIL_RECIPIENT = "mail.notify.recipient";
     public static final String MAIL_NOTIFY = "mail.notify.trainer";
     public static final String MAIL_AUTOREPLY = "mail.autoreply";
+    /**
+     * Sciezka 1 z briefu (konsultacja + plan w PDF). Cena stala, poza mechanika
+     * naboru zalozycielskiego — dlatego ustawienie, a nie wiersz w tabeli pakietow.
+     * W GROSZACH, tak samo jak kwoty pakietow.
+     */
+    public static final String OFFER_CONSULT_PRICE_GR = "offer.consult.price.gr";
+    public static final String OFFER_CONSULT_VISIBLE = "offer.consult.visible";
     public static final String SEO_TITLE = "seo.default.title";
     public static final String SEO_DESC = "seo.default.desc";
 

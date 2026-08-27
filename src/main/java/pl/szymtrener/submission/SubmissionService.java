@@ -38,6 +38,8 @@ public class SubmissionService {
         s.setGoal(form.goal());
         s.setEquipment(form.equipment());
         s.setSource(form.source());
+        s.setOfferPath(form.offerPath());
+        s.setOfferPackage(form.offerPackage());
         return persist(s, ip, userAgent);
     }
 
@@ -101,6 +103,8 @@ public class SubmissionService {
         data.put("zainteresowanie", s.getInterest());
         data.put("wiadomosc", s.getMessage());
         data.put("skad_trafil", s.getSource());
+        data.put("sciezka_oferty", s.getOfferPath());
+        data.put("pakiet", s.getOfferPackage());
         data.put("status", s.getStatus());
         data.put("termin_rozmowy", s.getCallAt());
         data.put("zgoda_rodo", s.getConsentAt());

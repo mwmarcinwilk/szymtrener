@@ -22,7 +22,8 @@
 
 ## Panel
 - `AdminAccountInitializer.syncAdminAccount(...)` — admin/ — trzyma konto zgodne z `ADMIN_EMAIL`/`ADMIN_PASSWORD`: zmiana zmiennej i restart AKTUALIZUJĄ konto (zmiana adresu zamiast duplikatu). Hasło ustawione w panelu przeżywa restart, bo porównywany jest odcisk SHA-256 ostatnio zastosowanej pary (`app_setting`, `admin.env.fingerprint`). Pilnuje tego `AdminAccountSyncIT` — cztery scenariusze, w tym „panel wygrywa, gdy env bez zmian".
-- `AdminUsersController` — admin/ — `/admin/administratorzy`: dodawanie i usuwanie kont z dostępem do panelu (link z Ustawień). Trzy blokady: nie da się usunąć ostatniego konta, nie da się usunąć konta, na którym się pracuje, hasło min. 12 znaków. Konto ze zmiennych środowiskowych jest na tym ekranie pokazane jako awaryjne wejście z instrukcją wyłączenia — inaczej „usunąłem konto, a dalej działa" wyglądałoby jak awaria.
+- `AdminNav.currentName() / .currentInitials()` — admin/ — nazwa i inicjały zalogowanej osoby w stopce menu. Do tej pory `display_name` było zapisywane, ale NIGDZIE nie wyświetlane — stopka pokazywała adres e-mail, a inicjały były wpisane na sztywno.
+- `AdminUsersController` — admin/ — `/admin/administratorzy`: dodawanie i usuwanie kont z dostępem do panelu (link z Ustawień). Trzy blokady: nie da się usunąć ostatniego konta, nie da się usunąć konta, na którym się pracuje, hasło min. 12 znaków. Edycja konta (`/admin/administratorzy/{id}`): nazwa wyświetlana, adres, hasło (puste = bez zmian) i włączenie konta; zmiana własnego adresu wylogowuje, bo adres jest loginem. Konto ze zmiennych środowiskowych jest na tym ekranie pokazane jako awaryjne wejście z instrukcją wyłączenia — inaczej „usunąłem konto, a dalej działa" wyglądałoby jak awaria.
 - `AdminController.changePassword()` — admin/ — `GET/POST /admin/haslo`; min. 12 znaków, po zmianie unieważnia sesję.
 - `AdminPostController.preview(id)` — admin/ — `GET /admin/posty/{id}/podglad`: szkic w wyglądzie strony, z noindex.
 - `AdminStatsController` — admin/ — `/admin/statystyki?dni=`; KPI z trendem, wykres CSS, top ścieżki, źródła, urządzenia i **wizyty botów AI**.
@@ -56,3 +57,12 @@
 - `Dockerfile` — obraz pod Coolify: budowanie wielostopniowe, warstwy Spring Boota, użytkownik bez roota, strefa Europe/Warsaw, healthcheck `/actuator/health`. Kontener bezstanowy, bo pliki siedzą w bazie (`media_blob`) — nie podpinaj wolumenu.
 - `deploy/COOLIFY.md` — komplet zmiennych środowiskowych, konfiguracja Gmaila (hasło aplikacji, ograniczenie nadawcy) i lista rzeczy do sprawdzenia po wdrożeniu.
 - `deploy/` — jednostka systemd, konfiguracja nginx (jedno przekierowanie 301, `X-Forwarded-Proto`), skrypt kopii zapasowej.
+
+## Oferta online (brief programisty v2.2)
+- `OnlineOfferService` — offer/ — jedyne miejsce, które zamienia dane pakietów na to, co widzi klient. `packages()` zwraca `PackageView` z gotowymi napisami; `money(grosze)` formatuje kwotę spacjami NIEROZDZIELAJĄCYMI („1 074 zł" — nie łamie się na końcu wiersza). `lowestMonthly()` daje cenę „od X" do JSON-LD i FAQ, żeby żadna kopia ceny nie została w HTML.
+- `OnlinePackage` — kwoty w GROSZACH (`int`), dwa poziomy: startowy i docelowy. `effectiveMode()` sam przechodzi na cenę docelową, gdy `seatsLeft() == 0` — bez klikania w panelu. `badgePromotional` odróżnia plakietkę „CENA STARTOWA" (znika po zamknięciu naboru) od „Najlepszy wybór" (zostaje).
+- `Testimonial.signature()` — podpis pod imieniem z formatu współpracy i czasu trwania; oba pola mogą być puste, wtedy podpis się nie renderuje. `OnlineFaq.answered()` — pytanie bez odpowiedzi nie trafia na stronę.
+- `AdminOfferController` — admin/ — `/admin/oferta`: ceny obu ścieżek, liczniki miejsc, tryb ceny, opinie i FAQ. Kwoty wpisuje się w ZŁOTYCH; `grosze(String)` / `zlote(int)` robią zamianę i odrzucają wejście, którego nie da się odczytać (null zamiast cichego zera).
+- Cena Ścieżki 1 (konsultacja + plan) siedzi w `SettingsService.OFFER_CONSULT_PRICE_GR` — jedna kwota, bez własnej tabeli.
+- `Submission.offerPath` / `offerPackage` + `offerContext()` — z którego CTA przyszło zgłoszenie. Widać to w mailu do trenera i w karcie zgłoszenia. Ustawiają je ukryte pola formularza, wypełniane przez `data-path` / `data-package` na przyciskach (`main.js`).
+- Sekcje strony: `#online` (dwie ścieżki + pakiety), `#opinie`, `#faq-online` (akordeon na `<details>` — działa bez JS i czytają go boty). Każda znika w całości, gdy nie ma czego pokazać — bez placeholderów „wkrótce".

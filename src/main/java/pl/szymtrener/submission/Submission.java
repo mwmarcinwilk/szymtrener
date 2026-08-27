@@ -21,6 +21,13 @@ public class Submission {
     @Column(columnDefinition = "text") private String goal;
     private String equipment;
     private String source;
+
+    /**
+     * Z ktorej sciezki oferty przyszlo zgloszenie (brief 2.2, pkt 3). Puste dla
+     * formularza kontaktowego i dla zgloszen sprzed wprowadzenia dwoch sciezek.
+     */
+    @Column(name = "offer_path") private String offerPath;
+    @Column(name = "offer_package") private String offerPackage;
     private String interest;
     @Column(columnDefinition = "text") private String message;
 
@@ -55,6 +62,10 @@ public class Submission {
     public void setEquipment(String equipment) { this.equipment = equipment; }
     public String getSource() { return source; }
     public void setSource(String source) { this.source = source; }
+    public String getOfferPath() { return offerPath; }
+    public void setOfferPath(String offerPath) { this.offerPath = offerPath; }
+    public String getOfferPackage() { return offerPackage; }
+    public void setOfferPackage(String offerPackage) { this.offerPackage = offerPackage; }
     public String getInterest() { return interest; }
     public void setInterest(String interest) { this.interest = interest; }
     public String getMessage() { return message; }
@@ -74,6 +85,21 @@ public class Submission {
     public String getMailError() { return mailError; }
     public void setMailError(String mailError) { this.mailError = mailError; }
     public Instant getCreatedAt() { return createdAt; }
+
+    /**
+     * Sciezka i pakiet w jednej linii do maila i panelu, albo null gdy zgloszenie
+     * przyszlo bez kontekstu (formularz kontaktowy, stare wpisy).
+     */
+    @Transient
+    public String offerContext() {
+        String path = switch (offerPath == null ? "" : offerPath) {
+            case "KONSULTACJA" -> "Ścieżka 1 — Konsultacja + Plan treningowy";
+            case "PROWADZENIE" -> "Ścieżka 2 — Prowadzenie online 1:1";
+            default -> null;
+        };
+        if (path == null) return offerPackage == null || offerPackage.isBlank() ? null : "Pakiet " + offerPackage;
+        return offerPackage == null || offerPackage.isBlank() ? path : path + " · pakiet " + offerPackage;
+    }
 
     /** Termin rozmowy w formacie <input type="datetime-local">, albo pusty. */
     @Transient

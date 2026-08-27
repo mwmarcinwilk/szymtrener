@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Wszystko, co brief v2.2 kazał uczynić edytowalnym bez programisty:
+       ceny obu ścieżek, etap naboru, liczniki miejsc, opinie i FAQ.
+       Jeden ekran, bo to jedna decyzja handlowa — ceny zmieniają się razem
+       z licznikiem miejsc, a opinie z ceną startową (warunek „w zamian za opinię”). */-->
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('offer')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div th:if="${info}" role="status"
+           style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${info}">Gotowe.</div>
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+
+      <div class="page-h">
+        <div>
+          <h2>Oferta online</h2>
+          <p>Ceny, miejsca w naborze, opinie i FAQ. Wszystko zmieniasz tutaj, bez wdrożenia</p>
+        </div>
+        <div class="r">
+          <a class="btn btn-o" href="/#online" target="_blank" rel="noopener">
+            <svg><use href="#i-eye"/></svg>Zobacz na stronie</a>
+        </div>
+      </div>
+
+      <!-- ══ ŚCIEŻKA 1 ══════════════════════════════════════════════════════ -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-h">
+          <h2>Ścieżka 1 — Konsultacja + Plan treningowy</h2>
+          <span class="bg" th:classappend="${consultVisible} ? 'pub' : 'arch'"
+                th:text="${consultVisible} ? 'Widoczna' : 'Ukryta'">Widoczna</span>
+        </div>
+        <div class="card-b">
+          <form method="post" action="/admin/oferta/konsultacja" class="f-row">
+            <div class="fld" style="max-width:200px">
+              <label for="consultPrice">Cena jednorazowa</label>
+              <input type="text" id="consultPrice" name="price" th:value="${consultPrice}" inputmode="decimal">
+              <div class="hint"><span>w złotych, np. 349</span></div>
+            </div>
+            <div class="fld">
+              <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                <input type="checkbox" name="visible" value="true" th:checked="${consultVisible}" style="width:auto">
+                Pokazuj tę ścieżkę na stronie
+              </label>
+              <div class="hint"><span>Cena stała, nie podlega mechanice naboru założycielskiego</span></div>
+            </div>
+            <button class="btn btn-p" type="submit"><svg><use href="#i-check"/></svg>Zapisz</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ══ PAKIETY ═══════════════════════════════════════════════════════ -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-h">
+          <h2>Ścieżka 2 — pakiety prowadzenia 1:1</h2>
+          <form method="post" action="/admin/oferta/pakiety" style="display:flex;gap:8px">
+            <input type="text" name="name" placeholder="Nazwa nowego pakietu" required
+                   style="height:34px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font:inherit;font-size:13px">
+            <button class="btn btn-o" type="submit"><svg><use href="#i-plus"/></svg>Dodaj</button>
+          </form>
+        </div>
+        <div class="tbl-scroll">
+          <table class="tbl">
+            <thead><tr>
+              <th>Pakiet</th><th>Obowiązuje dziś</th><th>Cena docelowa</th>
+              <th>Miejsca</th><th>Status</th><th class="act">Akcje</th>
+            </tr></thead>
+            <tbody>
+              <tr th:each="p : ${packages}">
+                <td>
+                  <div class="t-main" th:text="${p.name}">Start</div>
+                  <div class="t-sub" th:text="${p.durationLabel} + (${p.highlighted} ? ' · wyróżniony' : '')">3 miesiące</div>
+                </td>
+                <!--/* „Obowiązuje dziś” to wynik effectiveMode(), nie samego przełącznika:
+                       przy zerze wolnych miejsc cena docelowa wchodzi automatycznie. */-->
+                <td>
+                  <div class="t-main" th:text="${p.startingPrice()}
+                        ? ${T(pl.szymtrener.offer.OnlineOfferService).money(p.currentTotalGr)}
+                        : ${T(pl.szymtrener.offer.OnlineOfferService).money(p.targetTotalGr)}">597 zł</div>
+                  <div class="t-sub" th:text="${p.effectiveMode().label()}
+                        + (${p.pricingMode.name() == 'STARTOWA' and !p.startingPrice()} ? ' (brak miejsc)' : '')">Cena startowa</div>
+                </td>
+                <td class="t-sub" th:text="${T(pl.szymtrener.offer.OnlineOfferService).money(p.targetTotalGr)}
+                      + ' · ' + ${T(pl.szymtrener.offer.OnlineOfferService).money(p.targetMonthlyGr)} + '/mies.'">747 zł</td>
+                <td>
+                  <span th:text="${p.seatsLeft()} + ' z ' + ${p.seatsTotal}"
+                        th:style="${p.seatsLeft() == 0} ? 'color:var(--red);font-weight:700' : 'font-weight:700'">3 z 5</span>
+                </td>
+                <td>
+                  <span class="bg" th:classappend="${p.visible} ? 'pub' : 'arch'"
+                        th:text="${p.visible} ? 'Na stronie' : 'Ukryty'">Na stronie</span>
+                </td>
+                <td class="act">
+                  <div class="row-acts">
+                    <a class="mini" th:href="@{/admin/oferta/pakiety/{id}(id=${p.id})}" title="Edytuj pakiet">
+                      <svg><use href="#i-edit"/></svg></a>
+                    <form method="post" th:action="@{/admin/oferta/pakiety/{id}/usun(id=${p.id})}"
+                          data-confirm-title="Usunąć pakiet?"
+                          th:data-confirm="'Pakiet ' + ${p.name} + ' zniknie ze strony. Tego nie da się cofnąć — jeśli chcesz go tylko schować, wyłącz widoczność.'"
+                          data-confirm-ok="Usuń pakiet">
+                      <button class="mini del" type="submit" title="Usuń pakiet"><svg><use href="#i-trash"/></svg></button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              <tr th:if="${packages.isEmpty()}">
+                <td colspan="6">Nie ma żadnego pakietu. Sekcja cen nie pokaże się na stronie.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ OPINIE ════════════════════════════════════════════════════════ -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-h">
+          <h2>Opinie klientów</h2>
+          <span class="sub">Kolejność ustawiasz ręcznie: niższa liczba wyżej</span>
+        </div>
+        <div class="tbl-scroll">
+          <table class="tbl">
+            <thead><tr><th style="width:60px">Kol.</th><th>Klient</th><th>Treść</th><th>Status</th><th class="act">Akcje</th></tr></thead>
+            <tbody>
+              <tr th:each="t : ${testimonials}">
+                <td th:text="${t.sortOrder}">1</td>
+                <td>
+                  <div class="t-main" th:text="${t.name} + (${t.city} != null ? ' · ' + ${t.city} : '')">Kacper · Łódź</div>
+                  <!--/* Podpis to osobny dowód (brief 5.1) — gdy go nie ma, mówimy o tym wprost. */-->
+                  <div class="t-sub" th:if="${t.signature()} != null" th:text="${t.signature()}">prowadzenie online</div>
+                  <div class="t-sub" th:if="${t.signature()} == null" style="opacity:.6">bez podpisu</div>
+                </td>
+                <td class="t-sub" th:text="${#strings.abbreviate(t.body, 90)}">Treść…</td>
+                <td>
+                  <span class="bg" th:classappend="${t.visible} ? 'pub' : 'arch'"
+                        th:text="${t.visible} ? 'Na stronie' : 'Ukryta'">Na stronie</span>
+                </td>
+                <td class="act">
+                  <div class="row-acts">
+                    <a class="mini" th:href="@{/admin/oferta/opinie/{id}(id=${t.id})}" title="Edytuj opinię">
+                      <svg><use href="#i-edit"/></svg></a>
+                    <form method="post" th:action="@{/admin/oferta/opinie/{id}/usun(id=${t.id})}"
+                          data-confirm-title="Usunąć opinię?"
+                          th:data-confirm="'Opinia od ' + ${t.name} + ' zostanie skasowana bezpowrotnie.'"
+                          data-confirm-ok="Usuń opinię">
+                      <button class="mini del" type="submit" title="Usuń opinię"><svg><use href="#i-trash"/></svg></button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              <tr th:if="${testimonials.isEmpty()}">
+                <td colspan="5">Nie ma opinii. Sekcja ukrywa się na stronie w całości.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-b" style="border-top:1px solid var(--line)">
+          <form method="post" action="/admin/oferta/opinie">
+            <div class="fld">
+              <label for="tName">Imię klienta</label>
+              <input type="text" id="tName" name="name" required placeholder="np. Kacper">
+            </div>
+            <div class="fld">
+              <label for="tBody">Treść opinii</label>
+              <textarea id="tBody" name="body" rows="3" required
+                        placeholder="Wklej dokładnie to, na co klient wyraził zgodę"></textarea>
+            </div>
+            <button class="btn btn-p" type="submit"><svg><use href="#i-plus"/></svg>Dodaj opinię</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ══ FAQ ═══════════════════════════════════════════════════════════ -->
+      <div class="card">
+        <div class="card-h">
+          <h2>FAQ sekcji online</h2>
+          <span class="sub">Pytanie bez odpowiedzi nie pokazuje się na stronie</span>
+        </div>
+        <div class="card-b">
+          <!--/* Każde pytanie to osobny formularz zapisywany w miejscu: przy siedmiu
+                 pozycjach osobny ekran na każdą oznaczałby siedem powrotów. */-->
+          <form th:each="q : ${questions}" method="post" th:action="@{/admin/oferta/faq/{id}(id=${q.id})}"
+                style="border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:11px">
+            <div class="f-row" style="align-items:flex-start">
+              <div class="fld" style="flex:1;margin:0">
+                <label th:for="'q' + ${q.id}">Pytanie</label>
+                <input type="text" th:id="'q' + ${q.id}" name="question" th:value="${q.question}" required>
+              </div>
+              <div class="fld" style="width:80px;margin:0">
+                <label th:for="'o' + ${q.id}">Kolejność</label>
+                <input type="number" th:id="'o' + ${q.id}" name="sortOrder" th:value="${q.sortOrder}" min="0">
+              </div>
+            </div>
+            <div class="fld" style="margin-top:10px">
+              <label th:for="'a' + ${q.id}">Odpowiedź</label>
+              <textarea th:id="'a' + ${q.id}" name="answer" rows="3"
+                        th:text="${q.answer}" placeholder="Dopóki puste — pytanie nie pojawia się na stronie"></textarea>
+            </div>
+            <div class="f-row" style="align-items:center;margin-top:8px">
+              <label style="display:flex;gap:8px;align-items:center;cursor:pointer;font-size:13px">
+                <input type="checkbox" name="visible" value="true" th:checked="${q.visible}" style="width:auto">
+                Widoczne
+              </label>
+              <span class="bg" th:classappend="${q.answered()} ? 'pub' : 'arch'"
+                    th:text="${q.answered()} ? 'Ma odpowiedź' : 'Czeka na odpowiedź'">Ma odpowiedź</span>
+              <div style="flex:1"></div>
+              <!--/* Kasowanie przez formaction, bo formularza nie da się zagnieździć w formularzu. */-->
+              <button class="mini del" type="submit" title="Usuń pytanie"
+                      th:formaction="@{/admin/oferta/faq/{id}/usun(id=${q.id})}"
+                      data-confirm-title="Usunąć pytanie?"
+                      th:data-confirm="'Pytanie „' + ${q.question} + '” zniknie z FAQ.'"
+                      data-confirm-ok="Usuń pytanie"><svg><use href="#i-trash"/></svg></button>
+              <button class="btn btn-p" type="submit"><svg><use href="#i-check"/></svg>Zapisz</button>
+            </div>
+          </form>
+
+          <form method="post" action="/admin/oferta/faq" class="f-row" style="margin-top:14px">
+            <div class="fld" style="flex:1;margin:0">
+              <label for="newQuestion">Nowe pytanie</label>
+              <input type="text" id="newQuestion" name="question" required placeholder="np. Jak działa aplikacja treningowa?">
+            </div>
+            <button class="btn btn-o" type="submit"><svg><use href="#i-plus"/></svg>Dodaj pytanie</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

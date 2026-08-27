@@ -91,6 +91,28 @@ class MailTemplatesTest {
     }
 
     @Test
+    @DisplayName("mail mówi, z której ścieżki i z którego pakietu przyszło zgłoszenie")
+    void showsOfferContext() {
+        Submission s = submission();
+        s.setOfferPath("PROWADZENIE");
+        s.setOfferPackage("Longevity");
+
+        String html = engine.process("mail/notify-trainer", context(s));
+
+        // Brief 3: Szymon ma to wiedziec, zanim oddzwoni
+        assertThat(html).contains("Kliknięte CTA");
+        assertThat(html).contains("Ścieżka 2 — Prowadzenie online 1:1 · pakiet Longevity");
+    }
+
+    @Test
+    @DisplayName("zgłoszenie bez kontekstu oferty nie pokazuje pustej ramki")
+    void skipsOfferContextWhenAbsent() {
+        String html = engine.process("mail/notify-trainer", context(submission()));
+
+        assertThat(html).doesNotContain("Kliknięte CTA");
+    }
+
+    @Test
     @DisplayName("potwierdzenie dla klienta zwraca się po imieniu i podaje telefon awaryjny")
     void clientConfirmationRenders() {
         String html = engine.process("mail/confirm-client", context(submission()));
