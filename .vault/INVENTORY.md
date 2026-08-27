@@ -102,10 +102,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### AdminAccountInitializer  (src/main/java/pl/szymtrener/admin/AdminAccountInitializer.java)
 - [   ] syncAdminAccount(AdminUserRepository repo, PasswordEncoder encoder, AppProperties props, SettingsService settings): ApplicationRunner  :41
-- [prv] resolveAccount(AdminUserRepository repo, String email): AdminUser  :104
-- [prv] addresses(AdminUserRepository repo): String  :112
-- [prv] fingerprint(String email, String password): String  :119
-- [prv] trim(String value): String  :129
+- [prv] resolveAccount(AdminUserRepository repo, String email): AdminUser  :111
+- [prv] addresses(AdminUserRepository repo): String  :119
+- [prv] fingerprint(String email, String password): String  :126
+- [prv] trim(String value): String  :136
 
 ### AdminAccountSyncIT  (src/test/java/pl/szymtrener/admin/AdminAccountSyncIT.java)
 - [prv] sync(String email, String password): void  :29
