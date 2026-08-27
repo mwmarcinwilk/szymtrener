@@ -11,6 +11,9 @@
   <div th:if="${param.blad}" style="background:#FDECEA;color:#C2503A;padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:12px">
     Nieprawidłowy e-mail lub hasło.
   </div>
+  <div th:if="${param.wygaslo}" style="background:#FFF6E6;color:#C8871B;padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:12px">
+    Sesja wygasła, bo aplikacja została w międzyczasie zrestartowana. Zaloguj się jeszcze raz.
+  </div>
   <div th:if="${param.wylogowano}" style="background:#EAF6F1;color:#1D9E75;padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:12px">
     Wylogowano.
   </div>

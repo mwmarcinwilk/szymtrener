@@ -1,5 +1,6 @@
 package pl.szymtrener.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +25,17 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/admin", true)
                 .failureUrl("/admin/logowanie?blad")
                 .permitAll())
+            // Nieaktualny token CSRF na formularzu logowania to NIE jest atak, tylko
+            // strona otwarta przed restartem aplikacji (sesje trzymamy w pamieci, wiec
+            // wdrozenie je kasuje). Zamiast slepego 403 odsylamy na logowanie z komunikatem,
+            // zeby uzytkownik mogl po prostu sprobowac jeszcze raz.
+            .exceptionHandling(handling -> handling.accessDeniedHandler((request, response, denied) -> {
+                if (request.getRequestURI().startsWith("/admin/logowanie")) {
+                    response.sendRedirect("/admin/logowanie?wygaslo");
+                } else {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                }
+            }))
             .logout(out -> out
                 .logoutRequestMatcher(new AntPathRequestMatcher("/admin/wyloguj"))
                 .logoutSuccessUrl("/admin/logowanie?wylogowano"))

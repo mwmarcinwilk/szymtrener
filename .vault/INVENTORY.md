@@ -756,8 +756,8 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [pub] allow(String key): boolean  :24
 
 ### SecurityConfig  (src/main/java/pl/szymtrener/config/SecurityConfig.java)
-- [   ] filterChain(HttpSecurity http): SecurityFilterChain  :15
-- [   ] passwordEncoder(): PasswordEncoder  :41
+- [   ] filterChain(HttpSecurity http): SecurityFilterChain  :16
+- [   ] passwordEncoder(): PasswordEncoder  :53
 
 ### SeoController  (src/main/java/pl/szymtrener/seo/SeoController.java)
 - [pub] robots(): String  :44
