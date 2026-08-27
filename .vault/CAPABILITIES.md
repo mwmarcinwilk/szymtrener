@@ -21,6 +21,7 @@
 - `POST /admin/posty/ocena` — admin/ — ocena szkicu bez zapisu. `POST /admin/posty/autozapis` i `/{id}/autozapis` — autozapis co 15 s; pierwszy autozapis nowego wpisu zakłada szkic i zwraca `id`.
 
 ## Panel
+- `AdminAccountInitializer.syncAdminAccount(...)` — admin/ — trzyma konto zgodne z `ADMIN_EMAIL`/`ADMIN_PASSWORD`: zmiana zmiennej i restart AKTUALIZUJĄ konto (zmiana adresu zamiast duplikatu). Hasło ustawione w panelu przeżywa restart, bo porównywany jest odcisk SHA-256 ostatnio zastosowanej pary (`app_setting`, `admin.env.fingerprint`). Pilnuje tego `AdminAccountSyncIT` — cztery scenariusze, w tym „panel wygrywa, gdy env bez zmian".
 - `AdminController.changePassword()` — admin/ — `GET/POST /admin/haslo`; min. 12 znaków, po zmianie unieważnia sesję.
 - `AdminPostController.preview(id)` — admin/ — `GET /admin/posty/{id}/podglad`: szkic w wyglądzie strony, z noindex.
 - `AdminStatsController` — admin/ — `/admin/statystyki?dni=`; KPI z trendem, wykres CSS, top ścieżki, źródła, urządzenia i **wizyty botów AI**.

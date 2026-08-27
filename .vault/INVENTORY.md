@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
 > AUTO-GENEROWANY 2026-08-27 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 42 · Endpointy: 48 · Metody: 649 · Front: 0
+> Beany: 42 · Endpointy: 48 · Metody: 658 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -100,7 +100,18 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 ## Metody (per klasa)
 
 ### AdminAccountInitializer  (src/main/java/pl/szymtrener/admin/AdminAccountInitializer.java)
-- [   ] createAdminIfMissing(AdminUserRepository repo, PasswordEncoder encoder, AppProperties props): ApplicationRunner  :26
+- [   ] syncAdminAccount(AdminUserRepository repo, PasswordEncoder encoder, AppProperties props, SettingsService settings): ApplicationRunner  :41
+- [prv] resolveAccount(AdminUserRepository repo, String email): AdminUser  :97
+- [prv] fingerprint(String email, String password): String  :105
+- [prv] trim(String value): String  :115
+
+### AdminAccountSyncIT  (src/test/java/pl/szymtrener/admin/AdminAccountSyncIT.java)
+- [prv] sync(String email, String password): void  :29
+- [   ] clean(): void  :40
+- [   ] createsAccountOnFirstRun(): void  :47
+- [   ] updatesPassword(): void  :57
+- [   ] renamesInsteadOfDuplicating(): void  :69
+- [   ] panelPasswordSurvivesRestart(): void  :80
 
 ### AdminApiController  (src/main/java/pl/szymtrener/admin/AdminApiController.java)
 - [prv] describe(MediaFile file): Map<String, Object>  :62

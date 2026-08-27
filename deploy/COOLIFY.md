@@ -40,7 +40,7 @@ Ustaw w Coolify (zakładka *Environment Variables*). Żadna z nich nie może tra
 | `DATABASE_URL` | link z zasobu Postgres | Coolify podstawia go zmienną `${...}` z bazy |
 | `SITE_URL` | `https://szymtrener.pl` | adresy kanoniczne, JSON-LD, sitemapa; **musi być https** |
 | `ADMIN_EMAIL` | `szymtrener@gmail.com` | login do panelu |
-| `ADMIN_PASSWORD` | mocne hasło | zakłada konto **tylko przy pierwszym starcie** — patrz niżej |
+| `ADMIN_PASSWORD` | mocne hasło, min. 12 znaków | zmiana + restart aktualizuje konto — patrz niżej |
 | `ANALYTICS_SALT` | losowy ciąg | sól do skrótów sesji, zmień na produkcji |
 | `MAIL_HOST` | `smtp.gmail.com` | |
 | `MAIL_PORT` | `587` | STARTTLS |
@@ -50,9 +50,23 @@ Ustaw w Coolify (zakładka *Environment Variables*). Żadna z nich nie może tra
 | `INDEXNOW_ENABLED` | `true` | powiadamianie Bing po publikacji |
 | `INDEXNOW_KEY` | losowy ciąg 32 znaków | |
 
-`ADMIN_PASSWORD` działa wyłącznie przy zakładaniu pierwszego konta. Późniejsza zmiana
-tej zmiennej **nie zmieni hasła** — aplikacja wypisze o tym ostrzeżenie w logu.
-Hasło zmienia się w panelu (`/admin/haslo`).
+### Konto administratora
+
+`ADMIN_EMAIL` i `ADMIN_PASSWORD` są **źródłem prawdy**. Zmiana którejkolwiek z nich
+i restart aplikacji aktualizują istniejące konto: nowy adres zastępuje stary,
+nowe hasło nadpisuje poprzednie. Nie powstaje drugie konto.
+
+Hasło zmienione w panelu (`/admin/haslo`) **przeżywa restart**, dopóki nie ruszysz
+zmiennych. Aplikacja pamięta odcisk ostatnio zastosowanej pary email+hasło
+(`app_setting`, klucz `admin.env.fingerprint`) i sięga do konta tylko wtedy,
+gdy zmienne faktycznie się zmieniły.
+
+Jeśli wcześniej zmieniałeś `ADMIN_EMAIL` na starej wersji aplikacji, w bazie mogło
+zostać drugie konto ze starym adresem. Aplikacja ostrzeże o tym w logu. Usuniesz je tak:
+
+```sql
+DELETE FROM admin_user WHERE email <> 'aktualny@adres';
+```
 
 ## 4. Poczta przez Gmail
 
