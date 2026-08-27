@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Automatyczne potwierdzenie dla osoby, która wysłała zgłoszenie.
+       Treść jest zatwierdzona przez klienta — nie przepisywać.
+       Style w atrybutach i układ na tabelach, bo klienci pocztowi wycinają <style>. */-->
+<head><meta charset="UTF-8"><title>Dostałem Twoje zgłoszenie</title></head>
+<body style="margin:0;padding:0;background:#F5F7F9;font-family:Arial,Helvetica,sans-serif;color:#16232F">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F5F7F9;padding:24px 12px">
+  <tr><td align="center">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0"
+           style="width:600px;max-width:100%;background:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #E3E9ED">
+
+      <tr><td style="background:#1A2B3C;padding:22px 24px">
+        <div style="font-size:16px;font-weight:bold;color:#FFFFFF">Szymon <span style="color:#4ECBA3">Domagała</span></div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:3px">
+          Trener personalny · Trener Longevity</div>
+      </td></tr>
+
+      <tr><td style="padding:26px 24px">
+        <div style="font-size:20px;font-weight:bold;margin-bottom:14px">
+          Cześć <span th:text="${s.name}">Imię</span>,</div>
+
+        <p style="font-size:15px;line-height:1.7;margin:0 0 14px">
+          dziękuję za wiadomość. Dostałem Twoje zgłoszenie i odezwę się w ciągu 24 godzin.</p>
+
+        <p style="font-size:15px;line-height:1.7;margin:0 0 22px">
+          Jeśli sprawa jest pilna, zadzwoń:
+          <a href="tel:+48502338373" style="color:#1D9E75;text-decoration:none;font-weight:bold">502 338 373</a>.</p>
+
+        <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom:22px">
+          <tr><td style="background:#1D9E75;border-radius:99px">
+            <a th:href="${siteUrl}"
+               style="display:inline-block;color:#FFFFFF;text-decoration:none;font-weight:bold;
+                      font-size:14px;padding:13px 26px">Wróć na stronę</a>
+          </td></tr>
+        </table>
+
+        <div style="border-top:1px solid #E3E9ED;padding-top:16px;font-size:13px;line-height:1.7;color:#5A6B7A">
+          Pozdrawiam,<br>
+          <strong style="color:#16232F">Szymon Domagała</strong><br>
+          Trener personalny, Trener Longevity<br>
+          Armii Krajowej 32a, 94-046 Łódź<br>
+          <a th:href="${siteUrl}" th:text="${siteHost}" style="color:#1D9E75;text-decoration:none">szymtrener.pl</a>
+        </div>
+      </td></tr>
+
+      <tr><td style="background:#F5F7F9;padding:14px 24px;font-size:11.5px;color:#8D9CA8;line-height:1.6">
+        Ta wiadomość została wysłana automatycznie, bo wypełniłeś formularz na stronie
+        <span th:text="${siteHost}">szymtrener.pl</span>. Jeśli to nie Ty — po prostu ją zignoruj.
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

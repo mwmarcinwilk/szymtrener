@@ -28,6 +28,14 @@
              style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
              th:text="${info}">Zapisano.</div>
 
+        <div class="note-bar" th:if="${!mailEnabled}"
+             style="background:var(--amber-pale);border-color:rgba(200,135,27,.25);color:#7A5310">
+          <svg><use href="#i-info"/></svg>
+          <div><b>Wysyłka e-mail jest wyłączona.</b> Formularze ze strony działają i zapisują się
+            do bazy — zgłoszenia znajdziesz w zakładce Zgłoszenia. Nie wychodzi tylko powiadomienie
+            do Ciebie ani potwierdzenie do klienta.</div>
+        </div>
+
         <div class="note-bar">
           <svg><use href="#i-info"/></svg>
           <div>
@@ -96,6 +104,18 @@
             <div class="card">
               <div class="card-h"><h2>Powiadomienia</h2></div>
               <div class="card-b">
+                <!--/* Główny wyłącznik. Zgłoszenia i tak lądują w bazie i widać je
+                       w panelu — to nie jest przełącznik „przyjmuj formularze". */-->
+                <div class="fld">
+                  <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                    <input type="checkbox" name="mailEnabled" value="true" th:checked="${mailEnabled}" style="width:auto">
+                    <b>Wysyłaj powiadomienia e-mail</b>
+                  </label>
+                  <div class="hint" style="justify-content:flex-start">
+                    <span>Wyłączone: zgłoszenia nadal zapisują się w bazie i widać je
+                          w zakładce Zgłoszenia, ale nie wychodzi żadna wiadomość.</span>
+                  </div>
+                </div>
                 <div class="fld">
                   <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
                     <input type="checkbox" name="notify" value="true" th:checked="${notify}" style="width:auto">

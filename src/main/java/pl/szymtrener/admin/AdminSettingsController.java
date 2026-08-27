@@ -43,6 +43,7 @@ public class AdminSettingsController {
     public String form(Model model) {
         model.addAttribute("pageSize", settings.getInt(SettingsService.BLOG_PAGE_SIZE, 9));
         model.addAttribute("recipient", settings.get(SettingsService.MAIL_RECIPIENT, props.mail().recipient()));
+        model.addAttribute("mailEnabled", settings.getBoolean(SettingsService.MAIL_ENABLED, true));
         model.addAttribute("notify", settings.getBoolean(SettingsService.MAIL_NOTIFY, true));
         model.addAttribute("autoReply", settings.getBoolean(SettingsService.MAIL_AUTOREPLY, props.mail().autoReply()));
         model.addAttribute("seoTitle", settings.get(SettingsService.SEO_TITLE, ""));
@@ -84,6 +85,7 @@ public class AdminSettingsController {
     @PostMapping("/admin/ustawienia")
     public String save(@RequestParam int pageSize,
                        @RequestParam String recipient,
+                       @RequestParam(defaultValue = "false") boolean mailEnabled,
                        @RequestParam(defaultValue = "false") boolean notify,
                        @RequestParam(defaultValue = "false") boolean autoReply,
                        @RequestParam(required = false) String seoTitle,
@@ -92,6 +94,7 @@ public class AdminSettingsController {
 
         // Zakres z sensem: 1 wpis na stronie to bezsens, 48 to strona ladujaca sie wieczność.
         settings.set(SettingsService.BLOG_PAGE_SIZE, String.valueOf(Math.clamp(pageSize, 3, 48)));
+        settings.set(SettingsService.MAIL_ENABLED, String.valueOf(mailEnabled));
         settings.set(SettingsService.MAIL_RECIPIENT, recipient.trim());
         settings.set(SettingsService.MAIL_NOTIFY, String.valueOf(notify));
         settings.set(SettingsService.MAIL_AUTOREPLY, String.valueOf(autoReply));

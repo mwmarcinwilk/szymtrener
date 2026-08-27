@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Powiadomienie dla trenera o nowym zgłoszeniu.
+
+       Style są WPISANE W ATRYBUTY, nie w <style> — Gmail i Outlook wycinają
+       arkusze z nagłówka, więc reguła w <head> po prostu by nie zadziałała.
+       Układ na tabelach z tego samego powodu: to jedyne, co renderuje się
+       przewidywalnie w klientach pocztowych. */-->
+<head><meta charset="UTF-8"><title>Nowe zgłoszenie</title></head>
+<body style="margin:0;padding:0;background:#F5F7F9;font-family:Arial,Helvetica,sans-serif;color:#16232F">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F5F7F9;padding:24px 12px">
+  <tr><td align="center">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0"
+           style="width:600px;max-width:100%;background:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #E3E9ED">
+
+      <tr><td style="background:#1A2B3C;padding:20px 24px">
+        <div style="font-size:16px;font-weight:bold;color:#FFFFFF">Szymon <span style="color:#4ECBA3">Domagała</span></div>
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:3px">
+          Nowe zgłoszenie ze strony</div>
+      </td></tr>
+
+      <tr><td style="padding:24px">
+        <div style="font-size:19px;font-weight:bold;margin:0 0 4px" th:text="${s.name}">Imię Nazwisko</div>
+        <div style="font-size:13px;color:#5A6B7A;margin-bottom:18px"
+             th:text="${s.type.label()} + ' · ' + ${s.createdLabel}">Formularz · data</div>
+
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;line-height:1.6">
+          <!--/* Puste pola pomijamy: ankieta kontaktowa ma inny zestaw niż zgłoszenie online. */-->
+          <tr th:if="${s.email != null}">
+            <td style="padding:7px 0;color:#8D9CA8;width:150px;vertical-align:top">E-mail</td>
+            <td style="padding:7px 0"><a th:href="'mailto:' + ${s.email}" th:text="${s.email}"
+                                         style="color:#1D9E75;text-decoration:none">adres</a></td></tr>
+          <tr th:if="${s.phone != null}">
+            <td style="padding:7px 0;color:#8D9CA8;vertical-align:top">Telefon</td>
+            <td style="padding:7px 0"><a th:href="'tel:' + ${s.phone}" th:text="${s.phone}"
+                                         style="color:#1D9E75;text-decoration:none">telefon</a></td></tr>
+          <tr th:if="${s.city != null}">
+            <td style="padding:7px 0;color:#8D9CA8;vertical-align:top">Miejscowość</td>
+            <td style="padding:7px 0" th:text="${s.city}">—</td></tr>
+          <tr th:if="${s.interest != null}">
+            <td style="padding:7px 0;color:#8D9CA8;vertical-align:top">Zainteresowanie</td>
+            <td style="padding:7px 0" th:text="${s.interest}">—</td></tr>
+          <tr th:if="${s.equipment != null}">
+            <td style="padding:7px 0;color:#8D9CA8;vertical-align:top">Sprzęt</td>
+            <td style="padding:7px 0" th:text="${s.equipment}">—</td></tr>
+          <tr th:if="${s.source != null}">
+            <td style="padding:7px 0;color:#8D9CA8;vertical-align:top">Skąd trafił</td>
+            <td style="padding:7px 0" th:text="${s.source}">—</td></tr>
+        </table>
+
+        <div th:if="${s.currentTraining != null}" style="margin-top:16px">
+          <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8D9CA8;margin-bottom:5px">
+            Jak trenuje teraz</div>
+          <div style="font-size:14px;line-height:1.65;background:#F5F7F9;border-left:3px solid #1D9E75;padding:11px 14px"
+               th:text="${s.currentTraining}">—</div>
+        </div>
+        <div th:if="${s.goal != null}" style="margin-top:14px">
+          <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8D9CA8;margin-bottom:5px">
+            Co chce osiągnąć</div>
+          <div style="font-size:14px;line-height:1.65;background:#F5F7F9;border-left:3px solid #1D9E75;padding:11px 14px"
+               th:text="${s.goal}">—</div>
+        </div>
+        <div th:if="${s.message != null}" style="margin-top:14px">
+          <div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8D9CA8;margin-bottom:5px">
+            Wiadomość</div>
+          <div style="font-size:14px;line-height:1.65;background:#F5F7F9;border-left:3px solid #1D9E75;padding:11px 14px"
+               th:text="${s.message}">—</div>
+        </div>
+
+        <div style="margin-top:22px">
+          <a th:href="${panelUrl}"
+             style="display:inline-block;background:#1D9E75;color:#FFFFFF;text-decoration:none;font-weight:bold;
+                    font-size:14px;padding:13px 26px;border-radius:99px">Otwórz w panelu</a>
+        </div>
+
+        <!--/* Odpowiedź na tę wiadomość idzie prosto do klienta — Reply-To ustawia MailService. */-->
+        <div style="font-size:12px;color:#8D9CA8;margin-top:18px;line-height:1.6">
+          Odpowiedz na tę wiadomość, żeby napisać bezpośrednio do klienta.<br>
+          Zgoda RODO udzielona <span th:text="${s.createdLabel}">—</span>.
+        </div>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

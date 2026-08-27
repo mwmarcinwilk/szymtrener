@@ -21,6 +21,12 @@ public class SettingsService {
 
     /** Klucze znane aplikacji — ekran ustawien rysuje sie z tej listy. */
     public static final String BLOG_PAGE_SIZE = "blog.page.size";
+    /**
+     * Glowny wylacznik poczty. Wylaczony = zgloszenia nadal zapisuja sie w bazie
+     * i widac je w panelu, ale nie leci zadna wiadomosc. Przydaje sie, zanim
+     * skrzynka bedzie skonfigurowana — strona dziala, nic nie ginie.
+     */
+    public static final String MAIL_ENABLED = "mail.enabled";
     public static final String MAIL_RECIPIENT = "mail.notify.recipient";
     public static final String MAIL_NOTIFY = "mail.notify.trainer";
     public static final String MAIL_AUTOREPLY = "mail.autoreply";

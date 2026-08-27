@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.szymtrener.common.NotFoundException;
 import pl.szymtrener.common.SlugUtil;
+import pl.szymtrener.settings.SettingsService;
 import pl.szymtrener.submission.*;
 
 import java.nio.charset.StandardCharsets;
@@ -32,13 +33,16 @@ public class AdminSubmissionController {
     private final SubmissionNoteRepository notes;
     private final SubmissionService service;
     private final ObjectMapper json;
+    private final SettingsService settings;
 
     public AdminSubmissionController(SubmissionRepository submissions, SubmissionNoteRepository notes,
-                                     SubmissionService service, ObjectMapper json) {
+                                     SubmissionService service, ObjectMapper json,
+                                     SettingsService settings) {
         this.submissions = submissions;
         this.notes = notes;
         this.service = service;
         this.json = json.copy().enable(SerializationFeature.INDENT_OUTPUT);
+        this.settings = settings;
     }
 
     @GetMapping
@@ -49,6 +53,7 @@ public class AdminSubmissionController {
                 : submissions.findByStatusOrderByCreatedAtDesc(status, PageRequest.of(strona, PAGE_SIZE)));
         model.addAttribute("activeStatus", status);
         model.addAttribute("statuses", SubmissionStatus.values());
+        model.addAttribute("mailEnabled", settings.getBoolean(SettingsService.MAIL_ENABLED, true));
         model.addAttribute("countAll", submissions.count());
         model.addAttribute("countNew", submissions.countByStatus(SubmissionStatus.NEW));
         model.addAttribute("countContact", submissions.countByStatus(SubmissionStatus.IN_CONTACT));

@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
-> AUTO-GENEROWANY 2026-08-26 przez tools/index_project.py — NIE edytuj ręcznie.
+> AUTO-GENEROWANY 2026-08-27 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 42 · Endpointy: 48 · Metody: 640 · Front: 0
+> Beany: 42 · Endpointy: 48 · Metody: 649 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -133,13 +133,13 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### AdminSettingsController  (src/main/java/pl/szymtrener/admin/AdminSettingsController.java)
 - [pub] form(Model model): String  :43
-- [pub] testMail(RedirectAttributes flash): String  :65
+- [pub] testMail(RedirectAttributes flash): String  :66
 
 ### AdminSubmissionController  (src/main/java/pl/szymtrener/admin/AdminSubmissionController.java)
-- [pub] detail(@PathVariable Long id, Model model): String  :64
-- [pub] addNote(@PathVariable Long id, @RequestParam String body, Principal principal): String  :84
-- [pub] export(@PathVariable Long id): ResponseEntity<byte[]>  :95
-- [pub] delete(@PathVariable Long id, Principal principal): String  :111
+- [pub] detail(@PathVariable Long id, Model model): String  :69
+- [pub] addNote(@PathVariable Long id, @RequestParam String body, Principal principal): String  :89
+- [pub] export(@PathVariable Long id): ResponseEntity<byte[]>  :100
+- [pub] delete(@PathVariable Long id, Principal principal): String  :116
 
 ### AdminTraineeController  (src/main/java/pl/szymtrener/admin/AdminTraineeController.java)
 - [pub] create(Model model): String  :47
@@ -422,11 +422,22 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] mask(String address): String  :81
 
 ### MailService  (src/main/java/pl/szymtrener/submission/MailService.java)
-- [pub] sendNotifications(Submission s): void  :35
-- [prv] trainerNotification(Submission s): SimpleMailMessage  :53
-- [prv] autoReply(Submission s): SimpleMailMessage  :63
-- [prv] body(Submission s): String  :83
-- [prv] line(StringBuilder sb, String label, String value): void  :100
+- [pub] sendNotifications(Submission s): void  :44
+- [prv] enabled(): boolean  :73
+- [prv] trainerNotification(Submission s): MimeMessage  :84
+- [prv] autoReply(Submission s): MimeMessage  :102
+- [prv] plainAutoReply(Submission s): String  :117
+- [prv] plainTrainerNotification(Submission s): String  :132
+- [prv] line(StringBuilder sb, String label, String value): void  :149
+
+### MailTemplatesTest  (src/test/java/pl/szymtrener/submission/MailTemplatesTest.java)
+- [   ] setUp(): void  :27
+- [prv] submission(): Submission  :39
+- [prv] context(Submission s): Context  :54
+- [   ] trainerNotificationRenders(): void  :65
+- [   ] skipsEmptyFields(): void  :79
+- [   ] clientConfirmationRenders(): void  :95
+- [   ] bothTemplatesSurviveMinimalSubmission(): void  :106
 
 ### MediaBlob  (src/main/java/pl/szymtrener/media/MediaBlob.java)
 - [pub] getMediaId(): Long  :23
@@ -752,12 +763,12 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] trim(String value): String  :121
 
 ### SettingsService  (src/main/java/pl/szymtrener/settings/SettingsService.java)
-- [pub] get(String key, String fallback): String  :39
-- [pub] getInt(String key, int fallback): int  :45
-- [pub] getBoolean(String key, boolean fallback): boolean  :56
-- [pub] set(String key, String value): void  :62
-- [pub] all(): Map<String, String>  :72
-- [prv] ensureLoaded(): void  :77
+- [pub] get(String key, String fallback): String  :45
+- [pub] getInt(String key, int fallback): int  :51
+- [pub] getBoolean(String key, boolean fallback): boolean  :62
+- [pub] set(String key, String value): void  :68
+- [pub] all(): Map<String, String>  :78
+- [prv] ensureLoaded(): void  :83
 
 ### SlugUtil  (src/main/java/pl/szymtrener/common/SlugUtil.java)
 - [pub] slugify(String input): String  :10

@@ -34,6 +34,10 @@
 - `window.sdDialog.alert({title, message})` / `.confirm({title, message, items, confirmLabel, cancelLabel, danger})` — static/js/admin.js — okna w szacie panelu zamiast natywnych `alert`/`confirm` przeglądarki. Zwracają Promise. Mają uwięziony fokus, Esc i klik w tło anulują, a przy `danger: true` fokus startuje na „Anuluj", żeby Enter nie skasował danych.
 - `<form data-confirm="…" data-confirm-title="…" data-confirm-ok="…">` — admin.js przechwytuje submit i pyta w oknie panelu. Używaj tego zamiast `onsubmit="return confirm(…)"`; Thymeleaf i tak nie wpuszcza zmiennych tekstowych do atrybutów zdarzeń.
 - `fragments/admin-layout :: pager(page, baseUrl)` — templates/fragments/ — paginacja list w panelu; `baseUrl` może już mieć parametry.
+- `SettingsService.MAIL_ENABLED` — główny wyłącznik poczty w Ustawieniach. Wyłączony: formularze nadal zapisują się do bazy i widać je w panelu, ale nic nie wychodzi. `MailService` kończy wtedy wcześnie i **nie ustawia `mail_error`** — to decyzja, nie awaria, więc oś czasu zgłoszenia nie może świecić na czerwono. Stan widać na pasku w Ustawieniach i na liście Zgłoszeń.
+- `templates/mail/notify-trainer.html` i `confirm-client.html` — formatki wysyłane jako multipart (HTML + wersja tekstowa). Style **w atrybutach**, układ na tabelach: Gmail i Outlook wycinają `<style>` z nagłówka. Pilnuje ich `MailTemplatesTest` — inaczej błąd w szablonie wyszedłby dopiero przy prawdziwym zgłoszeniu.
+- `MailConfig` — wypisuje przy starcie, co realnie wczytano (host, port, zamaskowany login, DŁUGOŚĆ hasła). Usuwa spacje z hasła aplikacji Google i mówi o tym w logu — wklejone „jak widać", w grupach po cztery, jest najczęstszą przyczyną błędu 535-5.7.8.
+- `POST /admin/ustawienia/test-poczty` — przycisk „Wyślij wiadomość testową"; komunikat serwera pocztowego wraca wprost na ekran.
 - `SubmissionService.export(id)` / `.delete(id)` — submission/ — RODO art. 15 i 17: komplet danych zgłoszenia do JSON-a i twarde usunięcie.
 
 ## Infrastruktura
