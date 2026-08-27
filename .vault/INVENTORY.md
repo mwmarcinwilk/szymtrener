@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
 > AUTO-GENEROWANY 2026-08-26 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 41 · Endpointy: 47 · Metody: 637 · Front: 0
+> Beany: 42 · Endpointy: 48 · Metody: 640 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -18,6 +18,7 @@
 @Component      PublishScheduler — src/main/java/pl/szymtrener/scheduler/PublishScheduler.java
 @Component      RateLimiter — src/main/java/pl/szymtrener/submission/RateLimiter.java
 @Configuration  AdminAccountInitializer — src/main/java/pl/szymtrener/admin/AdminAccountInitializer.java
+@Configuration  MailConfig — src/main/java/pl/szymtrener/config/MailConfig.java
 @Configuration  SecurityConfig — src/main/java/pl/szymtrener/config/SecurityConfig.java
 @Configuration  WebConfig — src/main/java/pl/szymtrener/config/WebConfig.java
 @Controller     AdminController — src/main/java/pl/szymtrener/admin/AdminController.java
@@ -89,6 +90,7 @@ POST    /admin/posty/ocena                            AdminPostController.score(
 POST    /admin/posty/zapisz                           AdminPostController.save() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 POST    /admin/posty/{id}/usun                        AdminPostController.delete() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 POST    /admin/ustawienia                             AdminSettingsController.save() — src/main/java/pl/szymtrener/admin/AdminSettingsController.java
+POST    /admin/ustawienia/test-poczty                 AdminSettingsController.testMail() — src/main/java/pl/szymtrener/admin/AdminSettingsController.java
 POST    /admin/zgloszenia/{id}/notatka                AdminSubmissionController.addNote() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 POST    /admin/zgloszenia/{id}/status                 AdminSubmissionController.changeStatus() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 POST    /admin/zgloszenia/{id}/usun                   AdminSubmissionController.delete() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
@@ -130,7 +132,8 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] toForm(Post post): PostForm  :323
 
 ### AdminSettingsController  (src/main/java/pl/szymtrener/admin/AdminSettingsController.java)
-- [pub] form(Model model): String  :38
+- [pub] form(Model model): String  :43
+- [pub] testMail(RedirectAttributes flash): String  :65
 
 ### AdminSubmissionController  (src/main/java/pl/szymtrener/admin/AdminSubmissionController.java)
 - [pub] detail(@PathVariable Long id, Model model): String  :64
@@ -413,6 +416,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### LegacyDocConverter  (src/main/java/pl/szymtrener/docimport/LegacyDocConverter.java)
 - [pub] convert(InputStream in): ImportResult  :22
+
+### MailConfig  (src/main/java/pl/szymtrener/config/MailConfig.java)
+- [   ] reportConfiguration(): void  :46
+- [prv] mask(String address): String  :81
 
 ### MailService  (src/main/java/pl/szymtrener/submission/MailService.java)
 - [pub] sendNotifications(Submission s): void  :35

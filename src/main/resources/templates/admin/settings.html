@@ -21,6 +21,9 @@
           </div>
         </div>
 
+        <div th:if="${error}" role="alert"
+             style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+             th:text="${error}">Błąd.</div>
         <div th:if="${info}" role="status"
              style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
              th:text="${info}">Zapisano.</div>
@@ -77,8 +80,14 @@
                 <div class="fld" style="margin-bottom:0">
                   <label for="mailFrom">Nadawca (from)</label>
                   <input type="text" id="mailFrom" th:value="${mailFrom}" readonly disabled>
-                  <div class="hint"><span>Serwer, port i nadawca pochodzą z pliku .env.</span></div>
+                  <div class="hint"><span>Serwer, port i nadawca pochodzą ze zmiennych środowiskowych.</span></div>
                 </div>
+                <!--/* Atrybut form= wiąże przycisk z osobnym formularzem na końcu strony:
+                       formularza nie wolno zagnieżdżać w formularzu ustawień. */-->
+                <button type="submit" form="mail-test" class="btn btn-o btn-s"
+                        style="width:100%;justify-content:center;margin-top:13px">
+                  <svg><use href="#i-mail"/></svg>Wyślij wiadomość testową
+                </button>
               </div>
             </div>
           </div>
@@ -143,6 +152,8 @@
     </div>
   </div>
 </div>
+<!--/* Test wysyłki: osobny formularz, żeby nie zagnieżdżać go w formularzu ustawień. */-->
+<form id="mail-test" method="post" th:action="@{/admin/ustawienia/test-poczty}" hidden></form>
 <script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
 </body>
 </html>
