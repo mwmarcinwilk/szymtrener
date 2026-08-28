@@ -17,9 +17,6 @@ import java.util.List;
 @Service
 public class OnlineOfferService {
 
-    /** Spacja NIEROZDZIELAJACA: „1 074 zl" nie moze sie zlamac na koncu wiersza. */
-    private static final char NBSP = '\u00A0';
-
     /** Cena Sciezki 1 z briefu, gdy nikt jej jeszcze nie zmienil w panelu. */
     public static final int DEFAULT_CONSULT_PRICE_GR = 34900;
 
@@ -96,17 +93,9 @@ public class OnlineOfferService {
                 badge, p.isHighlighted(), starting);
     }
 
-    /** Grosze → „1 074 zł". Spacja nierozdzielajaca, bez koncowek groszowych. */
+    /** Grosze → „1 074 zł". Reguła jest wspólna dla całej oferty, patrz {@link Money}. */
     public static String money(int grosze) {
-        long zlote = Math.round(grosze / 100.0);
-        String digits = Long.toString(zlote);
-        StringBuilder out = new StringBuilder();
-        for (int i = 0; i < digits.length(); i++) {
-            if (i > 0 && (digits.length() - i) % 3 == 0) out.append(NBSP);
-            out.append(digits.charAt(i));
-        }
-        // NBSP takze przed jednostka: „1 074" nie moze zostac oddzielone od „zl"
-        return out + "\u00A0zł";
+        return Money.format(grosze);
     }
 
     /**

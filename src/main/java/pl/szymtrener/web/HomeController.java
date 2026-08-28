@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import pl.szymtrener.config.AppProperties;
 import pl.szymtrener.content.PostRepository;
 import pl.szymtrener.offer.OnlineOfferService;
+import pl.szymtrener.offer.StationaryOfferService;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -20,11 +21,14 @@ public class HomeController {
     private final PostRepository posts;
     private final AppProperties props;
     private final OnlineOfferService offer;
+    private final StationaryOfferService stationary;
 
-    public HomeController(PostRepository posts, AppProperties props, OnlineOfferService offer) {
+    public HomeController(PostRepository posts, AppProperties props,
+                          OnlineOfferService offer, StationaryOfferService stationary) {
         this.posts = posts;
         this.props = props;
         this.offer = offer;
+        this.stationary = stationary;
     }
 
     @GetMapping("/")
@@ -49,6 +53,15 @@ public class HomeController {
         // Cena w danych strukturalnych musi zgadzac sie z ta na stronie — rozbieznosc
         // jest gorsza niz jej brak.
         model.addAttribute("lowestMonthly", offer.lowestMonthly());
+
+        // Cennik stacjonarny: te same liczby zasilaja karty w sekcji oferty
+        // i odpowiedz w FAQ (brief stacjonarny 5.3, jedno zrodlo cennika).
+        model.addAttribute("individualPackages", stationary.individual());
+        model.addAttribute("pairPackages", stationary.pairs());
+        model.addAttribute("stationaryRules", stationary.rules());
+        model.addAttribute("stationaryPrices", stationary.priceSentence());
+        model.addAttribute("longestValidity", stationary.longestValidity());
+        model.addAttribute("pairPrice", stationary.cheapestPair());
         return "index";
     }
 

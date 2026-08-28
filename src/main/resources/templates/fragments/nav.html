@@ -9,6 +9,9 @@
     <ul class="nav-links">
       <li><a th:href="|${base}#o-mnie|" href="#o-mnie">O mnie</a></li>
       <li><a th:href="|${base}#oferta|" href="#oferta">Oferta</a></li>
+      <!--/* Pary w menu: brief stacjonarny wskazuje, że to najbardziej dochodowy
+             produkt, a dotąd był schowany jako druga zakładka w cenniku. */-->
+      <li><a th:href="|${base}#pary|" href="#pary">We dwoje</a></li>
       <li><a th:href="|${base}#online|" href="#online">Online</a></li>
       <li><a href="/blog">Blog</a></li>
       <li><a th:href="|${base}#podcast|" href="#podcast">Ekspert</a></li>
@@ -29,12 +32,13 @@
 <div class="mobile-menu" id="mobile-menu">
   <a th:href="|${base}#o-mnie|" href="#o-mnie"><span class="idx">01</span>O mnie</a>
   <a th:href="|${base}#oferta|" href="#oferta"><span class="idx">02</span>Oferta</a>
-  <a th:href="|${base}#online|" href="#online"><span class="idx">03</span>Online</a>
-  <a href="/blog"><span class="idx">04</span>Blog</a>
-  <a th:href="|${base}#podcast|" href="#podcast"><span class="idx">05</span>Ekspert</a>
-  <a th:href="|${base}#studio|" href="#studio"><span class="idx">06</span>Studio</a>
-  <a th:href="|${base}#faq|" href="#faq"><span class="idx">07</span>FAQ</a>
-  <a th:href="|${base}#kontakt|" href="#kontakt"><span class="idx">08</span>Kontakt</a>
+  <a th:href="|${base}#pary|" href="#pary"><span class="idx">03</span>We dwoje</a>
+  <a th:href="|${base}#online|" href="#online"><span class="idx">04</span>Online</a>
+  <a href="/blog"><span class="idx">05</span>Blog</a>
+  <a th:href="|${base}#podcast|" href="#podcast"><span class="idx">06</span>Ekspert</a>
+  <a th:href="|${base}#studio|" href="#studio"><span class="idx">07</span>Studio</a>
+  <a th:href="|${base}#faq|" href="#faq"><span class="idx">08</span>FAQ</a>
+  <a th:href="|${base}#kontakt|" href="#kontakt"><span class="idx">09</span>Kontakt</a>
   <div class="mm-contact">
     <span>Zadzwoń lub napisz:</span>
     <a href="tel:+48502338373">502 338 373</a>

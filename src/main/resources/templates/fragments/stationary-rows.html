@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--/* ═══ Wiersze cennika ═══════════════════════════════════════════════════
+       Osobny fragment, bo oba cenniki (indywidualne i pary) mają identyczny
+       zestaw pól. Jedna definicja zamiast dwóch kopii do rozjechania. */-->
+<div th:fragment="rows(lista)" xmlns:th="http://www.thymeleaf.org">
+  <form th:each="p : ${lista}" method="post" th:action="@{/admin/oferta/stacjonarnie/{id}(id=${p.id})}"
+        style="border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:11px">
+    <div class="f-row" style="align-items:flex-start">
+      <div class="fld" style="flex:1;min-width:170px;margin:0">
+        <label th:for="'n' + ${p.id}">Nazwa</label>
+        <input type="text" th:id="'n' + ${p.id}" name="name" th:value="${p.name}" required>
+      </div>
+      <div class="fld" style="width:100px;margin:0">
+        <label th:for="'s' + ${p.id}">Treningów</label>
+        <input type="number" th:id="'s' + ${p.id}" name="sessions" th:value="${p.sessions}" min="1" required>
+      </div>
+      <div class="fld" style="width:130px;margin:0">
+        <label th:for="'c' + ${p.id}">Cena za trening</label>
+        <input type="text" th:id="'c' + ${p.id}" name="pricePerSession"
+               th:value="${prices.get(p.id)}" inputmode="decimal" required>
+      </div>
+      <div class="fld" style="width:120px;margin:0">
+        <label th:for="'w' + ${p.id}">Ważność (tyg.)</label>
+        <input type="number" th:id="'w' + ${p.id}" name="validityWeeks" th:value="${p.validityWeeks}" min="1"
+               placeholder="bez terminu">
+      </div>
+      <div class="fld" style="width:90px;margin:0">
+        <label th:for="'o' + ${p.id}">Kolejność</label>
+        <input type="number" th:id="'o' + ${p.id}" name="sortOrder" th:value="${p.sortOrder}" min="0">
+      </div>
+    </div>
+    <div class="f-row" style="align-items:center;margin-top:9px">
+      <label style="display:flex;gap:8px;align-items:center;cursor:pointer;font-size:13px">
+        <input type="checkbox" name="visible" value="true" th:checked="${p.visible}" style="width:auto">
+        Na stronie
+      </label>
+      <label style="display:flex;gap:8px;align-items:center;cursor:pointer;font-size:13px">
+        <input type="checkbox" name="featured" value="true" th:checked="${p.featured}" style="width:auto">
+        Wyróżniony
+      </label>
+      <!--/* Kwota „razem" i rabat są tylko podglądem: liczy je strona z ceny za trening. */-->
+      <span class="t-sub" style="font-size:11.5px;color:var(--ink-3)"
+            th:text="${p.sessions} > 1
+                ? 'Razem ' + ${T(pl.szymtrener.offer.Money).format(p.totalGr())}
+                : 'wejście bez terminu'">Razem 1 800 zł</span>
+      <div style="flex:1"></div>
+      <button class="mini del" type="submit" title="Usuń pakiet"
+              th:formaction="@{/admin/oferta/stacjonarnie/{id}/usun(id=${p.id})}"
+              data-confirm-title="Usunąć pakiet?"
+              th:data-confirm="'Pakiet „' + ${p.name} + '” zniknie z cennika. Jeśli chcesz go tylko schować, odznacz „Na stronie”.'"
+              data-confirm-ok="Usuń pakiet"><svg><use href="#i-trash"/></svg></button>
+      <button class="btn btn-p" type="submit"><svg><use href="#i-check"/></svg>Zapisz</button>
+    </div>
+  </form>
+  <p th:if="${lista.isEmpty()}" style="font-size:13px;color:var(--ink-3)">
+    Nie ma tu żadnego pakietu, więc ten cennik nie pokaże się na stronie.</p>
+</div>
+</body>
+</html>

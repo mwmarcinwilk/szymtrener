@@ -139,7 +139,23 @@
           "name": "Ile kosztuje trening personalny w Łodzi?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Pojedynczy trening stacjonarny kosztuje 190 zł, a w pakietach cena spada do 150 zł za trening (pakiet 12). Treningi dla par to od 200 do 240 zł za sesję. Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł."
+            "text": "[[${stationaryPrices} ?: 'Pojedynczy trening stacjonarny kosztuje 210 zł.']] Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Jak długo ważny jest pakiet i co jeśli zachoruję?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ważność rośnie razem z wielkością pakietu: cztery treningi masz do wykorzystania przez 6 tygodni, a największy pakiet przez [[${longestValidity} ?: '16 tygodni']]. Odwołanie do 24 godzin przed treningiem nie ma żadnych konsekwencji, ustalamy nowy termin. Raz na pakiet możesz też zgłosić z góry pauzę do 3 tygodni na chorobę lub wyjazd, która zatrzymuje bieg ważności."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy mogę trenować razem z partnerem lub partnerką?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tak. Trenujecie w jednym terminie, jedziecie jednym samochodem i nikt nie musi zostawać w domu z dziećmi, żeby to drugie mogło poćwiczyć. Każde z Was pracuje na własnym poziomie. Ceny treningów dla par są łączne za dwie osoby i zaczynają się od [[${pairPrice} ?: '200 zł']] za trening."
           }
         },
         {
@@ -354,94 +370,113 @@
       <p class="lead">Pracuję stacjonarnie w Łodzi oraz zdalnie w całej Polsce. Każda forma jest dostosowana do Twojego stylu życia.</p>
     </div>
 
-    <div class="offer-tabs" data-reveal>
-      <button class="tab-btn active" onclick="showTab('stacjonarne',this)">Treningi stacjonarne</button>
-      <button class="tab-btn" onclick="showTab('pary',this)">Treningi dla par</button>
-      <button class="tab-btn" onclick="showTab('online',this)">Online &amp; Dietetyka</button>
-    </div>
-
-    <div class="offer-panel active" id="panel-stacjonarne">
+    <!--/* Cennik pochodzi z panelu. To samo źródło zasila odpowiedź w FAQ niżej —
+           brief stacjonarny 5.3: obie instancje cennika muszą czerpać z jednego
+           miejsca, żeby nie rozjechały się przy kolejnej zmianie ceny. */-->
+    <div class="price-block" data-reveal th:if="${!individualPackages.isEmpty()}">
+      <h3 class="price-h">Treningi indywidualne</h3>
       <div class="price-grid">
-        <div class="price-card">
-          <div class="price-qty">Pojedynczy trening</div>
-          <div class="price-main">190 <span>zł / szt</span></div>
-          <div class="price-total">Elastycznie, bez zobowiązań</div>
-          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
-        </div>
-        <div class="price-card">
-          <div class="price-qty">Pakiet 4 treningów</div>
-          <div class="price-main">170 <span>zł / szt</span></div>
-          <div class="price-total">Razem: <strong>680 zł</strong></div>
-          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
-        </div>
-        <div class="price-card featured">
-          <div class="price-qty">Pakiet 8 treningów</div>
-          <div class="price-main">160 <span>zł / szt</span></div>
-          <div class="price-total">Razem: <strong>1 280 zł</strong></div>
-          <a href="#kontakt" class="btn btn-primary">Umów konsultację</a>
-        </div>
-        <div class="price-card">
-          <div class="price-qty">Pakiet 12 treningów</div>
-          <div class="price-main">150 <span>zł / szt</span></div>
-          <div class="price-total">Razem: <strong>1 800 zł</strong></div>
-          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
+        <div class="price-card" th:each="p : ${individualPackages}" th:classappend="${p.featured()} ? ' featured'">
+          <div class="price-qty" th:text="${p.name()}">Pakiet 8 treningów</div>
+          <div class="price-main"><span th:text="${p.perSession()}">160 zł</span> <span>/ trening</span></div>
+          <div class="price-total" th:if="${p.totalLine()} != null">
+            <strong th:text="${p.totalLine()}">Razem: 1 280 zł</strong>
+          </div>
+          <div class="price-total" th:unless="${p.totalLine()} != null">Elastycznie, bez zobowiązań</div>
+          <!--/* Ważność i rabat przy każdym pakiecie: brief 5.1 wskazuje, że dziś
+                 tej informacji nie ma nigdzie na stronie. */-->
+          <div class="price-meta">
+            <span class="price-save" th:if="${p.discount()} != null" th:text="${p.discount()}">Taniej o 29%</span>
+            <span class="price-valid" th:if="${p.validity()} != null" th:text="${p.validity()}">Ważny 16 tygodni</span>
+          </div>
+          <a href="#kontakt" class="btn" th:classappend="${p.featured()} ? 'btn-primary' : 'btn-outline'">Umów konsultację</a>
         </div>
       </div>
     </div>
 
-    <div class="offer-panel" id="panel-pary">
-      <div class="price-grid">
-        <div class="price-card">
-          <div class="price-qty">Pojedynczy trening (para)</div>
-          <div class="price-main">240 <span>zł / szt</span></div>
-          <div class="price-total">Razem dla dwojga</div>
-          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
-        </div>
-        <div class="price-card">
-          <div class="price-qty">Pakiet 4 treningów (para)</div>
-          <div class="price-main">220 <span>zł / szt</span></div>
-          <div class="price-total">Razem: <strong>880 zł</strong></div>
-          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
-        </div>
-        <div class="price-card featured">
-          <div class="price-qty">Pakiet 8 treningów (para)</div>
-          <div class="price-main">210 <span>zł / szt</span></div>
-          <div class="price-total">Razem: <strong>1 680 zł</strong></div>
-          <a href="#kontakt" class="btn btn-primary">Umów konsultację</a>
-        </div>
-        <div class="price-card">
-          <div class="price-qty">Pakiet 12 treningów (para)</div>
-          <div class="price-main">200 <span>zł / szt</span></div>
-          <div class="price-total">Razem: <strong>2 400 zł</strong></div>
-          <a href="#kontakt" class="btn btn-outline">Umów konsultację</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="offer-panel" id="panel-online">
-      <div class="offer-online">
-        <div class="online-card">
-          <div class="ic">💻</div>
-          <h3>Prowadzenie online</h3>
-          <!--/* Kwota z panelu, nie z HTML — brief 2.5 zakazuje kopii ceny w kilku miejscach. */-->
-          <div class="online-price" th:if="${lowestMonthly} != null">od <span th:text="${lowestMonthly}">149 zł</span> <span>/ miesiąc</span></div>
-          <p>Spersonalizowany plan treningowy, dostęp do aplikacji treningowej na telefon, stały kontakt i analiza postępów. Pracujesz z dowolnego miejsca w Polsce.</p>
-          <a href="#online" class="btn btn-outline">Poznaj szczegóły online</a>
-        </div>
-        <div class="online-card">
-          <div class="ic">🥗</div>
-          <h3>Jadłospis dietetyczny</h3>
-          <div class="online-price">od 129 <span>zł / rozpiska</span></div>
-          <p>Indywidualnie opracowany jadłospis dostosowany do Twoich potrzeb, celów zdrowotnych i stylu życia.</p>
-          <a href="#kontakt" class="btn btn-outline">Zamów jadłospis</a>
-        </div>
-      </div>
+    <!--/* Zasady odwołań stoją PRZY cenniku, nie w regulaminie: brief traktuje
+           pauzę jako argument sprzedażowy, a nie zapis prawny. */-->
+    <div class="rules" data-reveal th:if="${!stationaryRules.isEmpty()}">
+      <h3>Co, jeśli życie wejdzie w drogę</h3>
+      <ul>
+        <li th:each="r : ${stationaryRules}" th:text="${r}">Odwołanie do 24 godzin przed treningiem nie ma konsekwencji.</li>
+      </ul>
     </div>
 
     <div class="offer-note" data-reveal>
       <p>💬 <strong>Nie wiesz, od czego zacząć?</strong><br>
         Zacznij od bezpłatnej konsultacji – porozmawiamy o Twoich potrzebach i dobierzemy odpowiedni plan.</p>
       <a href="#kontakt" class="btn btn-primary">Umów rozmowę wstępną</a>
+    </div>
+  </div>
+</section>
+
+<!--/* ─── TRENING WE DWOJE ───
+       Pary przestały być drugą zakładką w cenniku i dostały własną sekcję z opisem
+       problemu, który rozwiązują. To najbardziej dochodzony produkt w ofercie:
+       ta sama godzina pracy, wyższa stawka, a wspólny termin usuwa główną barierę
+       logistyczną w domu z dziećmi. */-->
+<section id="pary" class="section pairs">
+  <div class="container">
+    <div class="pairs-head" data-reveal>
+      <div class="online-badge">We dwoje</div>
+      <h2>Trenujcie razem, w jednym terminie</h2>
+      <p>Najczęstszy powód, dla którego trening nie dochodzi do skutku w domu z dziećmi, jest prozaiczny: ktoś musi zostać z dzieciakami. Wspólny trening znosi ten problem. Jeden termin, jeden dojazd, nikt nie zostaje w domu i nikt nikomu nie tłumaczy, dlaczego znowu nie wyszło.</p>
+    </div>
+
+    <div class="pairs-body">
+      <ul class="pairs-list" data-reveal>
+        <li>Wspólny termin, więc nie trzeba się zmieniać przy dzieciach</li>
+        <li>Jeden dojazd zamiast dwóch i jedna godzina wyjęta z tygodnia, nie dwie</li>
+        <li>Każde z Was ćwiczy według własnego poziomu, w tym samym czasie</li>
+        <li>Łatwiej utrzymać regularność, kiedy druga osoba idzie razem z Wami</li>
+      </ul>
+
+      <div class="price-grid pairs-grid" data-reveal th:if="${!pairPackages.isEmpty()}">
+        <div class="price-card" th:each="p : ${pairPackages}" th:classappend="${p.featured()} ? ' featured'">
+          <div class="price-qty" th:text="${p.name()}">Pakiet 8 treningów</div>
+          <div class="price-main"><span th:text="${p.perSession()}">210 zł</span> <span>/ trening</span></div>
+          <div class="price-total" th:if="${p.totalLine()} != null">
+            <strong th:text="${p.totalLine()}">Razem: 1 680 zł</strong>
+          </div>
+          <div class="price-total" th:unless="${p.totalLine()} != null">Elastycznie, bez zobowiązań</div>
+          <div class="price-meta">
+            <span class="price-save" th:if="${p.discount()} != null" th:text="${p.discount()}">Taniej o 17%</span>
+            <span class="price-valid" th:if="${p.validity()} != null" th:text="${p.validity()}">Ważny 16 tygodni</span>
+          </div>
+          <a href="#kontakt" class="btn" th:classappend="${p.featured()} ? 'btn-primary' : 'btn-outline'">Umów trening we dwoje</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="pairs-note" data-reveal th:if="${!pairPackages.isEmpty()}">Podane kwoty są łączne za dwie osoby, nie za osobę.</p>
+  </div>
+</section>
+
+<!-- ─── ONLINE I DIETETYKA ─── -->
+<section id="zdalnie" class="section">
+  <div class="container">
+    <div data-reveal>
+      <div class="eyebrow">Zdalnie</div>
+      <h2 class="headline">Nie mieszkasz w <em>Łodzi</em>?</h2>
+      <p class="lead">Prowadzę klientów z całej Polski. Plan, aplikacja na telefon i stały kontakt zamiast dojazdu.</p>
+    </div>
+    <div class="offer-online" data-reveal>
+      <div class="online-card">
+        <div class="ic">💻</div>
+        <h3>Prowadzenie online</h3>
+        <!--/* Kwota z panelu, nie z HTML — brief 2.5 zakazuje kopii ceny w kilku miejscach. */-->
+        <div class="online-price" th:if="${lowestMonthly} != null">od <span th:text="${lowestMonthly}">149 zł</span> <span>/ miesiąc</span></div>
+        <p>Spersonalizowany plan treningowy, dostęp do aplikacji treningowej na telefon, stały kontakt i analiza postępów. Pracujesz z dowolnego miejsca w Polsce.</p>
+        <a href="#online" class="btn btn-outline">Poznaj szczegóły online</a>
+      </div>
+      <div class="online-card">
+        <div class="ic">🥗</div>
+        <h3>Jadłospis dietetyczny</h3>
+        <div class="online-price">od 129 <span>zł / rozpiska</span></div>
+        <p>Indywidualnie opracowany jadłospis dostosowany do Twoich potrzeb, celów zdrowotnych i stylu życia.</p>
+        <a href="#kontakt" class="btn btn-outline">Zamów jadłospis</a>
+      </div>
     </div>
   </div>
 </section>
@@ -829,19 +864,40 @@
 
       <article class="faq-item">
         <h3 class="faq-q">Ile kosztuje trening personalny w Łodzi?</h3>
-        <p class="faq-a" th:inline="text">Pojedynczy trening stacjonarny kosztuje 190 zł, a w pakietach cena spada do 150 zł za trening (pakiet 12). Treningi dla par to od 200 do 240 zł za sesję. Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł.</p>
-        <table class="price-table">
-          <caption>Cennik treningów personalnych – 1 osoba (stan: czerwiec 2026)</caption>
+        <!--/* Zdanie i tabela pochodzą z tych samych danych co cennik wyżej.
+               Brief stacjonarny 5.3: cennik jest na stronie dwa razy i obie
+               instancje muszą czerpać z jednego źródła. */-->
+        <p class="faq-a" th:inline="text">[[${stationaryPrices} ?: 'Pojedynczy trening stacjonarny kosztuje 210 zł.']] Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł.</p>
+        <table class="price-table" th:if="${!individualPackages.isEmpty()}">
+          <caption>Cennik treningów personalnych – 1 osoba</caption>
           <thead>
-            <tr><th scope="col">Pakiet</th><th scope="col">Cena za trening</th><th scope="col">Razem</th></tr>
+            <tr><th scope="col">Pakiet</th><th scope="col">Cena za trening</th><th scope="col">Razem</th><th scope="col">Ważność</th></tr>
           </thead>
           <tbody>
-            <tr><td>Pojedynczy trening</td><td>190 zł</td><td>190 zł</td></tr>
-            <tr><td>Pakiet 4 treningów</td><td>170 zł</td><td>680 zł</td></tr>
-            <tr><td>Pakiet 8 treningów</td><td>160 zł</td><td>1 280 zł</td></tr>
-            <tr><td>Pakiet 12 treningów</td><td>150 zł</td><td>1 800 zł</td></tr>
+            <tr th:each="p : ${individualPackages}">
+              <td th:text="${p.name()}">Pakiet 8 treningów</td>
+              <td th:text="${p.perSession()}">160 zł</td>
+              <td th:text="${p.totalLine()} != null ? ${#strings.replace(p.totalLine(), 'Razem: ', '')} : ${p.perSession()}">1 280 zł</td>
+              <td th:text="${p.validity()} ?: '—'">Ważny 10 tygodni</td>
+            </tr>
           </tbody>
         </table>
+      </article>
+
+      <!--/* Dwa pytania dopisane wprost z briefu stacjonarnego (punkt 5.2):
+             ważność pakietu i trening we dwoje to dwie rzeczy, o które klienci
+             pytają, a których strona dotąd nie tłumaczyła. */-->
+      <article class="faq-item">
+        <h3 class="faq-q">Jak długo ważny jest pakiet i co jeśli zachoruję?</h3>
+        <p class="faq-a" th:inline="text">Ważność rośnie razem z wielkością pakietu: cztery treningi masz do wykorzystania przez 6 tygodni, a największy pakiet przez [[${longestValidity} ?: '16 tygodni']]. To zapas policzony tak, żeby zmieściła się w nim choroba, delegacja albo tydzień, w którym po prostu nie wyszło.</p>
+        <ul th:if="${!stationaryRules.isEmpty()}">
+          <li th:each="r : ${stationaryRules}" th:text="${r}">Odwołanie do 24 godzin przed treningiem nie ma konsekwencji.</li>
+        </ul>
+      </article>
+
+      <article class="faq-item">
+        <h3 class="faq-q">Czy mogę trenować razem z partnerem lub partnerką?</h3>
+        <p class="faq-a" th:inline="text">Tak, i dla wielu osób to jedyna forma, która realnie wchodzi w grafik. Trenujecie w jednym terminie, jedziecie jednym samochodem i nikt nie zostaje w domu z dziećmi, żeby to drugie mogło poćwiczyć. Każde z Was pracuje przy tym na własnym poziomie. Ceny par są łączne za dwie osoby i zaczynają się od [[${pairPrice} ?: '200 zł']] za trening.</p>
       </article>
 
       <article class="faq-item">

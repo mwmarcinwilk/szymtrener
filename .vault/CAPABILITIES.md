@@ -66,3 +66,13 @@
 - Cena Ścieżki 1 (konsultacja + plan) siedzi w `SettingsService.OFFER_CONSULT_PRICE_GR` — jedna kwota, bez własnej tabeli.
 - `Submission.offerPath` / `offerPackage` + `offerContext()` — z którego CTA przyszło zgłoszenie. Widać to w mailu do trenera i w karcie zgłoszenia. Ustawiają je ukryte pola formularza, wypełniane przez `data-path` / `data-package` na przyciskach (`main.js`).
 - Sekcje strony: `#online` (dwie ścieżki + pakiety), `#opinie`, `#faq-online` (akordeon na `<details>` — działa bez JS i czytają go boty). Każda znika w całości, gdy nie ma czego pokazać — bez placeholderów „wkrótce".
+
+## Cennik stacjonarny (brief „Ceny treningów stacjonarnych" v1.0)
+- `StationaryOfferService` — offer/ — cennik gotowy do wyświetlenia plus zdania do FAQ. `priceSentence()` i tabela cennika w FAQ powstają z tych samych liczb co karty w sekcji oferty: brief 5.3 wymaga jednego źródła, bo cennik jest na stronie dwa razy.
+- `StationaryPackage` — trzyma TYLKO cenę za jeden trening. Kwota „razem" (`totalGr()`) i rabat (`discountPercent(cenaPojedynczego)`) są liczone; trzy kolumny opisujące tę samą cenę rozjeżdżają się przy pierwszej zmianie. Rabat liczy się w obrębie rodzaju: cena pary jest łączna za dwie osoby, więc porównanie z ceną indywidualną nie miałoby sensu.
+- `validityWeeks` = null oznacza wejście bez terminu, nie zero tygodni. `StationaryOfferService.validityLabel()` odmienia: „4 tygodnie", „6 tygodni", „22 tygodnie".
+- `Money.format(gr)` / `Money.amount(gr)` — offer/ — wspólne formatowanie kwot dla oferty online i stacjonarnej. `format` dokleja „zł" po spacji nierozdzielającej, `amount` zwraca samą kwotę do zapisów typu „od 200 do 240 zł". `OnlineOfferService.money()` deleguje tutaj.
+- `AdminOfferController` obsługuje dwa ekrany pod jedną pozycją menu: `/admin/oferta` (online) i `/admin/oferta/stacjonarnie` (ceny, ważność, zasady odwołań). Cennik stacjonarny edytuje się w wierszu, bez wchodzenia na osobny ekran — najczęstsza operacja to poprawienie jednej kwoty.
+- `fragments/stationary-rows :: rows(lista)` — wiersze cennika w panelu, wspólne dla treningów indywidualnych i par.
+- `SettingsService` + klucze `stationary.rules.{cancel,late,pause}` — zasady odwołań i pauzy jako zwykły tekst z panelu. Pokazują się przy cenniku i w FAQ, bo brief traktuje pauzę jako argument sprzedażowy, nie zapis regulaminu.
+- Sekcje strony: `#oferta` (cennik indywidualny + zasady), `#pary` (własna ścieżka z opisem bariery logistycznej), `#zdalnie` (online i dietetyka). Zakładki `showTab` zniknęły razem z kodem JS i CSS — pary przestały być drugą zakładką w cenniku.

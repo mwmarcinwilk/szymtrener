@@ -12,6 +12,10 @@ import pl.szymtrener.settings.SettingsService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Ekran „Oferta online" — ceny, opinie i FAQ w jednym miejscu.
@@ -35,14 +39,17 @@ public class AdminOfferController {
     private final OnlineFaqRepository faq;
     private final SettingsService settings;
     private final OnlineOfferService offer;
+    private final StationaryPackageRepository stationary;
 
     public AdminOfferController(OnlinePackageRepository packages, TestimonialRepository testimonials,
-                                OnlineFaqRepository faq, SettingsService settings, OnlineOfferService offer) {
+                                OnlineFaqRepository faq, SettingsService settings, OnlineOfferService offer,
+                                StationaryPackageRepository stationary) {
         this.packages = packages;
         this.testimonials = testimonials;
         this.faq = faq;
         this.settings = settings;
         this.offer = offer;
+        this.stationary = stationary;
     }
 
     @GetMapping
@@ -292,6 +299,132 @@ public class AdminOfferController {
         faq.delete(q);
         flash.addFlashAttribute("info", "Usunięto pytanie.");
         return "redirect:/admin/oferta";
+    }
+
+    // ── Cennik stacjonarny (brief „Ceny stacjonarne", punkt 5.3) ─────────────
+
+    @GetMapping("/stacjonarnie")
+    public String stationary(Model model) {
+        List<StationaryPackage> all = stationary.findAllByOrderByKindAscSortOrderAsc();
+        model.addAttribute("individual", all.stream().filter(p -> p.getKind() == StationaryKind.INDYWIDUALNY).toList());
+        model.addAttribute("pairs", all.stream().filter(p -> p.getKind() == StationaryKind.PARA).toList());
+        model.addAttribute("ruleCancel", settings.get(StationaryOfferService.RULE_CANCEL, ""));
+        model.addAttribute("ruleLate", settings.get(StationaryOfferService.RULE_LATE, ""));
+        model.addAttribute("rulePause", settings.get(StationaryOfferService.RULE_PAUSE, ""));
+        model.addAttribute("prices", pricesInZloty(all));
+        model.addAttribute("title", "Cennik stacjonarny");
+        return "admin/offer-stationary";
+    }
+
+    /** Kwoty w zlotowkach pod pola formularza, po id pakietu. */
+    private static Map<Long, String> pricesInZloty(List<StationaryPackage> all) {
+        Map<Long, String> out = new LinkedHashMap<>();
+        all.forEach(p -> out.put(p.getId(), zlote(p.getPricePerSessionGr())));
+        return out;
+    }
+
+    @PostMapping("/stacjonarnie/{id}")
+    public String saveStationary(@PathVariable Long id,
+                                 @RequestParam String name,
+                                 @RequestParam int sessions,
+                                 @RequestParam String pricePerSession,
+                                 @RequestParam(required = false) String validityWeeks,
+                                 @RequestParam(defaultValue = "false") boolean featured,
+                                 @RequestParam(defaultValue = "0") int sortOrder,
+                                 @RequestParam(defaultValue = "false") boolean visible,
+                                 RedirectAttributes flash) {
+
+        StationaryPackage p = stationary.findById(id)
+                .orElseThrow(() -> new NotFoundException("Nie ma pakietu " + id));
+
+        Integer price = grosze(pricePerSession);
+        if (price == null) {
+            flash.addFlashAttribute("error", "Cena za trening musi być liczbą, np. 210.");
+            return "redirect:/admin/oferta/stacjonarnie";
+        }
+        if (sessions < 1) {
+            flash.addFlashAttribute("error", "Pakiet musi mieć co najmniej jeden trening.");
+            return "redirect:/admin/oferta/stacjonarnie";
+        }
+        Integer weeks = weeks(validityWeeks);
+        if (weeks != null && weeks <= 0) {
+            flash.addFlashAttribute("error", "Ważność podaj w tygodniach albo zostaw puste dla wejścia bez terminu.");
+            return "redirect:/admin/oferta/stacjonarnie";
+        }
+
+        p.setName(name.trim());
+        p.setSessions(sessions);
+        p.setPricePerSessionGr(price);
+        p.setValidityWeeks(weeks);
+        p.setFeatured(featured);
+        p.setSortOrder(sortOrder);
+        p.setVisible(visible);
+        stationary.save(p);
+
+        log.info("Zaktualizowano pakiet stacjonarny: {} {} ({} gr/trening)", p.getKind(), p.getName(), price);
+        flash.addFlashAttribute("info", "Zapisano: " + p.getKind().label().toLowerCase(Locale.ROOT)
+                + ", " + p.getName() + ".");
+        return "redirect:/admin/oferta/stacjonarnie";
+    }
+
+    @PostMapping("/stacjonarnie")
+    public String addStationary(@RequestParam StationaryKind kind,
+                                @RequestParam String name,
+                                RedirectAttributes flash) {
+        if (name.isBlank()) {
+            flash.addFlashAttribute("error", "Podaj nazwę pakietu.");
+            return "redirect:/admin/oferta/stacjonarnie";
+        }
+        StationaryPackage p = new StationaryPackage();
+        p.setKind(kind);
+        p.setName(name.trim());
+        p.setSessions(1);
+        p.setPricePerSessionGr(0);
+        p.setSortOrder(stationary.findAll().size() + 1);
+        // Ukryty do czasu wpisania ceny — inaczej na stronie stanelaby karta za 0 zl.
+        p.setVisible(false);
+        stationary.save(p);
+        flash.addFlashAttribute("info", "Dodano pakiet. Wpisz cenę i włącz widoczność.");
+        return "redirect:/admin/oferta/stacjonarnie";
+    }
+
+    @PostMapping("/stacjonarnie/{id}/usun")
+    public String deleteStationary(@PathVariable Long id, RedirectAttributes flash) {
+        StationaryPackage p = stationary.findById(id)
+                .orElseThrow(() -> new NotFoundException("Nie ma pakietu " + id));
+        stationary.delete(p);
+        flash.addFlashAttribute("info", "Usunięto pakiet " + p.getName() + ".");
+        return "redirect:/admin/oferta/stacjonarnie";
+    }
+
+    /**
+     * Zasady odwolan i pauzy. Brief: maja byc argumentem sprzedazowym widocznym
+     * przy cenniku, nie zapisem w regulaminie — stad zwykle pola tekstowe.
+     */
+    @PostMapping("/stacjonarnie/zasady")
+    public String saveRules(@RequestParam(required = false) String cancel,
+                            @RequestParam(required = false) String late,
+                            @RequestParam(required = false) String pause,
+                            RedirectAttributes flash) {
+        settings.set(StationaryOfferService.RULE_CANCEL, text(cancel));
+        settings.set(StationaryOfferService.RULE_LATE, text(late));
+        settings.set(StationaryOfferService.RULE_PAUSE, text(pause));
+        flash.addFlashAttribute("info", "Zapisano zasady odwołań.");
+        return "redirect:/admin/oferta/stacjonarnie";
+    }
+
+    private static String text(String v) {
+        return v == null ? "" : v.trim();
+    }
+
+    /** Puste pole = wejscie bez terminu, nie zero tygodni. */
+    static Integer weeks(String input) {
+        if (input == null || input.isBlank()) return null;
+        try {
+            return Integer.valueOf(input.trim());
+        } catch (NumberFormatException e) {
+            return 0;   // odrzucone wyzej jako blad
+        }
     }
 
     // ── Kwoty ────────────────────────────────────────────────────────────────

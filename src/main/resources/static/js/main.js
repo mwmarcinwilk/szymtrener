@@ -176,15 +176,6 @@
     });
   });
 
-  /* ─── OFFER TABS ─── */
-  window.showTab = function (id, btn) {
-    $$('.offer-panel').forEach(p => p.classList.remove('active'));
-    $$('.tab-btn').forEach(b => b.classList.remove('active'));
-    const panel = $('#panel-' + id);
-    if (panel) panel.classList.add('active');
-    btn.classList.add('active');
-  };
-
   /* ─── BACK TO TOP ─── */
   const backTop = $('#backTop');
   if (backTop) {

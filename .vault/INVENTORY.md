@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
-> AUTO-GENEROWANY 2026-08-27 przez tools/index_project.py — NIE edytuj ręcznie.
+> AUTO-GENEROWANY 2026-08-28 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 46 · Endpointy: 66 · Metody: 789 · Front: 0
+> Beany: 47 · Endpointy: 71 · Metody: 837 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -48,6 +48,7 @@
 @Service        PostService — src/main/java/pl/szymtrener/content/PostService.java
 @Service        SeoScoreService — src/main/java/pl/szymtrener/seo/SeoScoreService.java
 @Service        SettingsService — src/main/java/pl/szymtrener/settings/SettingsService.java
+@Service        StationaryOfferService — src/main/java/pl/szymtrener/offer/StationaryOfferService.java
 @Service        SubmissionService — src/main/java/pl/szymtrener/submission/SubmissionService.java
 @Service        TraineeService — src/main/java/pl/szymtrener/crm/TraineeService.java
 
@@ -66,6 +67,7 @@ GET     /admin/media                                  AdminMediaController.libra
 GET     /admin/oferta                                 AdminOfferController.overview() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 GET     /admin/oferta/opinie/{id}                     AdminOfferController.editTestimonial() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 GET     /admin/oferta/pakiety/{id}                    AdminOfferController.editPackage() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
+GET     /admin/oferta/stacjonarnie                    AdminOfferController.stationary() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 GET     /admin/posty                                  AdminPostController.list() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 GET     /admin/posty/nowy                             AdminPostController.create() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 GET     /admin/posty/{id}                             AdminPostController.edit() — src/main/java/pl/szymtrener/admin/AdminPostController.java
@@ -107,6 +109,10 @@ POST    /admin/oferta/opinie/{id}/usun                AdminOfferController.delet
 POST    /admin/oferta/pakiety                         AdminOfferController.addPackage() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/pakiety/{id}                    AdminOfferController.savePackage() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/pakiety/{id}/usun               AdminOfferController.deletePackage() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
+POST    /admin/oferta/stacjonarnie                    AdminOfferController.addStationary() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
+POST    /admin/oferta/stacjonarnie/zasady             AdminOfferController.saveRules() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
+POST    /admin/oferta/stacjonarnie/{id}               AdminOfferController.saveStationary() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
+POST    /admin/oferta/stacjonarnie/{id}/usun          AdminOfferController.deleteStationary() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/posty/autozapis                        AdminPostController.autosave() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 POST    /admin/posty/ocena                            AdminPostController.score() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 POST    /admin/posty/zapisz                           AdminPostController.save() — src/main/java/pl/szymtrener/admin/AdminPostController.java
@@ -159,18 +165,24 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] currentLogin(): String  :67
 
 ### AdminOfferController  (src/main/java/pl/szymtrener/admin/AdminOfferController.java)
-- [pub] overview(Model model): String  :49
-- [pub] addPackage(@RequestParam String name, RedirectAttributes flash): String  :80
-- [pub] editPackage(@PathVariable Long id, Model model): String  :98
-- [pub] deletePackage(@PathVariable Long id, RedirectAttributes flash): String  :171
-- [pub] addTestimonial(@RequestParam String name, @RequestParam String body, RedirectAttributes flash): String  :182
-- [pub] editTestimonial(@PathVariable Long id, Model model): String  :198
-- [pub] deleteTestimonial(@PathVariable Long id, RedirectAttributes flash): String  :236
-- [pub] addQuestion(@RequestParam String question, RedirectAttributes flash): String  :247
-- [pub] deleteQuestion(@PathVariable Long id, RedirectAttributes flash): String  :289
-- [   ] grosze(String input): Integer  :303
-- [   ] zlote(int grosze): String  :318
-- [prv] blankToNull(String v): String  :323
+- [pub] overview(Model model): String  :56
+- [pub] addPackage(@RequestParam String name, RedirectAttributes flash): String  :87
+- [pub] editPackage(@PathVariable Long id, Model model): String  :105
+- [pub] deletePackage(@PathVariable Long id, RedirectAttributes flash): String  :178
+- [pub] addTestimonial(@RequestParam String name, @RequestParam String body, RedirectAttributes flash): String  :189
+- [pub] editTestimonial(@PathVariable Long id, Model model): String  :205
+- [pub] deleteTestimonial(@PathVariable Long id, RedirectAttributes flash): String  :243
+- [pub] addQuestion(@RequestParam String question, RedirectAttributes flash): String  :254
+- [pub] deleteQuestion(@PathVariable Long id, RedirectAttributes flash): String  :296
+- [pub] stationary(Model model): String  :307
+- [prv] pricesInZloty(List<StationaryPackage> all): Map<Long, String>  :320
+- [pub] addStationary(@RequestParam StationaryKind kind, @RequestParam String name, RedirectAttributes flash): String  :371
+- [pub] deleteStationary(@PathVariable Long id, RedirectAttributes flash): String  :392
+- [prv] text(String v): String  :416
+- [   ] weeks(String input): Integer  :421
+- [   ] grosze(String input): Integer  :436
+- [   ] zlote(int grosze): String  :451
+- [prv] blankToNull(String v): String  :456
 
 ### AdminOfferControllerTest  (src/test/java/pl/szymtrener/admin/AdminOfferControllerTest.java)
 - [   ] parsesHumanInput(): void  :17
@@ -463,8 +475,8 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] handlesRealFailure(): void  :43
 
 ### HomeController  (src/main/java/pl/szymtrener/web/HomeController.java)
-- [pub] home(Model model): String  :31
-- [pub] privacy(Model model): String  :56
+- [pub] home(Model model): String  :35
+- [pub] privacy(Model model): String  :69
 
 ### HtmlSanitizer  (src/main/java/pl/szymtrener/content/HtmlSanitizer.java)
 - [pub] clean(String html): String  :52
@@ -579,6 +591,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] safeName(String name): String  :179
 - [prv] sha256(byte[] data): String  :184
 
+### Money  (src/main/java/pl/szymtrener/offer/Money.java)
+- [pub] format(int grosze): String  :17
+- [pub] amount(int grosze): String  :22
+
 ### OnlineFaq  (src/main/java/pl/szymtrener/offer/OnlineFaq.java)
 - [pub] answered(): boolean  :20
 - [pub] getId(): Long  :24
@@ -596,14 +612,14 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findAllByOrderBySortOrderAsc(): List<OnlineFaq>  :9
 
 ### OnlineOfferService  (src/main/java/pl/szymtrener/offer/OnlineOfferService.java)
-- [pub] consultation(): ConsultationView  :44
-- [pub] consultPriceGr(): int  :50
-- [pub] packages(): List<PackageView>  :67
-- [   ] toView(OnlinePackage p): PackageView  :72
-- [pub] money(int grosze): String  :100
-- [pub] lowestMonthly(): String  :119
-- [pub] testimonials(): List<Testimonial>  :130
-- [pub] faq(): List<OnlineFaq>  :139
+- [pub] consultation(): ConsultationView  :41
+- [pub] consultPriceGr(): int  :47
+- [pub] packages(): List<PackageView>  :64
+- [   ] toView(OnlinePackage p): PackageView  :69
+- [pub] money(int grosze): String  :97
+- [pub] lowestMonthly(): String  :108
+- [pub] testimonials(): List<Testimonial>  :119
+- [pub] faq(): List<OnlineFaq>  :128
 
 ### OnlineOfferServiceTest  (src/test/java/pl/szymtrener/offer/OnlineOfferServiceTest.java)
 - [prv] pack(int seatsTaken, int seatsTotal, PricingMode mode): OnlinePackage  :14
@@ -941,6 +957,56 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] trimsLongTitles(): void  :40
 - [   ] handlesPunctuationOnlyTitle(): void  :53
 - [   ] isDeterministic(): void  :59
+
+### StationaryKind  (src/main/java/pl/szymtrener/offer/StationaryKind.java)
+- [pub] label(): String  :13
+
+### StationaryOfferService  (src/main/java/pl/szymtrener/offer/StationaryOfferService.java)
+- [pub] individual(): List<PackageView>  :44
+- [pub] pairs(): List<PackageView>  :49
+- [prv] views(StationaryKind kind): List<PackageView>  :53
+- [   ] validityLabel(Integer weeks): String  :77
+- [pub] rules(): List<String>  :86
+- [pub] priceSentence(): String  :100
+- [pub] cheapestPair(): String  :121
+- [prv] price(StationaryKind kind, boolean singleEntry): String  :126
+- [prv] priceGr(StationaryKind kind, boolean singleEntry): Integer  :131
+- [pub] longestValidity(): String  :143
+
+### StationaryOfferServiceTest  (src/test/java/pl/szymtrener/offer/StationaryOfferServiceTest.java)
+- [prv] pack(int sessions, int priceGr, Integer weeks): StationaryPackage  :14
+- [   ] discountAgainstSingleEntry(): void  :25
+- [   ] noDiscountWhenNotCheaper(): void  :35
+- [   ] totalIsComputed(): void  :44
+- [   ] validityIsInflected(): void  :52
+- [   ] singleEntryHasNoValidity(): void  :63
+- [   ] amountWithoutUnit(): void  :72
+
+### StationaryPackage  (src/main/java/pl/szymtrener/offer/StationaryPackage.java)
+- [pub] totalGr(): int  :37
+- [pub] single(): boolean  :43
+- [pub] discountPercent(int singlePriceGr): int  :52
+- [pub] getId(): Long  :57
+- [pub] getKind(): StationaryKind  :58
+- [pub] setKind(StationaryKind kind): void  :59
+- [pub] getName(): String  :60
+- [pub] setName(String name): void  :61
+- [pub] getSessions(): int  :62
+- [pub] setSessions(int sessions): void  :63
+- [pub] getPricePerSessionGr(): int  :64
+- [pub] setPricePerSessionGr(int v): void  :65
+- [pub] getValidityWeeks(): Integer  :66
+- [pub] setValidityWeeks(Integer validityWeeks): void  :67
+- [pub] isFeatured(): boolean  :68
+- [pub] setFeatured(boolean featured): void  :69
+- [pub] getSortOrder(): int  :70
+- [pub] setSortOrder(int sortOrder): void  :71
+- [pub] isVisible(): boolean  :72
+- [pub] setVisible(boolean visible): void  :73
+
+### StationaryPackageRepository  (src/main/java/pl/szymtrener/offer/StationaryPackageRepository.java)
+- [   ] findByKindAndVisibleTrueOrderBySortOrderAsc(StationaryKind kind): List<StationaryPackage>  :8
+- [   ] findAllByOrderByKindAscSortOrderAsc(): List<StationaryPackage>  :9
 
 ### Submission  (src/main/java/pl/szymtrener/submission/Submission.java)
 - [pub] getId(): Long  :46
