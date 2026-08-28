@@ -13,4 +13,7 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findTop5ByOrderByCreatedAtDesc();
     long countByStatus(SubmissionStatus status);
     long countByCreatedAtAfter(Instant since);
+
+    /** Zaleglosci: termin przypomnienia minal, a trener go nie odhaczyl. */
+    java.util.List<Submission> findByRemindDoneFalseAndRemindAtLessThanEqual(java.time.Instant at);
 }

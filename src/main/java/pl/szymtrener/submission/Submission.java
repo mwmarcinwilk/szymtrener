@@ -37,6 +37,19 @@ public class Submission {
     private SubmissionStatus status = SubmissionStatus.NEW;
 
     @Column(name = "call_at") private Instant callAt;
+
+    /**
+     * Daty wejscia w kolejne etapy. Sciezka w panelu pokazuje pod nazwa kroku,
+     * KIEDY sie wydarzyl — sam status nie niesie tej informacji.
+     */
+    @Column(name = "contacted_at") private Instant contactedAt;
+    @Column(name = "call_booked_at") private Instant callBookedAt;
+    @Column(name = "converted_at") private Instant convertedAt;
+    @Column(name = "archived_at") private Instant archivedAt;
+
+    /** Przypomnienie: rozwiazuje glowny problem, czyli zgloszenie, o ktorym trener zapomnial. */
+    @Column(name = "remind_at") private Instant remindAt;
+    @Column(name = "remind_done", nullable = false) private boolean remindDone;
     @Column(name = "ip_hash") private String ipHash;
     @Column(name = "user_agent") private String userAgent;
     @Column(name = "mail_sent", nullable = false) private boolean mailSent;
@@ -84,6 +97,18 @@ public class Submission {
     public void setMailSent(boolean mailSent) { this.mailSent = mailSent; }
     public String getMailError() { return mailError; }
     public void setMailError(String mailError) { this.mailError = mailError; }
+    public Instant getContactedAt() { return contactedAt; }
+    public void setContactedAt(Instant v) { this.contactedAt = v; }
+    public Instant getCallBookedAt() { return callBookedAt; }
+    public void setCallBookedAt(Instant v) { this.callBookedAt = v; }
+    public Instant getConvertedAt() { return convertedAt; }
+    public void setConvertedAt(Instant v) { this.convertedAt = v; }
+    public Instant getArchivedAt() { return archivedAt; }
+    public void setArchivedAt(Instant v) { this.archivedAt = v; }
+    public Instant getRemindAt() { return remindAt; }
+    public void setRemindAt(Instant remindAt) { this.remindAt = remindAt; }
+    public boolean isRemindDone() { return remindDone; }
+    public void setRemindDone(boolean remindDone) { this.remindDone = remindDone; }
     public Instant getCreatedAt() { return createdAt; }
 
     /**
@@ -99,6 +124,26 @@ public class Submission {
         };
         if (path == null) return offerPackage == null || offerPackage.isBlank() ? null : "Pakiet " + offerPackage;
         return offerPackage == null || offerPackage.isBlank() ? path : path + " · pakiet " + offerPackage;
+    }
+
+    /**
+     * Data wejscia w dany etap, sformatowana pod sciezke w panelu. Pusty znacznik
+     * dla etapow, ktorych zgloszenie jeszcze nie osiagnelo.
+     */
+    @Transient
+    public String stageDate(String stage) {
+        Instant at = switch (stage) {
+            case "NEW" -> createdAt;
+            case "CONTACTED" -> contactedAt;
+            case "CALL" -> callBookedAt;
+            case "CLIENT" -> convertedAt;
+            case "ARCHIVED" -> archivedAt;
+            default -> null;
+        };
+        if (at == null) return "—";
+        return java.time.format.DateTimeFormatter
+                .ofPattern("d MMM, HH:mm", java.util.Locale.forLanguageTag("pl-PL"))
+                .format(at.atZone(java.time.ZoneId.of("Europe/Warsaw")));
     }
 
     /** Termin rozmowy w formacie <input type="datetime-local">, albo pusty. */

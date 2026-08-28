@@ -13,13 +13,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.szymtrener.common.NotFoundException;
 import pl.szymtrener.common.SlugUtil;
+import pl.szymtrener.crm.*;
 import pl.szymtrener.settings.SettingsService;
 import pl.szymtrener.submission.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -34,15 +37,20 @@ public class AdminSubmissionController {
     private final SubmissionService service;
     private final ObjectMapper json;
     private final SettingsService settings;
+    private final MessageService messages;
+    private final TraineeService trainees;
 
     public AdminSubmissionController(SubmissionRepository submissions, SubmissionNoteRepository notes,
                                      SubmissionService service, ObjectMapper json,
-                                     SettingsService settings) {
+                                     SettingsService settings, MessageService messages,
+                                     TraineeService trainees) {
         this.submissions = submissions;
         this.notes = notes;
         this.service = service;
         this.json = json.copy().enable(SerializationFeature.INDENT_OUTPUT);
         this.settings = settings;
+        this.messages = messages;
+        this.trainees = trainees;
     }
 
     @GetMapping
@@ -69,8 +77,15 @@ public class AdminSubmissionController {
     public String detail(@PathVariable Long id, Model model) {
         Submission submission = submissions.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie ma zgłoszenia " + id));
+        List<SubmissionNote> all = notes.findBySubmissionIdOrderByPinnedDescCreatedAtDesc(id);
+
         model.addAttribute("item", submission);
-        model.addAttribute("notes", notes.findBySubmissionIdOrderByCreatedAtDesc(id));
+        model.addAttribute("notes", all);
+        // Karta „Na co uwazac": wyciag z notatek oznaczonych Zdrowie albo Wazne,
+        // zeby przeciwwskazania byly widoczne bez czytania calosci.
+        model.addAttribute("warnings", all.stream().filter(SubmissionNote::warning).limit(4).toList());
+        model.addAttribute("thread", messages.thread(id));
+        model.addAttribute("templates", messages.replyTemplates());
         model.addAttribute("statuses", SubmissionStatus.values());
         model.addAttribute("title", "Zgłoszenie: " + submission.getName());
         return "admin/submission-detail";
@@ -92,6 +107,132 @@ public class AdminSubmissionController {
     }
 
     /**
+     * Zmiana etapu ze sciezki. Kazde przejscie zostawia slad w watku — inaczej
+     * po tygodniu nie wiadomo, dlaczego zgloszenie stoi tam, gdzie stoi.
+     */
+    @PostMapping("/{id}/etap")
+    public String stage(@PathVariable Long id, @RequestParam SubmissionStatus status,
+                        RedirectAttributes flash) {
+        Submission before = submissions.findById(id)
+                .orElseThrow(() -> new NotFoundException("Nie ma zgłoszenia " + id));
+        if (before.getStatus() != status) {
+            service.stage(id, status);
+            messages.system(id, null, "Etap zmieniony na „" + status.label() + "”", false);
+        }
+        flash.addFlashAttribute("info", "Etap: " + status.label() + ".");
+        return "redirect:/admin/zgloszenia/" + id;
+    }
+
+    /**
+     * Wiadomosc do klienta albo zapis rozmowy telefonicznej. Tryb „telefon" NIC
+     * nie wysyla — to tylko slad w watku.
+     */
+    @PostMapping("/{id}/wiadomosc")
+    public String message(@PathVariable Long id,
+                          @RequestParam String body,
+                          @RequestParam(defaultValue = "mail") String way,
+                          RedirectAttributes flash) {
+
+        Submission s = submissions.findById(id)
+                .orElseThrow(() -> new NotFoundException("Nie ma zgłoszenia " + id));
+        if (body == null || body.isBlank()) {
+            flash.addFlashAttribute("error", "Pusta wiadomość nie ma czego przenieść.");
+            return "redirect:/admin/zgloszenia/" + id;
+        }
+
+        if ("tel".equals(way)) {
+            messages.logPhoneCall(id, null, body.trim());
+            flash.addFlashAttribute("info", "Zapisano rozmowę. Do klienta nic nie poszło.");
+        } else {
+            MessageService.SendResult result =
+                    messages.sendEmail(id, null, s.getEmail(), s.getName(), body.trim(), null);
+            if (result.sent()) {
+                flash.addFlashAttribute("info", "Wiadomość poszła do " + s.getEmail() + ".");
+            } else {
+                flash.addFlashAttribute("error", result.error());
+            }
+        }
+        return "redirect:/admin/zgloszenia/" + id;
+    }
+
+    /** Wstawia szablon do pola odpowiedzi z podstawionym imieniem. */
+    @GetMapping("/{id}/szablon/{code}")
+    @ResponseBody
+    public Map<String, String> template(@PathVariable Long id, @PathVariable String code) {
+        Submission s = submissions.findById(id)
+                .orElseThrow(() -> new NotFoundException("Nie ma zgłoszenia " + id));
+        String firstName = s.getName() == null ? "" : s.getName().trim().split("\\s+")[0];
+        return Map.of("body", messages.fill(code, firstName, s.getCurrentTraining()));
+    }
+
+    /** Przypomnienie: „za ile" albo konkretna data. */
+    @PostMapping("/{id}/przypomnienie")
+    public String remind(@PathVariable Long id,
+                         @RequestParam(required = false) String preset,
+                         @RequestParam(required = false) String date,
+                         RedirectAttributes flash) {
+
+        java.time.ZoneId zone = ZoneId.of("Europe/Warsaw");
+        java.time.Instant at = null;
+        if (date != null && !date.isBlank()) {
+            at = LocalDateTime.parse(date).atZone(zone).toInstant();
+        } else if (preset != null && !preset.isBlank() && !"brak".equals(preset)) {
+            // Przypomnienie o 9:00, nie o godzinie klikniecia — o 23:40 „za 3 dni"
+            // powinno znaczyc rano trzeciego dnia, a nie w srodku nocy.
+            int days = switch (preset) {
+                case "jutro" -> 1;
+                case "3dni" -> 3;
+                case "tydzien" -> 7;
+                default -> 0;
+            };
+            if (days > 0) {
+                at = java.time.LocalDate.now(zone).plusDays(days).atTime(9, 0).atZone(zone).toInstant();
+            }
+        }
+        service.remind(id, at);
+        flash.addFlashAttribute("info", at == null
+                ? "Przypomnienie wyłączone."
+                : "Przypomnę Ci o tym zgłoszeniu.");
+        return "redirect:/admin/zgloszenia/" + id;
+    }
+
+    /** Odhaczenie przypomnienia bez zmiany terminu. */
+    @PostMapping("/{id}/przypomnienie/zalatwione")
+    public String remindDone(@PathVariable Long id, RedirectAttributes flash) {
+        service.remindDone(id);
+        flash.addFlashAttribute("info", "Załatwione.");
+        return "redirect:/admin/zgloszenia/" + id;
+    }
+
+    /** „Zrób klienta" — przenosi dane, watek i notatki, po czym otwiera profil. */
+    @PostMapping("/{id}/konwertuj")
+    public String convert(@PathVariable Long id, RedirectAttributes flash) {
+        Trainee trainee = trainees.fromSubmission(id);
+        messages.attachToTrainee(id, trainee.getId());
+        notes.findBySubmissionIdOrderByPinnedDescCreatedAtDesc(id).forEach(n -> {
+            n.setTraineeId(trainee.getId());
+            notes.save(n);
+        });
+        messages.system(id, trainee.getId(), "Zgłoszenie zamienione na klienta", false);
+        flash.addFlashAttribute("info", "Gotowe. To teraz klient.");
+        return "redirect:/admin/klienci/" + trainee.getId();
+    }
+
+    /** Notatka z tagami. Puste tagi zapisujemy jako brak, nie jako pusty ciag. */
+    @PostMapping("/{id}/notatka/tagi")
+    public String addTaggedNote(@PathVariable Long id, @RequestParam String body,
+                                @RequestParam(required = false) List<String> tags,
+                                Principal principal, RedirectAttributes flash) {
+        if (body == null || body.isBlank()) {
+            flash.addFlashAttribute("error", "Pusta notatka nie zostanie zapisana.");
+            return "redirect:/admin/zgloszenia/" + id;
+        }
+        service.addNote(id, null, principal != null ? principal.getName() : "panel", body.trim(),
+                tags == null ? null : String.join(", ", tags));
+        return "redirect:/admin/zgloszenia/" + id;
+    }
+
+        /**
      * Prawo dostepu do danych (RODO, art. 15) — komplet zgloszenia w JSON-ie,
      * gotowy do odeslania klientowi, ktory o niego poprosi.
      */

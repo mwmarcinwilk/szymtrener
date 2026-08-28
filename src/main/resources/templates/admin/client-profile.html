@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Profil klienta. Wszystkie liczby liczone z bazy: frekwencja z sesji,
+       postęp z pomiarów, wartość współpracy z pakietów. W makiecie były przykładowe. */-->
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('clients')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div th:if="${info}" role="status"
+           style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${info}">Zapisano.</div>
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+
+      <div class="page-h">
+        <div>
+          <div class="top-crumb" th:text="'Klienci / ' + ${t.name}">Klienci / Profil</div>
+          <div class="per" style="margin-top:9px">
+            <div class="av g" th:text="${t.initials()}">EK</div>
+            <div>
+              <div class="nm" th:text="${t.name}">Ewa Krawczyk</div>
+              <div class="mt" th:text="${(t.city ?: '—')}
+                    + (${t.age} != null ? ' · ' + ${t.age} + ' lat' : '')
+                    + (${t.startedLabel()} != null ? ' · klient od ' + ${t.startedLabel()} : '')
+                    + (${t.weeksTogether()} != null ? ' (' + ${t.weeksTogether()} + ' tyg.)' : '')">Łódź · 47 lat</div>
+              <div class="per-tags">
+                <span class="chip" th:if="${t.mode} != null" th:text="${t.mode.label()}">Stacjonarnie</span>
+                <span class="chip" th:if="${!pack.none()}" th:text="${pack.name()}">Pakiet 12</span>
+                <span class="chip src" th:if="${t.source} != null" th:text="${t.source}">Polecenie</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="r">
+          <a class="btn btn-o" href="/admin/klienci"><svg><use href="#i-back"/></svg>Wróć</a>
+          <a class="btn btn-o" th:href="@{/admin/klienci/{id}/edycja(id=${t.id})}"><svg><use href="#i-edit"/></svg>Dane</a>
+          <a class="btn btn-p" href="#dziennik"><svg><use href="#i-plus"/></svg>Zapisz trening</a>
+        </div>
+      </div>
+
+      <!--/* Ostrzeżenie o pakiecie stoi nad wszystkim: to jedyna rzecz na tym
+             ekranie, o której trzeba porozmawiać na najbliższej sesji. */-->
+      <div class="warnbar" th:if="${pack.endingSoon() and !pack.none()}">
+        <svg><use href="#i-alert"/></svg>
+        <div class="tx">
+          <b th:text="${pack.left()} == 0 ? 'Pakiet wykorzystany w całości.'
+                : (${pack.left()} == 1 ? 'Został 1 trening z pakietu.'
+                   : 'Zostały ' + ${T(pl.szymtrener.crm.Plural).sessions(pack.left())} + ' z pakietu.')">
+            Został 1 trening z pakietu.</b>
+          <span th:if="${attendance > 0}" th:text="'Frekwencja ' + ${attendance} + '% — dobry moment na rozmowę o kontynuacji.'">
+            Frekwencja 94%</span>
+        </div>
+        <a class="btn btn-p btn-s" href="#pakiet">Zaproponuj pakiet</a>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-ic g"><svg><use href="#i-dumb"/></svg></div>
+          <div class="kpi-v" th:text="${done}">31</div>
+          <div class="kpi-l">Treningi odbyte</div>
+          <div class="kpi-t fl" th:text="${!pack.none()} ? ${pack.used()} + ' w tym pakiecie' : 'bez pakietu'">11 w tym pakiecie</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic b"><svg><use href="#i-check"/></svg></div>
+          <div class="kpi-v" th:text="${attendance} + '%'">94%</div>
+          <div class="kpi-l">Frekwencja</div>
+          <div class="kpi-t fl" th:text="${T(pl.szymtrener.crm.Plural).cancelled(cancelled)}">2 odwołane</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic a"><svg><use href="#i-scale"/></svg></div>
+          <div class="kpi-v" th:text="${weight} != null ? ${weight.last()} : '—'">74,2 kg</div>
+          <div class="kpi-l">Masa ciała</div>
+          <!--/* Znak kierunku przy delcie: samo „4,2 kg" nie mówi, czy w górę czy w dół. */-->
+          <div class="kpi-t" th:classappend="${weight} != null ? (${weight.direction()} == 'good' ? 'up' : 'fl') : 'fl'"
+               th:text="${weight} != null ? ${weight.signedDelta()} : 'brak pomiarów'">−4,2 kg</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-ic n"><svg><use href="#i-money"/></svg></div>
+          <div class="kpi-v" th:text="${lifetime}">4 200 zł</div>
+          <div class="kpi-l">Wartość współpracy</div>
+          <div class="kpi-t fl" th:text="${T(pl.szymtrener.crm.Plural).packages(#lists.size(packages))}">3 pakiety</div>
+        </div>
+      </div>
+
+      <div class="crm">
+        <div style="display:grid;gap:16px">
+
+          <!-- ══ DZIENNIK TRENINGÓW ══════════════════════════════════════════ -->
+          <div class="card" id="dziennik">
+            <div class="card-h">
+              <div><h2>Dziennik treningów</h2><div class="sub">Ostatnie sesje i najbliższy termin</div></div>
+            </div>
+            <div class="log">
+              <div class="log-i" th:each="s : ${log}">
+                <div class="log-d">
+                  <div class="dd" th:text="${s.dayLabel()}">31</div>
+                  <div class="mm" th:text="${s.monthLabel()}">sie</div>
+                </div>
+                <div class="log-ic" th:classappend="${s.status.name() == 'PLANNED'} ? ' plan' : (${s.status.name() == 'CANCELLED'} ? ' miss' : '')">
+                  <svg><use th:href="${s.status.name() == 'DONE'} ? '#i-check' : (${s.status.name() == 'CANCELLED'} ? '#i-alert' : '#i-clock')"/></svg>
+                </div>
+                <div>
+                  <div class="log-t" th:text="${s.title}">Siła — dolna część ciała</div>
+                  <div class="log-s" th:text="${s.whenLabel()} + (${s.note} != null ? ' · ' + ${s.note} : '')">
+                    poniedziałek 9:00</div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <span class="bg" th:classappend="${s.status.badge()}" th:text="${s.status.label()}">Odbyty</span>
+                  <form method="post" th:action="@{/admin/klienci/{id}/sesja/{sid}/usun(id=${t.id},sid=${s.id})}"
+                        data-confirm-title="Usunąć trening z dziennika?"
+                        data-confirm="Wpis zniknie, a licznik pakietu przeliczy się od nowa."
+                        data-confirm-ok="Usuń">
+                    <button class="mini del" type="submit" title="Usuń"><svg><use href="#i-trash"/></svg></button>
+                  </form>
+                </div>
+              </div>
+              <p th:if="${#lists.isEmpty(log)}" style="font-size:13px;color:var(--ink-3);padding:16px 20px">
+                Dziennik jest pusty. Zapisz pierwszy trening poniżej.</p>
+            </div>
+
+            <div class="card-b" style="border-top:1px solid var(--line)">
+              <form method="post" th:action="@{/admin/klienci/{id}/sesja(id=${t.id})}">
+                <div class="f-row">
+                  <div class="fld" style="width:210px"><label for="startsAt">Termin</label>
+                    <input type="datetime-local" id="startsAt" name="startsAt" required></div>
+                  <div class="fld" style="flex:1;min-width:180px"><label for="sesTitle">Co trenujecie</label>
+                    <input type="text" id="sesTitle" name="title" required placeholder="np. Siła — dolna część ciała"></div>
+                  <div class="fld" style="width:150px"><label for="sesStatus">Stan</label>
+                    <select id="sesStatus" name="status">
+                      <option th:each="st : ${statuses}" th:value="${st.name()}" th:text="${st.label()}">Zaplanowany</option>
+                    </select></div>
+                </div>
+                <div class="fld" style="margin-top:11px"><label for="sesNote">Notatka z sesji</label>
+                  <input type="text" id="sesNote" name="note" placeholder="np. Martwy ciąg 62,5 kg × 5. Technika stabilna."></div>
+                <!--/* Odwołany trening domyślnie NIE zużywa wejścia z pakietu. Przełącznik
+                       jest dla sytuacji, gdy klient odwołał na ostatnią chwilę. */-->
+                <div class="f-row" style="align-items:center;margin-top:9px">
+                  <label style="display:flex;gap:8px;align-items:center;cursor:pointer;font-size:13px">
+                    <input type="checkbox" name="consumesPackage" value="true" style="width:auto">
+                    Odwołany trening zużywa wejście z pakietu
+                  </label>
+                  <div style="flex:1"></div>
+                  <button class="btn btn-p" type="submit"><svg><use href="#i-plus"/></svg>Zapisz trening</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- ══ POMIARY ═════════════════════════════════════════════════════ -->
+          <div class="card">
+            <div class="card-h">
+              <div><h2>Pomiary i postęp</h2><div class="sub">Porównanie do pierwszego pomiaru</div></div>
+            </div>
+            <div class="tbl-scroll" th:if="${!#lists.isEmpty(progress)}">
+              <table class="meas">
+                <thead><tr><th>Parametr</th><th>Start</th><th>Teraz</th><th>Zmiana</th></tr></thead>
+                <tbody>
+                  <tr th:each="r : ${progress}">
+                    <td th:text="${r.metric()}">Masa ciała</td>
+                    <td class="v" th:text="${r.first()}">78,4 kg</td>
+                    <td class="v" th:text="${r.last()}">74,2 kg</td>
+                    <td>
+                      <!--/* Kierunek dobrej zmiany zależy od metryki i siedzi przy danych:
+                             masa w dół, martwy ciąg w górę. */-->
+                      <span class="dt" th:classappend="${r.direction()}">
+                        <svg th:if="${r.direction() != 'flat'}"><use th:href="${r.direction() == 'good'} ? '#i-arrow-up' : '#i-arrow-dn'"/></svg>
+                        <span th:text="${r.signedDelta()}">−4,2 kg</span>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-b" th:if="${#lists.isEmpty(progress)}" style="padding-bottom:0">
+              <p style="font-size:13px;color:var(--ink-3)">Nie ma jeszcze pomiarów. Pierwszy zapis staje się punktem odniesienia dla postępu.</p>
+            </div>
+
+            <div class="card-b" style="border-top:1px solid var(--line)">
+              <form method="post" th:action="@{/admin/klienci/{id}/pomiar(id=${t.id})}">
+                <div class="f-row">
+                  <div class="fld" style="flex:1;min-width:180px"><label for="metric">Parametr</label>
+                    <input type="text" id="metric" name="metric" required placeholder="np. Masa ciała" list="metryki">
+                    <datalist id="metryki">
+                      <option value="Masa ciała"></option><option value="Obwód talii"></option>
+                      <option value="Martwy ciąg (5 powt.)"></option><option value="Przysiad (5 powt.)"></option>
+                      <option value="Deska (czas)"></option><option value="Samopoczucie (1–10)"></option>
+                    </datalist></div>
+                  <div class="fld" style="width:120px"><label for="mvalue">Wartość</label>
+                    <input type="text" id="mvalue" name="value" required inputmode="decimal" placeholder="74,2"></div>
+                  <div class="fld" style="width:100px"><label for="unit">Jednostka</label>
+                    <input type="text" id="unit" name="unit" placeholder="kg"></div>
+                  <div class="fld" style="width:150px"><label for="takenOn">Data</label>
+                    <input type="date" id="takenOn" name="takenOn"></div>
+                </div>
+                <div class="f-row" style="align-items:center;margin-top:9px">
+                  <label style="display:flex;gap:8px;align-items:center;cursor:pointer;font-size:13px">
+                    <input type="checkbox" name="lowerIsBetter" value="true" style="width:auto">
+                    Mniej znaczy lepiej (masa ciała, obwody)
+                  </label>
+                  <div style="flex:1"></div>
+                  <button class="btn btn-p" type="submit"><svg><use href="#i-plus"/></svg>Dodaj pomiar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- ══ ROZMOWA ═════════════════════════════════════════════════════ -->
+          <div class="card" id="composer">
+            <div class="card-h">
+              <div><h2>Rozmowa</h2><div class="sub">Ten sam wątek co przy zgłoszeniu</div></div>
+            </div>
+            <div class="th" style="padding-bottom:14px">
+              <th:block th:each="m : ${thread}">
+                <div th:if="${m.system()}" class="sysline" th:classappend="${m.failed()} ? ' bad'" th:text="${m.body}">Zdarzenie</div>
+                <div th:unless="${m.system()}" class="msg" th:classappend="${m.outgoing()} ? ' out'">
+                  <div class="mav" th:unless="${m.outgoing()}" th:text="${t.initials()}">EK</div>
+                  <div class="bub">
+                    <div class="bub-h">
+                      <b th:text="${m.outgoing()} ? 'Ty' : ${t.name}">Ty</b>
+                      <span class="ch" th:classappend="${m.channel.css()}">
+                        <svg><use th:href="${m.channel.name() == 'FORM'} ? '#i-inbox' : (${m.channel.name() == 'PHONE'} ? '#i-phone' : '#i-mail')"/></svg>
+                        <span th:text="${m.channel.label()}">E-mail</span>
+                      </span>
+                      <time th:text="${m.sentLabel()}">wczoraj, 20:11</time>
+                    </div>
+                    <p th:text="${m.body}">Treść.</p>
+                  </div>
+                  <div class="mav" th:if="${m.outgoing()}">SD</div>
+                </div>
+              </th:block>
+              <p th:if="${#lists.isEmpty(thread)}" style="font-size:13px;color:var(--ink-3);padding:4px 0">
+                Wątek jest pusty.</p>
+            </div>
+            <div class="cmp">
+              <form method="post" th:action="@{/admin/klienci/{id}/wiadomosc(id=${t.id})}">
+                <div class="cmp-way">
+                  <button class="way on" type="button" data-way="mail"><svg><use href="#i-mail"/></svg>Wyślij e-mail</button>
+                  <button class="way" type="button" data-way="tel"><svg><use href="#i-phone"/></svg>Zapisz rozmowę telefoniczną</button>
+                </div>
+                <input type="hidden" name="way" id="cmp-way" value="mail">
+                <textarea id="cmp-tx" name="body" required style="min-height:76px"
+                          th:placeholder="'Napisz do ' + ${t.name} + '…'"></textarea>
+                <div class="cmp-foot">
+                  <button class="btn btn-p" type="submit"><svg><use href="#i-send"/></svg>Wyślij</button>
+                  <span class="sp" th:if="${t.email} != null" th:text="'Wysyłka na ' + ${t.email}">Wysyłka</span>
+                  <span class="sp" th:if="${t.email} == null">Brak adresu e-mail — uzupełnij dane albo zapisz rozmowę telefoniczną</span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ KOLUMNA BOCZNA ════════════════════════════════════════════════ -->
+        <aside class="crm-side">
+          <div class="pkbox" id="pakiet">
+            <div class="lb">Aktualny pakiet</div>
+            <div th:if="${!pack.none()}">
+              <div class="big"><span th:text="${pack.left()}">1</span> <i th:text="'/ ' + ${pack.total()} + ' treningów'">/ 12 treningów</i></div>
+              <div class="sub" th:text="${pack.name()} + ' · wykorzystane ' + ${pack.used()} + ' z ' + ${pack.total()}">Pakiet 12</div>
+              <div class="tr"><div class="fl" th:style="'width:' + ${pack.pct()} + '%'"></div></div>
+            </div>
+            <div th:if="${pack.none()}">
+              <div class="big">—</div>
+              <div class="sub" style="margin-bottom:14px">Ten klient nie ma aktywnego pakietu.</div>
+            </div>
+
+            <form method="post" th:action="@{/admin/klienci/{id}/pakiet(id=${t.id})}" style="margin-top:12px">
+              <!--/* Sprzedaż nowego pakietu zamyka poprzedni: dwa aktywne naraz
+                     uniemożliwiłyby policzenie, z którego schodzą treningi. */-->
+              <div class="fld"><label for="pkgName" style="color:rgba(255,255,255,.65)">Nazwa</label>
+                <input type="text" id="pkgName" name="name" placeholder="np. Pakiet 12"></div>
+              <div class="f-row">
+                <div class="fld" style="flex:1"><label for="pkgSessions" style="color:rgba(255,255,255,.65)">Treningów</label>
+                  <input type="number" id="pkgSessions" name="totalSessions" min="1" value="12" required></div>
+                <div class="fld" style="flex:1"><label for="pkgPrice" style="color:rgba(255,255,255,.65)">Cena / trening</label>
+                  <input type="text" id="pkgPrice" name="pricePerSession" inputmode="decimal" placeholder="150" required></div>
+              </div>
+              <button class="btn btn-p" type="submit" style="width:100%;margin-top:10px">
+                <svg><use href="#i-plus"/></svg>Sprzedaj pakiet</button>
+            </form>
+          </div>
+
+          <div class="card" th:if="${t.goalNote != null or !#lists.isEmpty(warnings)}">
+            <div class="card-h"><h2>Cele i priorytety</h2></div>
+            <div class="card-b" style="padding-top:6px">
+              <div class="goal" th:if="${t.goalNote} != null">
+                <div class="gi"><svg><use href="#i-target"/></svg></div>
+                <div><div class="t">Cel współpracy</div><div class="s" th:text="${t.goalNote}">Martwy ciąg 70 kg</div></div>
+              </div>
+              <div class="goal" th:each="w : ${warnings}">
+                <div class="gi" style="background:var(--red-pale);color:var(--red)"><svg><use href="#i-alert"/></svg></div>
+                <div>
+                  <div class="t" th:text="${#strings.arrayJoin(w.tagList(), ' · ')}">Zdrowie</div>
+                  <div class="s" th:text="${w.body}">Treść notatki</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Dane i plan</h2></div>
+            <div class="card-b" style="padding-top:6px">
+              <div class="mini-row" th:if="${t.phone} != null"><span class="k">Telefon</span>
+                <span class="v"><a th:href="'tel:' + ${t.phone}" th:text="${t.phone}">telefon</a></span></div>
+              <div class="mini-row" th:if="${t.email} != null"><span class="k">E-mail</span>
+                <span class="v" style="font-size:12px"><a th:href="'mailto:' + ${t.email}" th:text="${t.email}">adres</a></span></div>
+              <div class="mini-row" th:if="${t.fixedSlots} != null"><span class="k">Stałe terminy</span>
+                <span class="v" style="font-size:12px" th:text="${t.fixedSlots}">pon 9:00 · czw 9:00</span></div>
+              <div class="mini-row" th:if="${t.planName} != null"><span class="k">Plan</span>
+                <span class="v" style="font-size:12px" th:text="${t.planName}">Siła 2×/tyg</span></div>
+              <div class="mini-row"><span class="k">Ostatni kontakt</span>
+                <span class="v" style="font-size:12px" th:text="${t.lastContactLabel()}">wczoraj</span></div>
+              <div class="contact-row">
+                <a th:href="'tel:' + ${t.phone}" th:if="${t.phone} != null"><svg><use href="#i-phone"/></svg>Zadzwoń</a>
+                <a th:href="@{/admin/klienci/{id}/edycja(id=${t.id})}"><svg><use href="#i-edit"/></svg>Edytuj dane</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-h"><h2>Notatki</h2><div class="r"><span class="chip" th:text="${#lists.size(notes)}">2</span></div></div>
+            <div class="card-b">
+              <div style="display:grid;gap:11px">
+                <div class="nt" th:each="n : ${notes}" th:classappend="${n.pinned} ? ' pin'" style="padding:12px 14px">
+                  <div class="nt-h">
+                    <svg width="11" height="11" style="color:var(--amber)" th:if="${n.pinned}"><use href="#i-pin"/></svg>
+                    <b th:text="${n.author}">Szymon</b> · <span th:text="${n.createdLabel}">27 sie</span>
+                    <span class="r">
+                      <form method="post" th:action="@{/admin/notatki/{id}/przypnij(id=${n.id})}" style="display:inline">
+                        <input type="hidden" name="back" th:value="'/admin/klienci/' + ${t.id}">
+                        <button type="submit" th:title="${n.pinned} ? 'Odepnij' : 'Przypnij'"><svg><use href="#i-pin"/></svg></button>
+                      </form>
+                    </span>
+                  </div>
+                  <p th:text="${n.body}">Treść notatki.</p>
+                  <div class="nt-tags" th:if="${!#lists.isEmpty(n.tagList())}">
+                    <span class="nt-t" th:each="tg : ${n.tagList()}" th:text="${tg}">Zdrowie</span>
+                  </div>
+                </div>
+                <p th:if="${#lists.isEmpty(notes)}" style="font-size:12.5px;color:var(--ink-3)">Brak notatek.</p>
+              </div>
+
+              <form method="post" th:action="@{/admin/klienci/{id}/notatka(id=${t.id})}" style="margin-top:12px">
+                <div class="fld"><textarea name="body" rows="3" required
+                     placeholder="Nowa notatka: przeciwwskazania, ustalenia, na co uważać…"></textarea></div>
+                <div class="nt-chips" style="margin-bottom:10px">
+                  <label class="nt-chip"><input type="checkbox" name="tags" value="Zdrowie" hidden>Zdrowie</label>
+                  <label class="nt-chip"><input type="checkbox" name="tags" value="Rozmowa" hidden>Rozmowa</label>
+                  <label class="nt-chip"><input type="checkbox" name="tags" value="Sprzedaż" hidden>Sprzedaż</label>
+                  <label class="nt-chip"><input type="checkbox" name="tags" value="Ważne" hidden>Ważne</label>
+                </div>
+                <button class="btn btn-o" type="submit" style="width:100%"><svg><use href="#i-plus"/></svg>Dodaj notatkę</button>
+              </form>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+<script th:src="@{/js/admin-crm.js}" src="/js/admin-crm.js" defer></script>
+</body>
+</html>

@@ -45,6 +45,13 @@ public class TraineeService {
             trainee.setMode(source.getType() == SubmissionType.ONLINE ? TraineeMode.ONLINE : TraineeMode.ONSITE);
             trainee.setStartedAt(LocalDate.now(ZONE));
             trainee.setStatus(TraineeStatus.ACTIVE);
+            // Kontakt i zrodlo przenosimy ze zgloszenia: bez adresu nie da sie
+            // do klienta napisac, a przepisywanie recznie to prosta droga do literowki.
+            trainee.setEmail(source.getEmail());
+            trainee.setPhone(source.getPhone());
+            trainee.setSource(source.getSource());
+            trainee.setGoalNote(source.getGoal());
+            trainee.setLastContactAt(java.time.Instant.now());
             Trainee saved = trainees.save(trainee);
 
             source.setStatus(SubmissionStatus.CLIENT);
@@ -71,6 +78,11 @@ public class TraineeService {
         trainee.setPlanName(blankToNull(form.getPlanName()));
         trainee.setSessionCount(Math.max(0, form.getSessionCount()));
         trainee.setStatus(form.getStatus());
+        trainee.setEmail(blankToNull(form.getEmail()));
+        trainee.setPhone(blankToNull(form.getPhone()));
+        trainee.setFixedSlots(blankToNull(form.getFixedSlots()));
+        trainee.setSource(blankToNull(form.getSource()));
+        trainee.setGoalNote(blankToNull(form.getGoalNote()));
         return trainees.save(trainee);
     }
 

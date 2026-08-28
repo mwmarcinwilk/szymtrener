@@ -41,6 +41,15 @@ public class AdminNav {
     }
 
     /**
+     * Zgloszenia z minionym terminem przypomnienia. Osobno od licznika nowych:
+     * zapomniane zgloszenie to inny problem niz nieprzeczytane i wymaga innego
+     * koloru plakietki.
+     */
+    public long dueReminders() {
+        return submissions.findByRemindDoneFalseAndRemindAtLessThanEqual(java.time.Instant.now()).size();
+    }
+
+    /**
      * Nazwa zalogowanej osoby do stopki menu. Bez tego pole „nazwa wyswietlana"
      * bylo zapisywane, ale nigdzie nie widoczne — a wiec bezuzyteczne.
      * Logowanie ze zmiennych srodowiskowych nie ma wiersza w bazie, wiec wtedy

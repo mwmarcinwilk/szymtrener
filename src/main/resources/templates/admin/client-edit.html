@@ -60,6 +60,37 @@
             </div>
           </div>
 
+          <!--/* Kontakt jest tu warunkiem działania rozmowy w panelu: bez adresu
+                 e-mail przycisk „Wyślij" w profilu nie ma dokąd wysłać. */-->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="fld">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" th:field="*{email}" placeholder="adres@example.pl">
+            </div>
+            <div class="fld">
+              <label for="phone">Telefon</label>
+              <input type="tel" id="phone" th:field="*{phone}" placeholder="500 000 000">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="fld">
+              <label for="fixedSlots">Stałe terminy</label>
+              <input type="text" id="fixedSlots" th:field="*{fixedSlots}" placeholder="pon 9:00 · czw 9:00">
+            </div>
+            <div class="fld">
+              <label for="source">Skąd trafił</label>
+              <input type="text" id="source" th:field="*{source}" placeholder="np. Polecenie">
+            </div>
+          </div>
+
+          <div class="fld">
+            <label for="goalNote">Cel współpracy</label>
+            <textarea id="goalNote" th:field="*{goalNote}" rows="2"
+                      placeholder="np. Martwy ciąg 70 kg do końca roku"></textarea>
+            <div class="hint"><span>Widoczny w profilu w karcie „Cele i priorytety”</span></div>
+          </div>
+
           <div class="fld">
             <label for="status">Status</label>
             <select id="status" th:field="*{status}">
@@ -68,7 +99,8 @@
           </div>
 
           <button class="btn btn-p" type="submit">Zapisz</button>
-          <a class="btn btn-o" href="/admin/klienci">Wróć do listy</a>
+          <a class="btn btn-o" th:if="${form.id != null}" th:href="@{/admin/klienci/{id}(id=${form.id})}">Wróć do profilu</a>
+          <a class="btn btn-o" th:if="${form.id == null}" href="/admin/klienci">Wróć do listy</a>
         </form>
       </div>
 

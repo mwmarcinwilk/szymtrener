@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* „Kto ma trening w najbliższych dniach" — jedno z trzech pytań, na które
+       ekran klientów ma odpowiadać. Osobny widok, bo w dniu pracy patrzy się
+       na grafik, a nie na listę klientów. */-->
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('clients')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+
+      <div class="page-h">
+        <div>
+          <div class="top-crumb">Klienci / Tydzień</div>
+          <h2>Tydzień treningów</h2>
+          <p th:text="${#lists.size(sessions)} + ' sesji od poniedziałku do niedzieli'">23 sesje</p>
+        </div>
+        <div class="r"><a class="btn btn-o" href="/admin/klienci"><svg><use href="#i-back"/></svg>Wróć</a></div>
+      </div>
+
+      <div class="card">
+        <div class="log">
+          <div class="log-i" th:each="s : ${sessions}">
+            <div class="log-d">
+              <div class="dd" th:text="${s.dayLabel()}">31</div>
+              <div class="mm" th:text="${s.monthLabel()}">sie</div>
+            </div>
+            <div class="log-ic" th:classappend="${s.status.name() == 'PLANNED'} ? ' plan' : (${s.status.name() == 'CANCELLED'} ? ' miss' : '')">
+              <svg><use th:href="${s.status.name() == 'DONE'} ? '#i-check' : (${s.status.name() == 'CANCELLED'} ? '#i-alert' : '#i-clock')"/></svg>
+            </div>
+            <div>
+              <div class="log-t">
+                <a th:href="@{/admin/klienci/{id}(id=${s.traineeId})}" style="color:inherit"
+                   th:text="${names.get(s.traineeId)}">Ewa Krawczyk</a>
+              </div>
+              <div class="log-s" th:text="${s.whenLabel()} + ' · ' + ${s.title}">poniedziałek 9:00</div>
+            </div>
+            <div><span class="bg" th:classappend="${s.status.badge()}" th:text="${s.status.label()}">Zaplanowany</span></div>
+          </div>
+          <p th:if="${#lists.isEmpty(sessions)}" style="font-size:13px;color:var(--ink-3);padding:16px 20px">
+            W tym tygodniu nie ma zapisanych treningów.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
 > AUTO-GENEROWANY 2026-08-28 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 47 · Endpointy: 72 · Metody: 839 · Front: 0
+> Beany: 51 · Endpointy: 90 · Metody: 1049 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -18,6 +18,7 @@
 @Component      PostPageModel — src/main/java/pl/szymtrener/web/PostPageModel.java
 @Component      PublishScheduler — src/main/java/pl/szymtrener/scheduler/PublishScheduler.java
 @Component      RateLimiter — src/main/java/pl/szymtrener/submission/RateLimiter.java
+@Component      ReminderScheduler — src/main/java/pl/szymtrener/submission/ReminderScheduler.java
 @Configuration  AdminAccountInitializer — src/main/java/pl/szymtrener/admin/AdminAccountInitializer.java
 @Configuration  MailConfig — src/main/java/pl/szymtrener/config/MailConfig.java
 @Configuration  SecurityConfig — src/main/java/pl/szymtrener/config/SecurityConfig.java
@@ -33,17 +34,20 @@
 @Controller     AdminUsersController — src/main/java/pl/szymtrener/admin/AdminUsersController.java
 @Controller     BlogController — src/main/java/pl/szymtrener/web/BlogController.java
 @Controller     HomeController — src/main/java/pl/szymtrener/web/HomeController.java
+@Controller     NoteController — src/main/java/pl/szymtrener/admin/NoteController.java
 @RestController AdminApiController — src/main/java/pl/szymtrener/admin/AdminApiController.java
 @RestController MediaController — src/main/java/pl/szymtrener/media/MediaController.java
 @RestController PublicFormController — src/main/java/pl/szymtrener/web/PublicFormController.java
 @RestController SeoController — src/main/java/pl/szymtrener/seo/SeoController.java
 @Service        AdminUserDetailsService — src/main/java/pl/szymtrener/admin/AdminUserDetailsService.java
 @Service        AiReadinessAnalyzer — src/main/java/pl/szymtrener/seo/AiReadinessAnalyzer.java
+@Service        ClientInsightService — src/main/java/pl/szymtrener/crm/ClientInsightService.java
 @Service        DocImportService — src/main/java/pl/szymtrener/docimport/DocImportService.java
 @Service        IndexNowService — src/main/java/pl/szymtrener/seo/IndexNowService.java
 @Service        JsonLdService — src/main/java/pl/szymtrener/seo/JsonLdService.java
 @Service        MailService — src/main/java/pl/szymtrener/submission/MailService.java
 @Service        MediaService — src/main/java/pl/szymtrener/media/MediaService.java
+@Service        MessageService — src/main/java/pl/szymtrener/crm/MessageService.java
 @Service        OnlineOfferService — src/main/java/pl/szymtrener/offer/OnlineOfferService.java
 @Service        PostService — src/main/java/pl/szymtrener/content/PostService.java
 @Service        SeoScoreService — src/main/java/pl/szymtrener/seo/SeoScoreService.java
@@ -61,7 +65,9 @@ GET     /admin/api/media                              AdminApiController.list() 
 GET     /admin/haslo                                  AdminController.passwordForm() — src/main/java/pl/szymtrener/admin/AdminController.java
 GET     /admin/klienci                                AdminTraineeController.list() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
 GET     /admin/klienci/nowy                           AdminTraineeController.create() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
-GET     /admin/klienci/{id}                           AdminTraineeController.edit() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+GET     /admin/klienci/tydzien                        AdminTraineeController.week() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+GET     /admin/klienci/{id}                           AdminTraineeController.profile() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+GET     /admin/klienci/{id}/edycja                    AdminTraineeController.edit() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
 GET     /admin/logowanie                              AdminController.login() — src/main/java/pl/szymtrener/admin/AdminController.java
 GET     /admin/media                                  AdminMediaController.library() — src/main/java/pl/szymtrener/admin/AdminMediaController.java
 GET     /admin/oferta                                 AdminOfferController.overview() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
@@ -77,6 +83,7 @@ GET     /admin/ustawienia                             AdminSettingsController.fo
 GET     /admin/zgloszenia                             AdminSubmissionController.list() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 GET     /admin/zgloszenia/{id}                        AdminSubmissionController.detail() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 GET     /admin/zgloszenia/{id}/dane                   AdminSubmissionController.export() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
+GET     /admin/zgloszenia/{id}/szablon/{code}         AdminSubmissionController.template() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 GET     /blog                                         BlogController.list() — src/main/java/pl/szymtrener/web/BlogController.java
 GET     /blog/kategoria/{slug}                        BlogController.byCategory() — src/main/java/pl/szymtrener/web/BlogController.java
 GET     /blog/szukaj                                  BlogController.search() — src/main/java/pl/szymtrener/web/BlogController.java
@@ -97,8 +104,16 @@ POST    /admin/api/media                              AdminApiController.upload(
 POST    /admin/haslo                                  AdminController.changePassword() — src/main/java/pl/szymtrener/admin/AdminController.java
 POST    /admin/klienci/zapisz                         AdminTraineeController.save() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
 POST    /admin/klienci/ze-zgloszenia/{submissionId}   AdminTraineeController.fromSubmission() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+POST    /admin/klienci/{id}/notatka                   AdminTraineeController.addNote() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+POST    /admin/klienci/{id}/pakiet                    AdminTraineeController.sellPackage() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+POST    /admin/klienci/{id}/pomiar                    AdminTraineeController.addMeasurement() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+POST    /admin/klienci/{id}/sesja                     AdminTraineeController.saveSession() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+POST    /admin/klienci/{id}/sesja/{sessionId}/usun    AdminTraineeController.deleteSession() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
 POST    /admin/klienci/{id}/usun                      AdminTraineeController.delete() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
+POST    /admin/klienci/{id}/wiadomosc                 AdminTraineeController.message() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
 POST    /admin/media/{id}/usun                        AdminMediaController.delete() — src/main/java/pl/szymtrener/admin/AdminMediaController.java
+POST    /admin/notatki/{id}/przypnij                  NoteController.togglePin() — src/main/java/pl/szymtrener/admin/NoteController.java
+POST    /admin/notatki/{id}/usun                      NoteController.delete() — src/main/java/pl/szymtrener/admin/NoteController.java
 POST    /admin/oferta/dieta                           AdminOfferController.saveDiet() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/faq                             AdminOfferController.addQuestion() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/faq/{id}                        AdminOfferController.saveQuestion() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
@@ -119,10 +134,17 @@ POST    /admin/posty/ocena                            AdminPostController.score(
 POST    /admin/posty/zapisz                           AdminPostController.save() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 POST    /admin/posty/{id}/usun                        AdminPostController.delete() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 POST    /admin/ustawienia                             AdminSettingsController.save() — src/main/java/pl/szymtrener/admin/AdminSettingsController.java
+POST    /admin/ustawienia/szablony/{id}               AdminSettingsController.saveTemplate() — src/main/java/pl/szymtrener/admin/AdminSettingsController.java
 POST    /admin/ustawienia/test-poczty                 AdminSettingsController.testMail() — src/main/java/pl/szymtrener/admin/AdminSettingsController.java
+POST    /admin/zgloszenia/{id}/etap                   AdminSubmissionController.stage() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
+POST    /admin/zgloszenia/{id}/konwertuj              AdminSubmissionController.convert() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 POST    /admin/zgloszenia/{id}/notatka                AdminSubmissionController.addNote() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
+POST    /admin/zgloszenia/{id}/notatka/tagi           AdminSubmissionController.addTaggedNote() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
+POST    /admin/zgloszenia/{id}/przypomnienie          AdminSubmissionController.remind() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
+POST    /admin/zgloszenia/{id}/przypomnienie/zalatwione AdminSubmissionController.remindDone() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 POST    /admin/zgloszenia/{id}/status                 AdminSubmissionController.changeStatus() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 POST    /admin/zgloszenia/{id}/usun                   AdminSubmissionController.delete() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
+POST    /admin/zgloszenia/{id}/wiadomosc              AdminSubmissionController.message() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 POST    /api/zgloszenia/kontakt                       PublicFormController.contact() — src/main/java/pl/szymtrener/web/PublicFormController.java
 POST    /api/zgloszenia/online                        PublicFormController.online() — src/main/java/pl/szymtrener/web/PublicFormController.java
 
@@ -161,9 +183,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 ### AdminNav  (src/main/java/pl/szymtrener/admin/AdminNav.java)
 - [pub] publishedPosts(): long  :34
 - [pub] newSubmissions(): long  :39
-- [pub] currentName(): String  :49
-- [pub] currentInitials(): String  :58
-- [prv] currentLogin(): String  :67
+- [pub] dueReminders(): long  :48
+- [pub] currentName(): String  :58
+- [pub] currentInitials(): String  :67
+- [prv] currentLogin(): String  :76
 
 ### AdminOfferController  (src/main/java/pl/szymtrener/admin/AdminOfferController.java)
 - [pub] overview(Model model): String  :56
@@ -203,22 +226,30 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] toForm(Post post): PostForm  :323
 
 ### AdminSettingsController  (src/main/java/pl/szymtrener/admin/AdminSettingsController.java)
-- [pub] form(Model model): String  :43
-- [pub] testMail(RedirectAttributes flash): String  :66
+- [pub] form(Model model): String  :46
+- [pub] testMail(RedirectAttributes flash): String  :70
 
 ### AdminSubmissionController  (src/main/java/pl/szymtrener/admin/AdminSubmissionController.java)
-- [pub] detail(@PathVariable Long id, Model model): String  :69
-- [pub] addNote(@PathVariable Long id, @RequestParam String body, Principal principal): String  :89
-- [pub] export(@PathVariable Long id): ResponseEntity<byte[]>  :100
-- [pub] delete(@PathVariable Long id, Principal principal): String  :116
+- [pub] detail(@PathVariable Long id, Model model): String  :77
+- [pub] addNote(@PathVariable Long id, @RequestParam String body, Principal principal): String  :104
+- [pub] stage(@PathVariable Long id, @RequestParam SubmissionStatus status, RedirectAttributes flash): String  :114
+- [pub] template(@PathVariable Long id, @PathVariable String code): Map<String, String>  :161
+- [pub] remindDone(@PathVariable Long id, RedirectAttributes flash): String  :201
+- [pub] convert(@PathVariable Long id, RedirectAttributes flash): String  :209
+- [pub] export(@PathVariable Long id): ResponseEntity<byte[]>  :241
+- [pub] delete(@PathVariable Long id, Principal principal): String  :257
 
 ### AdminTraineeController  (src/main/java/pl/szymtrener/admin/AdminTraineeController.java)
-- [pub] create(Model model): String  :47
-- [pub] edit(@PathVariable Long id, Model model): String  :54
-- [pub] delete(@PathVariable Long id, RedirectAttributes flash): String  :70
-- [pub] fromSubmission(@PathVariable Long submissionId, RedirectAttributes flash): String  :78
-- [prv] form(Model model, Trainee trainee): String  :84
-- [prv] toForm(Trainee trainee): TraineeForm  :93
+- [pub] week(Model model): String  :109
+- [pub] create(Model model): String  :121
+- [pub] profile(@PathVariable Long id, Model model): String  :129
+- [pub] edit(@PathVariable Long id, Model model): String  :155
+- [pub] delete(@PathVariable Long id, RedirectAttributes flash): String  :171
+- [pub] deleteSession(@PathVariable Long id, @PathVariable Long sessionId, RedirectAttributes flash): String  :221
+- [pub] sellPackage(@PathVariable Long id, @RequestParam String name, @RequestParam int totalSessions, @RequestParam String pricePerSession, RedirectAttributes flash): String  :270
+- [pub] fromSubmission(@PathVariable Long submissionId, RedirectAttributes flash): String  :341
+- [prv] form(Model model, Trainee trainee): String  :347
+- [prv] toForm(Trainee trainee): TraineeForm  :356
 
 ### AdminUser  (src/main/java/pl/szymtrener/admin/AdminUser.java)
 - [pub] getId(): Long  :33
@@ -361,8 +392,35 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 ### CleanupScheduler  (src/main/java/pl/szymtrener/scheduler/CleanupScheduler.java)
 - [pub] purgeOldPageViews(): void  :32
 
+### ClientInsightService  (src/main/java/pl/szymtrener/crm/ClientInsightService.java)
+- [pub] signedDelta(): String  :57
+- [pub] packageState(Long traineeId): PackageState  :73
+- [prv] usedSessions(Long traineeId, Long packageId): int  :100
+- [pub] endingSoon(): List<Trainee>  :109
+- [pub] staleContacts(int days): List<Trainee>  :118
+- [pub] nextSession(Long traineeId): Optional<TrainingSession>  :128
+- [pub] log(Long traineeId, int limit): List<TrainingSession>  :136
+- [pub] thisWeek(): List<TrainingSession>  :144
+- [pub] attendancePct(Long traineeId): int  :156
+- [pub] doneSessions(Long traineeId): long  :165
+- [pub] cancelledSessions(Long traineeId): long  :171
+- [pub] lifetimeValueGr(Long traineeId): int  :180
+- [pub] lifetimeValue(Long traineeId): String  :186
+- [pub] soldThisMonth(): String  :192
+- [pub] progress(Long traineeId): List<MeasurementRow>  :207
+- [pub] weightChange(Long traineeId): MeasurementRow  :235
+- [prv] trim(BigDecimal value): String  :242
+- [pub] rows(List<Trainee> source, int staleDays): List<ClientRow>  :250
+
 ### ContentMetrics  (src/main/java/pl/szymtrener/content/ContentMetrics.java)
 - [pub] analyse(String contentHtml, String lead): Result  :15
+
+### CrmModelTest  (src/test/java/pl/szymtrener/crm/CrmModelTest.java)
+- [   ] cancelledDoesNotConsume(): void  :22
+- [   ] packageValue(): void  :35
+- [   ] warningNotes(): void  :46
+- [   ] systemAndFailedMessages(): void  :62
+- [   ] contactLabels(): void  :79
 
 ### DatabaseUrlEnvironmentPostProcessor  (src/main/java/pl/szymtrener/config/DatabaseUrlEnvironmentPostProcessor.java)
 - [pub] postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application): void  :34
@@ -533,6 +591,24 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] clientConfirmationRenders(): void  :117
 - [   ] bothTemplatesSurviveMinimalSubmission(): void  :128
 
+### Measurement  (src/main/java/pl/szymtrener/crm/Measurement.java)
+- [pub] getId(): Long  :27
+- [pub] getTraineeId(): Long  :28
+- [pub] setTraineeId(Long traineeId): void  :29
+- [pub] getTakenOn(): LocalDate  :30
+- [pub] setTakenOn(LocalDate takenOn): void  :31
+- [pub] getMetric(): String  :32
+- [pub] setMetric(String metric): void  :33
+- [pub] getValue(): BigDecimal  :34
+- [pub] setValue(BigDecimal value): void  :35
+- [pub] getUnit(): String  :36
+- [pub] setUnit(String unit): void  :37
+- [pub] isLowerIsBetter(): boolean  :38
+- [pub] setLowerIsBetter(boolean lowerIsBetter): void  :39
+
+### MeasurementRepository  (src/main/java/pl/szymtrener/crm/MeasurementRepository.java)
+- [   ] findByTraineeIdOrderByMetricAscTakenOnAsc(Long traineeId): List<Measurement>  :8
+
 ### MediaBlob  (src/main/java/pl/szymtrener/media/MediaBlob.java)
 - [pub] getMediaId(): Long  :23
 - [pub] getData(): byte[]  :24
@@ -592,9 +668,59 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] safeName(String name): String  :179
 - [prv] sha256(byte[] data): String  :184
 
+### Message  (src/main/java/pl/szymtrener/crm/Message.java)
+- [pub] system(): boolean  :42
+- [pub] outgoing(): boolean  :47
+- [pub] failed(): boolean  :53
+- [pub] sentLabel(): String  :58
+- [pub] getId(): Long  :63
+- [pub] getSubmissionId(): Long  :64
+- [pub] setSubmissionId(Long submissionId): void  :65
+- [pub] getTraineeId(): Long  :66
+- [pub] setTraineeId(Long traineeId): void  :67
+- [pub] getDirection(): MessageDirection  :68
+- [pub] setDirection(MessageDirection direction): void  :69
+- [pub] getChannel(): MessageChannel  :70
+- [pub] setChannel(MessageChannel channel): void  :71
+- [pub] getBody(): String  :72
+- [pub] setBody(String body): void  :73
+- [pub] getAttachmentId(): Long  :74
+- [pub] setAttachmentId(Long attachmentId): void  :75
+- [pub] getSentAt(): Instant  :76
+- [pub] setSentAt(Instant sentAt): void  :77
+- [pub] getMailStatus(): String  :78
+- [pub] setMailStatus(String mailStatus): void  :79
+
+### MessageChannel  (src/main/java/pl/szymtrener/crm/MessageChannel.java)
+- [pub] label(): String  :16
+- [pub] css(): String  :19
+
+### MessageRepository  (src/main/java/pl/szymtrener/crm/MessageRepository.java)
+- [   ] findBySubmissionIdOrderBySentAtAsc(Long submissionId): List<Message>  :8
+- [   ] findByTraineeIdOrderBySentAtAsc(Long traineeId): List<Message>  :9
+- [   ] countBySubmissionId(Long submissionId): long  :10
+
+### MessageService  (src/main/java/pl/szymtrener/crm/MessageService.java)
+- [pub] thread(Long submissionId): List<Message>  :51
+- [pub] traineeThread(Long traineeId): List<Message>  :56
+- [pub] replyTemplates(): List<ReplyTemplate>  :61
+- [pub] recordSubmission(Long submissionId, String body): void  :70
+- [pub] sendEmail(Long submissionId, Long traineeId, String to, String name, String body, Long attachmentId): SendResult  :85
+- [pub] logPhoneCall(Long submissionId, Long traineeId, String body): Message  :125
+- [pub] system(Long submissionId, Long traineeId, String body, boolean failure): void  :137
+- [pub] fill(String code, String firstName, String context): String  :155
+- [prv] trimEnding(String text): String  :166
+- [pub] attachToTrainee(Long submissionId, Long traineeId): void  :177
+- [prv] mailEnabled(): boolean  :184
+
 ### Money  (src/main/java/pl/szymtrener/offer/Money.java)
 - [pub] format(int grosze): String  :17
 - [pub] amount(int grosze): String  :22
+
+### NoteController  (src/main/java/pl/szymtrener/admin/NoteController.java)
+- [pub] togglePin(@PathVariable Long id, @RequestParam String back): String  :24
+- [pub] delete(@PathVariable Long id, @RequestParam String back): String  :30
+- [prv] safe(String back): String  :39
 
 ### OnlineFaq  (src/main/java/pl/szymtrener/offer/OnlineFaq.java)
 - [pub] answered(): boolean  :20
@@ -699,6 +825,19 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [pub] setFresh(String fresh): void  :11
 - [pub] getRepeat(): String  :12
 - [pub] setRepeat(String repeat): void  :13
+
+### Plural  (src/main/java/pl/szymtrener/crm/Plural.java)
+- [pub] form(long n, String one, String few, String many): String  :18
+- [pub] of(long n, String one, String few, String many): String  :26
+- [pub] sessions(long n): String  :30
+- [pub] packages(long n): String  :34
+- [pub] cancelled(long n): String  :38
+- [pub] clients(long n): String  :42
+
+### PluralTest  (src/test/java/pl/szymtrener/crm/PluralTest.java)
+- [   ] threeForms(): void  :16
+- [   ] teensAreException(): void  :26
+- [   ] otherForms(): void  :38
 
 ### Post  (src/main/java/pl/szymtrener/content/Post.java)
 - [   ] touch(): void  :108
@@ -919,6 +1058,26 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 ### RateLimiter  (src/main/java/pl/szymtrener/submission/RateLimiter.java)
 - [pub] allow(String key): boolean  :24
 
+### ReminderScheduler  (src/main/java/pl/szymtrener/submission/ReminderScheduler.java)
+- [pub] sendDueReminders(): void  :45
+- [pub] due(): List<Submission>  :71
+- [prv] body(List<Submission> due): String  :75
+
+### ReplyTemplate  (src/main/java/pl/szymtrener/crm/ReplyTemplate.java)
+- [pub] getId(): Long  :21
+- [pub] getCode(): String  :22
+- [pub] setCode(String code): void  :23
+- [pub] getLabel(): String  :24
+- [pub] setLabel(String label): void  :25
+- [pub] getBody(): String  :26
+- [pub] setBody(String body): void  :27
+- [pub] getSortOrder(): int  :28
+- [pub] setSortOrder(int sortOrder): void  :29
+
+### ReplyTemplateRepository  (src/main/java/pl/szymtrener/crm/ReplyTemplateRepository.java)
+- [   ] findAllByOrderBySortOrderAsc(): List<ReplyTemplate>  :9
+- [   ] findByCode(String code): Optional<ReplyTemplate>  :10
+
 ### SecurityConfig  (src/main/java/pl/szymtrener/config/SecurityConfig.java)
 - [   ] filterChain(HttpSecurity http): SecurityFilterChain  :16
 - [   ] passwordEncoder(): PasswordEncoder  :53
@@ -942,6 +1101,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] label(int score): String  :110
 - [prv] hint(long done, int total): String  :116
 - [prv] trim(String value): String  :121
+
+### SessionStatus  (src/main/java/pl/szymtrener/crm/SessionStatus.java)
+- [pub] label(): String  :13
+- [pub] badge(): String  :16
 
 ### SettingsService  (src/main/java/pl/szymtrener/settings/SettingsService.java)
 - [pub] get(String key, String fallback): String  :55
@@ -1012,66 +1175,89 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findAllByOrderByKindAscSortOrderAsc(): List<StationaryPackage>  :9
 
 ### Submission  (src/main/java/pl/szymtrener/submission/Submission.java)
-- [pub] getId(): Long  :46
-- [pub] getType(): SubmissionType  :47
-- [pub] setType(SubmissionType type): void  :48
-- [pub] getName(): String  :49
-- [pub] setName(String name): void  :50
-- [pub] getEmail(): String  :51
-- [pub] setEmail(String email): void  :52
-- [pub] getPhone(): String  :53
-- [pub] setPhone(String phone): void  :54
-- [pub] getCity(): String  :55
-- [pub] setCity(String city): void  :56
-- [pub] getCurrentTraining(): String  :57
-- [pub] setCurrentTraining(String currentTraining): void  :58
-- [pub] getGoal(): String  :59
-- [pub] setGoal(String goal): void  :60
-- [pub] getEquipment(): String  :61
-- [pub] setEquipment(String equipment): void  :62
-- [pub] getSource(): String  :63
-- [pub] setSource(String source): void  :64
-- [pub] getOfferPath(): String  :65
-- [pub] setOfferPath(String offerPath): void  :66
-- [pub] getOfferPackage(): String  :67
-- [pub] setOfferPackage(String offerPackage): void  :68
-- [pub] getInterest(): String  :69
-- [pub] setInterest(String interest): void  :70
-- [pub] getMessage(): String  :71
-- [pub] setMessage(String message): void  :72
-- [pub] getConsentAt(): Instant  :73
-- [pub] setConsentAt(Instant consentAt): void  :74
-- [pub] getStatus(): SubmissionStatus  :75
-- [pub] setStatus(SubmissionStatus status): void  :76
-- [pub] getCallAt(): Instant  :77
-- [pub] setCallAt(Instant callAt): void  :78
-- [pub] getIpHash(): String  :79
-- [pub] setIpHash(String ipHash): void  :80
-- [pub] getUserAgent(): String  :81
-- [pub] setUserAgent(String userAgent): void  :82
-- [pub] isMailSent(): boolean  :83
-- [pub] setMailSent(boolean mailSent): void  :84
-- [pub] getMailError(): String  :85
-- [pub] setMailError(String mailError): void  :86
-- [pub] getCreatedAt(): Instant  :87
-- [pub] offerContext(): String  :94
-- [pub] callAtLocal(): String  :106
-- [pub] initials(): String  :114
-- [pub] getCreatedLabel(): String  :125
+- [pub] getId(): Long  :59
+- [pub] getType(): SubmissionType  :60
+- [pub] setType(SubmissionType type): void  :61
+- [pub] getName(): String  :62
+- [pub] setName(String name): void  :63
+- [pub] getEmail(): String  :64
+- [pub] setEmail(String email): void  :65
+- [pub] getPhone(): String  :66
+- [pub] setPhone(String phone): void  :67
+- [pub] getCity(): String  :68
+- [pub] setCity(String city): void  :69
+- [pub] getCurrentTraining(): String  :70
+- [pub] setCurrentTraining(String currentTraining): void  :71
+- [pub] getGoal(): String  :72
+- [pub] setGoal(String goal): void  :73
+- [pub] getEquipment(): String  :74
+- [pub] setEquipment(String equipment): void  :75
+- [pub] getSource(): String  :76
+- [pub] setSource(String source): void  :77
+- [pub] getOfferPath(): String  :78
+- [pub] setOfferPath(String offerPath): void  :79
+- [pub] getOfferPackage(): String  :80
+- [pub] setOfferPackage(String offerPackage): void  :81
+- [pub] getInterest(): String  :82
+- [pub] setInterest(String interest): void  :83
+- [pub] getMessage(): String  :84
+- [pub] setMessage(String message): void  :85
+- [pub] getConsentAt(): Instant  :86
+- [pub] setConsentAt(Instant consentAt): void  :87
+- [pub] getStatus(): SubmissionStatus  :88
+- [pub] setStatus(SubmissionStatus status): void  :89
+- [pub] getCallAt(): Instant  :90
+- [pub] setCallAt(Instant callAt): void  :91
+- [pub] getIpHash(): String  :92
+- [pub] setIpHash(String ipHash): void  :93
+- [pub] getUserAgent(): String  :94
+- [pub] setUserAgent(String userAgent): void  :95
+- [pub] isMailSent(): boolean  :96
+- [pub] setMailSent(boolean mailSent): void  :97
+- [pub] getMailError(): String  :98
+- [pub] setMailError(String mailError): void  :99
+- [pub] getContactedAt(): Instant  :100
+- [pub] setContactedAt(Instant v): void  :101
+- [pub] getCallBookedAt(): Instant  :102
+- [pub] setCallBookedAt(Instant v): void  :103
+- [pub] getConvertedAt(): Instant  :104
+- [pub] setConvertedAt(Instant v): void  :105
+- [pub] getArchivedAt(): Instant  :106
+- [pub] setArchivedAt(Instant v): void  :107
+- [pub] getRemindAt(): Instant  :108
+- [pub] setRemindAt(Instant remindAt): void  :109
+- [pub] isRemindDone(): boolean  :110
+- [pub] setRemindDone(boolean remindDone): void  :111
+- [pub] getCreatedAt(): Instant  :112
+- [pub] offerContext(): String  :119
+- [pub] stageDate(String stage): String  :134
+- [pub] callAtLocal(): String  :151
+- [pub] initials(): String  :159
+- [pub] getCreatedLabel(): String  :170
 
 ### SubmissionNote  (src/main/java/pl/szymtrener/submission/SubmissionNote.java)
-- [pub] getId(): Long  :19
-- [pub] getSubmissionId(): Long  :20
-- [pub] setSubmissionId(Long submissionId): void  :21
-- [pub] getAuthor(): String  :22
-- [pub] setAuthor(String author): void  :23
-- [pub] getBody(): String  :24
-- [pub] setBody(String body): void  :25
-- [pub] getCreatedAt(): Instant  :26
-- [pub] getCreatedLabel(): String  :29
+- [pub] getId(): Long  :30
+- [pub] getSubmissionId(): Long  :31
+- [pub] setSubmissionId(Long submissionId): void  :32
+- [pub] getTraineeId(): Long  :33
+- [pub] setTraineeId(Long traineeId): void  :34
+- [pub] isPinned(): boolean  :35
+- [pub] setPinned(boolean pinned): void  :36
+- [pub] getTags(): String  :37
+- [pub] setTags(String tags): void  :38
+- [pub] getAuthor(): String  :39
+- [pub] setAuthor(String author): void  :40
+- [pub] getBody(): String  :41
+- [pub] setBody(String body): void  :42
+- [pub] getCreatedAt(): Instant  :43
+- [pub] tagList(): java.util.List<String>  :47
+- [pub] warning(): boolean  :58
+- [pub] getCreatedLabel(): String  :63
 
 ### SubmissionNoteRepository  (src/main/java/pl/szymtrener/submission/SubmissionNoteRepository.java)
-- [   ] findBySubmissionIdOrderByCreatedAtDesc(Long submissionId): List<SubmissionNote>  :7
+- [   ] findBySubmissionIdOrderByPinnedDescCreatedAtDesc(Long submissionId): List<SubmissionNote>  :9
+- [   ] findByTraineeIdOrderByPinnedDescCreatedAtDesc(Long traineeId): List<SubmissionNote>  :11
+- [   ] findBySubmissionIdOrderByCreatedAtDesc(Long submissionId): List<SubmissionNote>  :13
 
 ### SubmissionRepository  (src/main/java/pl/szymtrener/submission/SubmissionRepository.java)
 - [   ] findAllByOrderByCreatedAtDesc(Pageable pageable): Page<Submission>  :10
@@ -1080,16 +1266,25 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findTop5ByOrderByCreatedAtDesc(): List<Submission>  :13
 - [   ] countByStatus(SubmissionStatus status): long  :14
 - [   ] countByCreatedAtAfter(Instant since): long  :15
+- [   ] findByRemindDoneFalseAndRemindAtLessThanEqual(java.time.Instant at): java.util.List<Submission>  :18
 
 ### SubmissionService  (src/main/java/pl/szymtrener/submission/SubmissionService.java)
-- [pub] acceptOnline(FormRequests.OnlineForm form, String ip, String userAgent): Submission  :30
-- [pub] acceptContact(FormRequests.ContactForm form, String ip, String userAgent): Submission  :47
-- [prv] persist(Submission s, String ip, String userAgent): Submission  :58
-- [pub] changeStatus(Long id, SubmissionStatus status, Instant callAt): void  :68
-- [pub] delete(Long id): void  :80
-- [pub] export(Long id): Map<String, Object>  :89
-- [pub] addNote(Long submissionId, String author, String body): void  :126
-- [prv] hash(String ip): String  :134
+- [pub] acceptOnline(FormRequests.OnlineForm form, String ip, String userAgent): Submission  :33
+- [pub] acceptContact(FormRequests.ContactForm form, String ip, String userAgent): Submission  :50
+- [prv] persist(Submission s, String ip, String userAgent): Submission  :61
+- [prv] opening(Submission s): String  :77
+- [pub] changeStatus(Long id, SubmissionStatus status, Instant callAt): void  :92
+- [pub] stage(Long id, SubmissionStatus status): Submission  :105
+- [prv] stamp(Submission s, SubmissionStatus status): void  :114
+- [pub] remind(Long id, Instant at): void  :130
+- [pub] remindDone(Long id): void  :139
+- [pub] delete(Long id): void  :151
+- [pub] export(Long id): Map<String, Object>  :160
+- [pub] addNote(Long submissionId, String author, String body): void  :197
+- [pub] addNote(Long submissionId, Long traineeId, String author, String body, String tags): void  :202
+- [pub] togglePin(Long noteId): boolean  :214
+- [pub] deleteNote(Long noteId): void  :223
+- [prv] hash(String ip): String  :227
 
 ### SubmissionStatus  (src/main/java/pl/szymtrener/submission/SubmissionStatus.java)
 - [pub] label(): String  :6
@@ -1127,48 +1322,75 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findAllByOrderBySortOrderAsc(): List<Testimonial>  :9
 
 ### Trainee  (src/main/java/pl/szymtrener/crm/Trainee.java)
-- [pub] getId(): Long  :45
-- [pub] getSubmissionId(): Long  :46
-- [pub] setSubmissionId(Long submissionId): void  :47
-- [pub] getName(): String  :48
-- [pub] setName(String name): void  :49
-- [pub] getCity(): String  :50
-- [pub] setCity(String city): void  :51
-- [pub] getAge(): Integer  :52
-- [pub] setAge(Integer age): void  :53
-- [pub] getMode(): TraineeMode  :54
-- [pub] setMode(TraineeMode mode): void  :55
-- [pub] getStartedAt(): LocalDate  :56
-- [pub] setStartedAt(LocalDate startedAt): void  :57
-- [pub] getPlanName(): String  :58
-- [pub] setPlanName(String planName): void  :59
-- [pub] getSessionCount(): int  :60
-- [pub] setSessionCount(int sessionCount): void  :61
-- [pub] getStatus(): TraineeStatus  :62
-- [pub] setStatus(TraineeStatus status): void  :63
-- [pub] getCreatedAt(): Instant  :64
+- [pub] getId(): Long  :60
+- [pub] getSubmissionId(): Long  :61
+- [pub] setSubmissionId(Long submissionId): void  :62
+- [pub] getName(): String  :63
+- [pub] setName(String name): void  :64
+- [pub] getCity(): String  :65
+- [pub] setCity(String city): void  :66
+- [pub] getAge(): Integer  :67
+- [pub] setAge(Integer age): void  :68
+- [pub] getMode(): TraineeMode  :69
+- [pub] setMode(TraineeMode mode): void  :70
+- [pub] getStartedAt(): LocalDate  :71
+- [pub] setStartedAt(LocalDate startedAt): void  :72
+- [pub] getPlanName(): String  :73
+- [pub] setPlanName(String planName): void  :74
+- [pub] getSessionCount(): int  :75
+- [pub] setSessionCount(int sessionCount): void  :76
+- [pub] getStatus(): TraineeStatus  :77
+- [pub] setStatus(TraineeStatus status): void  :78
+- [pub] getCreatedAt(): Instant  :79
+- [pub] getEmail(): String  :80
+- [pub] setEmail(String email): void  :81
+- [pub] getPhone(): String  :82
+- [pub] setPhone(String phone): void  :83
+- [pub] getFixedSlots(): String  :84
+- [pub] setFixedSlots(String fixedSlots): void  :85
+- [pub] getLastContactAt(): Instant  :86
+- [pub] setLastContactAt(Instant lastContactAt): void  :87
+- [pub] getSource(): String  :88
+- [pub] setSource(String source): void  :89
+- [pub] getGoalNote(): String  :90
+- [pub] setGoalNote(String goalNote): void  :91
+- [pub] initials(): String  :95
+- [pub] daysSinceContact(): long  :109
+- [pub] lastContactLabel(): String  :116
+- [pub] startedLabel(): String  :126
+- [pub] weeksTogether(): Long  :134
 
 ### TraineeForm  (src/main/java/pl/szymtrener/crm/TraineeForm.java)
-- [pub] getId(): Long  :17
-- [pub] setId(Long id): void  :18
-- [pub] getSubmissionId(): Long  :19
-- [pub] setSubmissionId(Long submissionId): void  :20
-- [pub] getName(): String  :21
-- [pub] setName(String name): void  :22
-- [pub] getCity(): String  :23
-- [pub] setCity(String city): void  :24
-- [pub] getAge(): Integer  :25
-- [pub] setAge(Integer age): void  :26
-- [pub] getMode(): TraineeMode  :27
-- [pub] setMode(TraineeMode mode): void  :28
-- [pub] getStartedAt(): LocalDate  :29
-- [pub] setStartedAt(LocalDate startedAt): void  :30
-- [pub] getPlanName(): String  :31
-- [pub] setPlanName(String planName): void  :32
-- [pub] getSessionCount(): int  :33
-- [pub] setSessionCount(int sessionCount): void  :34
-- [pub] getStatus(): TraineeStatus  :35
-- [pub] setStatus(TraineeStatus status): void  :36
+- [pub] getId(): Long  :22
+- [pub] setId(Long id): void  :23
+- [pub] getSubmissionId(): Long  :24
+- [pub] setSubmissionId(Long submissionId): void  :25
+- [pub] getName(): String  :26
+- [pub] setName(String name): void  :27
+- [pub] getCity(): String  :28
+- [pub] setCity(String city): void  :29
+- [pub] getAge(): Integer  :30
+- [pub] setAge(Integer age): void  :31
+- [pub] getMode(): TraineeMode  :32
+- [pub] setMode(TraineeMode mode): void  :33
+- [pub] getStartedAt(): LocalDate  :34
+- [pub] setStartedAt(LocalDate startedAt): void  :35
+- [pub] getPlanName(): String  :36
+- [pub] setPlanName(String planName): void  :37
+- [pub] getSessionCount(): int  :38
+- [pub] setSessionCount(int sessionCount): void  :39
+- [pub] getStatus(): TraineeStatus  :40
+- [pub] setStatus(TraineeStatus status): void  :41
+- [pub] getEmail(): String  :42
+- [pub] setEmail(String email): void  :43
+- [pub] getPhone(): String  :44
+- [pub] setPhone(String phone): void  :45
+- [pub] getFixedSlots(): String  :46
+- [pub] setFixedSlots(String fixedSlots): void  :47
+- [pub] getSource(): String  :48
+- [pub] setSource(String source): void  :49
+- [pub] getGoalNote(): String  :50
+- [pub] setGoalNote(String goalNote): void  :51
 
 ### TraineeMode  (src/main/java/pl/szymtrener/crm/TraineeMode.java)
 - [pub] label(): String  :6
@@ -1181,11 +1403,59 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### TraineeService  (src/main/java/pl/szymtrener/crm/TraineeService.java)
 - [pub] fromSubmission(Long submissionId): Trainee  :36
-- [pub] save(TraineeForm form): Trainee  :59
-- [pub] delete(Long id): void  :78
-- [prv] blankToNull(String value): String  :82
+- [pub] save(TraineeForm form): Trainee  :66
+- [pub] delete(Long id): void  :90
+- [prv] blankToNull(String value): String  :94
 
 ### TraineeStatus  (src/main/java/pl/szymtrener/crm/TraineeStatus.java)
 - [pub] label(): String  :6
 - [pub] badge(): String  :15
+
+### TrainingPackage  (src/main/java/pl/szymtrener/crm/TrainingPackage.java)
+- [pub] valueGr(): int  :23
+- [pub] getId(): Long  :27
+- [pub] getTraineeId(): Long  :28
+- [pub] setTraineeId(Long traineeId): void  :29
+- [pub] getName(): String  :30
+- [pub] setName(String name): void  :31
+- [pub] getTotalSessions(): int  :32
+- [pub] setTotalSessions(int totalSessions): void  :33
+- [pub] getPricePerSessionGr(): int  :34
+- [pub] setPricePerSessionGr(int v): void  :35
+- [pub] getPurchasedAt(): LocalDate  :36
+- [pub] setPurchasedAt(LocalDate purchasedAt): void  :37
+- [pub] isActive(): boolean  :38
+- [pub] setActive(boolean active): void  :39
+
+### TrainingPackageRepository  (src/main/java/pl/szymtrener/crm/TrainingPackageRepository.java)
+- [   ] findByTraineeIdOrderByPurchasedAtDesc(Long traineeId): List<TrainingPackage>  :9
+- [   ] findByTraineeIdAndActiveTrue(Long traineeId): List<TrainingPackage>  :10
+- [   ] findByPurchasedAtGreaterThanEqual(LocalDate from): List<TrainingPackage>  :11
+
+### TrainingSession  (src/main/java/pl/szymtrener/crm/TrainingSession.java)
+- [pub] dayLabel(): String  :37
+- [pub] monthLabel(): String  :43
+- [pub] whenLabel(): String  :50
+- [pub] shortLabel(): String  :57
+- [pub] startsAtLocal(): String  :64
+- [pub] getId(): Long  :68
+- [pub] getTraineeId(): Long  :69
+- [pub] setTraineeId(Long traineeId): void  :70
+- [pub] getPackageId(): Long  :71
+- [pub] setPackageId(Long packageId): void  :72
+- [pub] getStartsAt(): Instant  :73
+- [pub] setStartsAt(Instant startsAt): void  :74
+- [pub] getTitle(): String  :75
+- [pub] setTitle(String title): void  :76
+- [pub] getNote(): String  :77
+- [pub] setNote(String note): void  :78
+- [pub] getStatus(): SessionStatus  :79
+- [pub] setStatus(SessionStatus status): void  :80
+- [pub] isConsumesPackage(): boolean  :81
+- [pub] setConsumesPackage(boolean consumesPackage): void  :82
+
+### TrainingSessionRepository  (src/main/java/pl/szymtrener/crm/TrainingSessionRepository.java)
+- [   ] findByTraineeIdOrderByStartsAtDesc(Long traineeId): List<TrainingSession>  :9
+- [   ] findByTraineeIdAndStatusOrderByStartsAtAsc(Long traineeId, SessionStatus status): List<TrainingSession>  :10
+- [   ] findByStartsAtBetweenOrderByStartsAtAsc(Instant from, Instant to): List<TrainingSession>  :11
 

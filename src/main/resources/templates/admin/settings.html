@@ -172,6 +172,44 @@
         </div>
       </form>
 
+      <!--/* Szablony odpowiedzi. W makiecie siedzą w JavaScripcie; tutaj są w bazie,
+             żeby trener poprawiał je sam. Osobne formularze, bo formularza nie
+             wolno zagnieżdżać w formularzu ustawień. */-->
+      <div class="card" style="margin-top:18px">
+        <div class="card-h">
+          <h2>Szablony odpowiedzi</h2>
+          <span class="sub">wstawiane jednym kliknięciem w rozmowie ze zgłoszeniem</span>
+        </div>
+        <div class="card-b">
+          <div class="note-bar" style="margin-bottom:16px">
+            <svg><use href="#i-info"/></svg>
+            <div>W treści możesz użyć <code>{imie}</code> — podstawi się imię klienta.
+              <code>{kontekst}</code> wstawia to, co napisał o swoim treningu.
+              <code>{powod}</code> i <code>{kierunek}</code> zostają do uzupełnienia ręcznie.</div>
+          </div>
+
+          <form th:each="tpl : ${templates}" method="post"
+                th:action="@{/admin/ustawienia/szablony/{id}(id=${tpl.id})}"
+                style="border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:11px">
+            <div class="f-row">
+              <div class="fld" style="flex:1;margin:0">
+                <label th:for="'tl' + ${tpl.id}">Nazwa</label>
+                <input type="text" th:id="'tl' + ${tpl.id}" name="label" th:value="${tpl.label}" required>
+              </div>
+              <div class="fld" style="width:90px;margin:0">
+                <label th:for="'to' + ${tpl.id}">Kolejność</label>
+                <input type="number" th:id="'to' + ${tpl.id}" name="sortOrder" th:value="${tpl.sortOrder}" min="0">
+              </div>
+            </div>
+            <div class="fld" style="margin-top:10px">
+              <label th:for="'tb' + ${tpl.id}">Treść</label>
+              <textarea th:id="'tb' + ${tpl.id}" name="body" rows="7" th:text="${tpl.body}" required></textarea>
+            </div>
+            <button class="btn btn-p" type="submit"><svg><use href="#i-check"/></svg>Zapisz szablon</button>
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

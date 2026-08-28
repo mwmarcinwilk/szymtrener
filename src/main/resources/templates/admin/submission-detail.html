@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Ekran zgłoszenia. Najważniejsza zasada z handoffu: „Odpisz" NIGDY nie otwiera
+       programu pocztowego. Rozmowa toczy się tutaj, wychodzi przez JavaMail,
+       a kopia zostaje w wątku — historia kontaktu jest w panelu, nie w Gmailu. */-->
 <head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
 <body>
 <div th:replace="~{fragments/admin-icons :: icons}"></div>
@@ -12,211 +15,302 @@
       <div th:if="${info}" role="status"
            style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
            th:text="${info}">Zapisano.</div>
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
 
       <div class="page-h">
         <div>
-          <div class="top-crumb">Zgłoszenia / Szczegóły</div>
-          <div class="who" style="margin-top:9px">
+          <div class="top-crumb" th:text="'Zgłoszenia / ' + ${item.name}">Zgłoszenia / Szczegóły</div>
+          <div class="per" style="margin-top:9px">
             <div class="av" th:text="${item.initials()}">MK</div>
             <div>
               <div class="nm" th:text="${item.name}">Imię i nazwisko</div>
               <div class="mt"
-                   th:text="${item.type.label() + ' · ' + item.createdLabel + (item.city != null ? ' · ' + item.city : '')}">
+                   th:text="${item.type.label() + ' · zgłoszenie ' + item.createdLabel + (item.city != null ? ' · ' + item.city : '')}">
                 Formularz online</div>
+              <div class="per-tags">
+                <span class="chip src" th:if="${item.source != null}" th:text="${item.source}">Facebook</span>
+                <span class="chip" th:if="${item.offerContext() != null}" th:text="${item.offerContext()}">Ścieżka 2</span>
+                <span class="chip" th:if="${item.equipment != null}" th:text="${item.equipment}">Sprzęt w domu</span>
+              </div>
             </div>
           </div>
         </div>
         <div class="r">
           <a class="btn btn-o" href="/admin/zgloszenia"><svg><use href="#i-back"/></svg>Wróć</a>
-          <a class="btn btn-p" th:href="'mailto:' + ${item.email}"><svg><use href="#i-mail"/></svg>Odpisz</a>
+          <form method="post" th:action="@{/admin/zgloszenia/{id}/konwertuj(id=${item.id})}"
+                data-confirm-title="Zrobić z tego klienta?"
+                data-confirm="Powstanie profil klienta, a wątek rozmowy i notatki przeniosą się razem z nim."
+                data-confirm-ok="Zrób klienta">
+            <button class="btn btn-o" type="submit"><svg><use href="#i-users"/></svg>Zrób klienta</button>
+          </form>
+          <button class="btn btn-p" type="button" id="focus-reply"><svg><use href="#i-send"/></svg>Odpisz</button>
         </div>
       </div>
 
-      <div class="sub-grid">
+      <!--/* Ścieżka etapów zamiast listy rozwijanej: jedno kliknięcie zmienia etap
+             i zostawia wpis w wątku. Data pod krokiem mówi, KIEDY się wydarzył. */-->
+      <form class="pipe" id="pipe" method="post" th:action="@{/admin/zgloszenia/{id}/etap(id=${item.id})}">
+        <button class="pipe-s" type="submit" name="status" value="NEW"
+                th:classappend="${item.status.name() == 'NEW'} ? ' on' : (${item.contactedAt != null or item.status.name() != 'NEW'} ? ' done' : '')">
+          <span class="n">1</span><span class="t">Nowe</span><span class="d" th:text="${item.stageDate('NEW')}">—</span>
+        </button>
+        <button class="pipe-s" type="submit" name="status" value="IN_CONTACT"
+                th:classappend="${item.status.name() == 'IN_CONTACT'} ? ' on' : (${item.contactedAt != null} ? ' done' : '')">
+          <span class="n">2</span><span class="t">W kontakcie</span><span class="d" th:text="${item.stageDate('CONTACTED')}">—</span>
+        </button>
+        <button class="pipe-s" type="submit" name="status" value="CALL_BOOKED"
+                th:classappend="${item.status.name() == 'CALL_BOOKED'} ? ' on' : (${item.callBookedAt != null} ? ' done' : '')">
+          <span class="n">3</span><span class="t">Rozmowa umówiona</span><span class="d" th:text="${item.stageDate('CALL')}">—</span>
+        </button>
+        <button class="pipe-s" type="submit" name="status" value="CLIENT"
+                th:classappend="${item.status.name() == 'CLIENT'} ? ' on' : (${item.convertedAt != null} ? ' done' : '')">
+          <span class="n">4</span><span class="t">Klient</span><span class="d" th:text="${item.stageDate('CLIENT')}">—</span>
+        </button>
+        <button class="pipe-s arch" type="submit" name="status" value="ARCHIVED"
+                th:classappend="${item.status.name() == 'ARCHIVED'} ? ' on'">
+          <span class="n">✕</span><span class="t">Archiwum</span><span class="d" th:text="${item.stageDate('ARCHIVED')}">—</span>
+        </button>
+      </form>
+
+      <div class="crm">
         <div style="display:grid;gap:16px">
+
+          <!-- ══ WĄTEK ROZMOWY ═══════════════════════════════════════════════ -->
           <div class="card">
             <div class="card-h">
-              <div><h2>Ankieta klienta</h2><div class="sub" th:text="${item.type.label()}">Formularz</div></div>
-              <div class="r"><span class="bg" th:classappend="${item.status.badge()}" th:text="${item.status.label()}">Nowe</span></div>
+              <div><h2>Rozmowa z klientem</h2><div class="sub">Wszystko w panelu — e-maile wychodzą z Twojej skrzynki</div></div>
+              <div class="r"><span class="chip" th:text="${#lists.size(thread)} + ' w wątku'">3 wiadomości</span></div>
             </div>
-            <div class="card-b" style="padding-top:6px">
-              <!--/* Puste pola pomijamy zamiast pokazywać rząd myślników: ankieta
-                     kontaktowa ma inny zestaw pól niż zgłoszenie na prowadzenie. */-->
-              <!--/* Kliknięte CTA jako pierwsze — to ono mówi, o czym będzie rozmowa. */-->
-              <div class="qa" th:if="${item.offerContext() != null}">
-                <div class="q">Kliknięte CTA</div>
-                <div class="a" style="color:var(--mint-2);font-weight:700" th:text="${item.offerContext()}">Ścieżka 2</div>
-              </div>
-              <div class="qa" th:if="${item.city != null}">
-                <div class="q">Skąd jesteś?</div><div class="a" th:text="${item.city}">Łódź</div>
-              </div>
-              <div class="qa" th:if="${item.currentTraining != null}">
-                <div class="q">Jak wygląda Twój trening teraz?</div>
-                <div class="a quote" th:text="${item.currentTraining}">—</div>
-              </div>
-              <div class="qa" th:if="${item.goal != null}">
-                <div class="q">Co chcesz osiągnąć?</div>
-                <div class="a quote" th:text="${item.goal}">—</div>
-              </div>
-              <div class="qa" th:if="${item.equipment != null}">
-                <div class="q">Dostęp do sprzętu?</div><div class="a" th:text="${item.equipment}">—</div>
-              </div>
-              <div class="qa" th:if="${item.interest != null}">
-                <div class="q">Zainteresowanie</div><div class="a" th:text="${item.interest}">—</div>
-              </div>
-              <div class="qa" th:if="${item.message != null}">
-                <div class="q">Wiadomość</div><div class="a quote" th:text="${item.message}">—</div>
-              </div>
-              <div class="qa" th:if="${item.source != null}">
-                <div class="q">Skąd o mnie wie?</div><div class="a" th:text="${item.source}">Instagram</div>
-              </div>
+
+            <div class="th">
+              <th:block th:each="m : ${thread}">
+                <!--/* Zdarzenia systemowe to cienkie linie, nie dymki: opisują, co się
+                       stało, a nie kto co powiedział. */-->
+                <div th:if="${m.system()}" class="sysline" th:classappend="${m.failed()} ? ' bad'"
+                     th:text="${m.body}">Etap zmieniony</div>
+
+                <div th:unless="${m.system()}" class="msg" th:classappend="${m.outgoing()} ? ' out'">
+                  <div class="mav" th:unless="${m.outgoing()}" th:text="${item.initials()}">MK</div>
+                  <div class="bub">
+                    <div class="bub-h">
+                      <b th:text="${m.outgoing()} ? 'Ty' : ${item.name}">Ty</b>
+                      <span class="ch" th:classappend="${m.channel.css()}">
+                        <svg><use th:href="${m.channel.name() == 'FORM'} ? '#i-inbox' : (${m.channel.name() == 'PHONE'} ? '#i-phone' : '#i-mail')"/></svg>
+                        <span th:text="${m.channel.label()}">E-mail</span>
+                      </span>
+                      <time th:text="${m.sentLabel()}">28 sie, 10:29</time>
+                      <span class="ch" style="background:var(--red-pale);color:var(--red)" th:if="${m.failed()}">nie wyszło</span>
+                    </div>
+                    <p th:text="${m.body}">Treść wiadomości.</p>
+                  </div>
+                  <div class="mav" th:if="${m.outgoing()}">SD</div>
+                </div>
+              </th:block>
+
+              <p th:if="${#lists.isEmpty(thread)}" style="font-size:13px;color:var(--ink-3);padding:4px 0">
+                Wątek jest pusty. Napisz pierwszą wiadomość albo zapisz rozmowę telefoniczną.</p>
+            </div>
+
+            <!--/* Pole odpowiedzi z dwoma trybami. Tryb telefoniczny NIC nie wysyła —
+                   zapisuje ustalenia w wątku. */-->
+            <div class="cmp" id="composer">
+              <form method="post" th:action="@{/admin/zgloszenia/{id}/wiadomosc(id=${item.id})}">
+                <div class="cmp-way">
+                  <button class="way on" type="button" data-way="mail"><svg><use href="#i-mail"/></svg>Wyślij e-mail</button>
+                  <button class="way" type="button" data-way="tel"><svg><use href="#i-phone"/></svg>Zapisz rozmowę telefoniczną</button>
+                </div>
+                <input type="hidden" name="way" id="cmp-way" value="mail">
+                <div class="cmp-top" th:data-templates="@{/admin/zgloszenia/{id}/szablon(id=${item.id})}">
+                  <span class="lb">Szablon</span>
+                  <button class="tpl" type="button" th:each="t : ${templates}"
+                          th:data-tpl="${t.code}" th:text="${t.label}">Pierwsza odpowiedź</button>
+                </div>
+                <textarea id="cmp-tx" name="body" required
+                          th:placeholder="'Napisz wiadomość do ' + ${item.name} + '… Możesz zacząć od gotowego szablonu powyżej.'"></textarea>
+                <div class="cmp-foot">
+                  <button class="btn btn-p" type="submit"><svg><use href="#i-send"/></svg>Wyślij</button>
+                  <span class="sp" th:text="'Wysyłka na ' + ${item.email} + ' · kopia trafia do wątku'">
+                    Wysyłka · kopia trafia do wątku</span>
+                </div>
+              </form>
             </div>
           </div>
 
+          <!-- ══ ANKIETA ═════════════════════════════════════════════════════ -->
           <div class="card">
-            <div class="card-h"><h2>Historia kontaktu</h2></div>
-            <div class="card-b">
-              <div class="tl">
-                <div class="tl-i">
-                  <div class="tl-d g"><svg><use href="#i-inbox"/></svg></div>
-                  <div>
-                    <div class="tl-t" th:text="'Zgłoszenie z formularza: ' + ${item.type.label()}">Zgłoszenie</div>
-                    <div class="tl-s"
-                         th:text="${item.createdLabel + (item.source != null ? ' · źródło: ' + item.source : '')}">—</div>
-                  </div>
-                </div>
-                <!--/* Stan wysyłki bierzemy z pola mailSent/mailError, a nie zakładamy,
-                       że skoro zgłoszenie jest w bazie, to mail poszedł. */-->
-                <div class="tl-i" th:if="${item.mailSent}">
-                  <div class="tl-d"><svg><use href="#i-mail"/></svg></div>
-                  <div>
-                    <div class="tl-t">Powiadomienie wysłane</div>
-                    <div class="tl-s" th:text="'na ' + ${item.email}">—</div>
-                  </div>
-                </div>
-                <div class="tl-i" th:if="${item.mailError != null}">
-                  <div class="tl-d"><svg><use href="#i-info"/></svg></div>
-                  <div>
-                    <div class="tl-t" style="color:var(--red)">Poczta nie przeszła</div>
-                    <div class="tl-s" th:text="${item.mailError}">—</div>
-                  </div>
-                </div>
-                <div class="tl-i" th:if="${item.callAt != null}">
-                  <div class="tl-d"><svg><use href="#i-cal"/></svg></div>
-                  <div>
-                    <div class="tl-t">Rozmowa wstępna umówiona</div>
-                    <div class="tl-s" th:text="${item.callAtLocal().replace('T', ', ')}">—</div>
-                  </div>
-                </div>
-                <div class="tl-i" th:if="${item.status.name() == 'NEW'}">
-                  <div class="tl-d"><svg><use href="#i-clock"/></svg></div>
-                  <div>
-                    <div class="tl-t">Oczekuje na odpowiedź trenera</div>
-                    <div class="tl-s">Zadeklarowany czas odpowiedzi: 24 godziny</div>
-                  </div>
-                </div>
+            <div class="card-h">
+              <div><h2>Ankieta ze zgłoszenia</h2><div class="sub">To, co klient wypełnił w formularzu</div></div>
+            </div>
+            <!--/* Puste pola pomijamy zamiast pokazywać rząd myślników: ankieta
+                   kontaktowa ma inny zestaw pól niż zgłoszenie na prowadzenie. */-->
+            <div class="sv">
+              <div class="sv-i" th:if="${item.offerContext() != null}">
+                <div class="q">Kliknięte CTA</div>
+                <div class="a" style="color:var(--mint-2)" th:text="${item.offerContext()}">Ścieżka 2</div>
+              </div>
+              <div class="sv-i" th:if="${item.city != null}">
+                <div class="q">Skąd jest</div><div class="a" th:text="${item.city}">Łódź</div>
+              </div>
+              <div class="sv-i" th:if="${item.equipment != null}">
+                <div class="q">Dostęp do sprzętu</div><div class="a" th:text="${item.equipment}">—</div>
+              </div>
+              <div class="sv-i" th:if="${item.source != null}">
+                <div class="q">Skąd o mnie wie</div><div class="a" th:text="${item.source}">Instagram</div>
+              </div>
+              <div class="sv-i" th:if="${item.interest != null}">
+                <div class="q">Zainteresowanie</div><div class="a" th:text="${item.interest}">—</div>
+              </div>
+              <div class="sv-i wide" th:if="${item.currentTraining != null}">
+                <div class="q">Jak wygląda trening teraz</div><div class="a" th:text="${item.currentTraining}">—</div>
+              </div>
+              <div class="sv-i wide" th:if="${item.goal != null}">
+                <div class="q">Co chce osiągnąć</div><div class="a" th:text="${item.goal}">—</div>
+              </div>
+              <div class="sv-i wide" th:if="${item.message != null}">
+                <div class="q">Wiadomość</div><div class="a" th:text="${item.message}">—</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div style="display:grid;gap:16px">
+        <!-- ══ PRAWA KOLUMNA ═════════════════════════════════════════════════ -->
+        <aside class="crm-side">
           <div class="card">
-            <div class="card-h"><h2>Dane kontaktowe</h2></div>
+            <div class="card-h"><h2>Następny krok</h2></div>
             <div class="card-b">
-              <div class="qa" style="padding-top:0">
-                <div class="q">E-mail</div><div class="a" style="font-size:13.5px" th:text="${item.email}">—</div>
-              </div>
-              <div class="qa" th:if="${item.phone != null}">
-                <div class="q">Telefon</div><div class="a" style="font-size:13.5px" th:text="${item.phone}">—</div>
-              </div>
-              <div class="qa" style="border:none">
-                <div class="q">Zgoda RODO</div>
-                <div class="a" style="font-size:13.5px;color:var(--mint-2);font-weight:700"
-                     th:text="'Udzielona ' + ${item.createdLabel}">—</div>
-              </div>
-              <div class="contact-row">
-                <a th:if="${item.phone != null}" th:href="'tel:' + ${item.phone}"><svg><use href="#i-phone"/></svg>Zadzwoń</a>
-                <a th:href="'mailto:' + ${item.email}"><svg><use href="#i-mail"/></svg>Napisz</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-h"><h2>Status</h2></div>
-            <div class="card-b">
-              <form method="post" th:action="@{/admin/zgloszenia/{id}/status(id=${item.id})}">
-                <div class="fld">
-                  <label for="status">Etap</label>
-                  <select id="status" name="status">
-                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label()}"
-                            th:selected="${s == item.status}">Nowe</option>
-                  </select>
+              <div class="due" style="margin-bottom:14px" th:if="${item.callAt != null}">
+                <svg><use href="#i-clock"/></svg>
+                <div>
+                  <div class="t" th:text="'Rozmowa: ' + ${item.callAtLocal()}">Rozmowa wstępna</div>
+                  <div class="s">Termin zapisany przy zgłoszeniu</div>
                 </div>
-                <div class="fld">
-                  <label for="callAt">Rozmowa wstępna</label>
-                  <input type="datetime-local" id="callAt" name="callAt" th:value="${item.callAtLocal()}">
-                </div>
-                <button class="btn btn-p" type="submit" style="width:100%;justify-content:center">
-                  <svg><use href="#i-check"/></svg>Zapisz zmiany</button>
-              </form>
-            </div>
-          </div>
+              </div>
+              <div class="due" style="margin-bottom:14px;background:var(--amber-pale);color:#7A5310"
+                   th:if="${item.remindAt != null and !item.remindDone}">
+                <svg><use href="#i-bell"/></svg>
+                <div><div class="t">Przypomnienie ustawione</div><div class="s">Wrócę do Ciebie z tym zgłoszeniem</div></div>
+              </div>
 
-          <div class="card">
-            <div class="card-h">
-              <h2>Notatki trenera</h2>
-              <div class="r"><span class="chip" th:text="${notes.size()}">0</span></div>
-            </div>
-            <div class="card-b">
-              <div class="notes" th:if="${!notes.isEmpty()}">
-                <div class="note" th:each="n : ${notes}">
-                  <div class="m">
-                    <svg width="11" height="11"><use href="#i-note"/></svg>
-                    <b th:text="${n.author}">Szymon</b> · <span th:text="${n.createdLabel}">—</span>
+              <!--/* Przypomnienie rozwiązuje główny problem panelu: zgłoszenie,
+                     o którym trener zapomniał. Szybkie przyciski zamiast kalendarza. */-->
+              <form class="step-box" method="post" th:action="@{/admin/zgloszenia/{id}/przypomnienie(id=${item.id})}">
+                <div class="fld" style="margin:0">
+                  <label>Przypomnij mi o tym zgłoszeniu</label>
+                  <div class="quick">
+                    <button class="qb" type="submit" name="preset" value="jutro">Jutro</button>
+                    <button class="qb" type="submit" name="preset" value="3dni">Za 3 dni</button>
+                    <button class="qb" type="submit" name="preset" value="tydzien">Za tydzień</button>
                   </div>
-                  <p th:text="${n.body}">treść</p>
                 </div>
-              </div>
-              <form class="note-add" method="post" th:action="@{/admin/zgloszenia/{id}/notatka(id=${item.id})}">
-                <textarea name="body" rows="3" placeholder="Dodaj notatkę — widoczna tylko dla Ciebie…" required></textarea>
-                <button class="btn btn-o" type="submit" style="width:100%;justify-content:center">
-                  <svg><use href="#i-plus"/></svg>Dodaj notatkę</button>
+                <div class="fld" style="margin:0">
+                  <label for="remindDate">Albo konkretny termin</label>
+                  <input type="datetime-local" id="remindDate" name="date">
+                </div>
+                <button class="btn btn-p" type="submit" style="width:100%"><svg><use href="#i-check"/></svg>Zapisz termin</button>
+              </form>
+
+              <form method="post" th:action="@{/admin/zgloszenia/{id}/przypomnienie/zalatwione(id=${item.id})}"
+                    th:if="${item.remindAt != null and !item.remindDone}">
+                <button class="btn btn-o" type="submit" style="width:100%;margin-top:8px">
+                  <svg><use href="#i-check"/></svg>Załatwione</button>
               </form>
             </div>
           </div>
 
           <div class="card">
-            <div class="card-h"><h2>Klient</h2></div>
-            <div class="card-b">
-              <p style="font-size:12px;color:var(--ink-3);line-height:1.6;margin-bottom:10px">
-                Przepisze imię i miejscowość do kartoteki klientów i ustawi zgłoszeniu status „Klient”.
-              </p>
-              <form method="post" th:action="@{/admin/klienci/ze-zgloszenia/{id}(id=${item.id})}">
-                <button class="btn btn-p" type="submit" style="width:100%;justify-content:center">
-                  <svg><use href="#i-users"/></svg>Zrób z tego klienta</button>
-              </form>
+            <div class="card-h"><h2>Kontakt</h2></div>
+            <div class="card-b" style="padding-top:6px">
+              <div class="mini-row"><span class="k">E-mail</span>
+                <span class="v"><a th:href="'mailto:' + ${item.email}" th:text="${item.email}">adres</a></span></div>
+              <div class="mini-row" th:if="${item.phone != null}"><span class="k">Telefon</span>
+                <span class="v"><a th:href="'tel:' + ${item.phone}" th:text="${item.phone}">telefon</a></span></div>
+              <div class="mini-row"><span class="k">Zgoda RODO</span>
+                <span class="v" style="color:var(--mint-2)" th:text="${item.createdLabel}">—</span></div>
+              <div class="contact-row">
+                <a th:href="'tel:' + ${item.phone}" th:if="${item.phone != null}"><svg><use href="#i-phone"/></svg>Zadzwoń</a>
+                <a th:href="@{/admin/zgloszenia/{id}/dane(id=${item.id})}"><svg><use href="#i-pdf"/></svg>Dane (RODO)</a>
+              </div>
+            </div>
+          </div>
+
+          <!--/* Wyciąg z notatek oznaczonych Zdrowie i Ważne: przeciwwskazania
+                 mają być widoczne bez czytania całości. */-->
+          <div class="card" th:if="${!#lists.isEmpty(warnings)}">
+            <div class="card-h"><h2>Na co uważać</h2><div class="r"><span class="chip">z notatek</span></div></div>
+            <div class="card-b" style="padding-top:6px">
+              <div class="goal" th:each="w : ${warnings}">
+                <div class="gi" style="background:var(--red-pale);color:var(--red)"><svg><use href="#i-alert"/></svg></div>
+                <div>
+                  <div class="t" th:text="${#strings.arrayJoin(w.tagList(), ' · ')}">Zdrowie</div>
+                  <div class="s" th:text="${w.body}">Treść notatki</div>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="card">
             <div class="card-h"><h2>Dane osobowe</h2></div>
             <div class="card-b">
-              <p style="font-size:12px;color:var(--ink-3);line-height:1.6;margin-bottom:10px">
-                Klient ma prawo zażądać kopii swoich danych i ich usunięcia. Na jedno i drugie
-                masz 30 dni (RODO, art. 15 i 17).
-              </p>
-              <a class="btn btn-o btn-s" th:href="@{/admin/zgloszenia/{id}/dane(id=${item.id})}"
-                 style="width:100%;justify-content:center;margin-bottom:8px">Pobierz dane (JSON)</a>
+              <p style="font-size:12.5px;line-height:1.6;color:var(--ink-2);margin-bottom:11px">
+                Usunięcie kasuje zgłoszenie razem z notatkami i wątkiem. Nieodwracalnie.</p>
               <form method="post" th:action="@{/admin/zgloszenia/{id}/usun(id=${item.id})}"
-                    data-confirm-title="Usunąć dane zgłoszenia?"
-                    data-confirm="Zgłoszenie zniknie razem z notatkami. Tego nie da się cofnąć."
-                    data-confirm-ok="Usuń trwale">
-                <button class="btn btn-danger btn-s" type="submit" style="width:100%;justify-content:center">
-                  <svg><use href="#i-trash"/></svg>Usuń dane trwale</button>
+                    data-confirm-title="Usunąć dane tej osoby?"
+                    data-confirm="Zgłoszenie zniknie razem z notatkami i całą rozmową. Tego nie da się cofnąć."
+                    data-confirm-ok="Usuń dane">
+                <button class="btn btn-o" type="submit" style="width:100%;color:var(--red);border-color:var(--red)">
+                  <svg><use href="#i-trash"/></svg>Usuń zgłoszenie</button>
               </form>
             </div>
           </div>
+        </aside>
+      </div>
+
+      <!--/* Notatki na pełną szerokość, nie w wąskim pasku z boku: to one niosą
+             wiedzę o kliencie, którą trener czyta przed rozmową. */-->
+      <div class="card" style="margin-top:16px">
+        <div class="card-h">
+          <div><h2>Notatki trenera</h2><div class="sub">Widoczne tylko dla Ciebie · przypięte na górze</div></div>
+          <div class="r"><span class="chip" th:text="${#lists.size(notes)}">3</span></div>
+        </div>
+        <div class="notes-grid">
+          <div class="nt" th:each="n : ${notes}" th:classappend="${n.pinned} ? ' pin'">
+            <div class="nt-h">
+              <svg width="11" height="11" style="color:var(--amber)" th:if="${n.pinned}"><use href="#i-pin"/></svg>
+              <b th:text="${n.author}">Szymon</b> · <span th:text="${n.createdLabel}">28 sie</span>
+              <span class="r">
+                <form method="post" th:action="@{/admin/notatki/{id}/przypnij(id=${n.id})}" style="display:inline">
+                  <input type="hidden" name="back" th:value="'/admin/zgloszenia/' + ${item.id}">
+                  <button type="submit" th:title="${n.pinned} ? 'Odepnij' : 'Przypnij'"><svg><use href="#i-pin"/></svg></button>
+                </form>
+                <form method="post" th:action="@{/admin/notatki/{id}/usun(id=${n.id})}" style="display:inline"
+                      data-confirm-title="Usunąć notatkę?" data-confirm="Notatki nie da się odzyskać."
+                      data-confirm-ok="Usuń">
+                  <input type="hidden" name="back" th:value="'/admin/zgloszenia/' + ${item.id}">
+                  <button type="submit" title="Usuń"><svg><use href="#i-trash"/></svg></button>
+                </form>
+              </span>
+            </div>
+            <p th:text="${n.body}">Treść notatki.</p>
+            <div class="nt-tags" th:if="${!#lists.isEmpty(n.tagList())}">
+              <span class="nt-t" th:each="t : ${n.tagList()}" th:text="${t}">Zdrowie</span>
+            </div>
+          </div>
+
+          <form class="nt-new" method="post" th:action="@{/admin/zgloszenia/{id}/notatka/tagi(id=${item.id})}">
+            <textarea name="body" required
+                      placeholder="Nowa notatka: ustalenia z rozmowy, przeciwwskazania, na co uważać…"></textarea>
+            <!--/* Tagi jako pola wyboru, nie wolny tekst: „Zdrowie" i „Ważne" sterują
+                   kartą „Na co uważać", więc literówka wyłączyłaby tę funkcję. */-->
+            <div class="nt-chips">
+              <label class="nt-chip"><input type="checkbox" name="tags" value="Zdrowie" hidden>Zdrowie</label>
+              <label class="nt-chip"><input type="checkbox" name="tags" value="Rozmowa" hidden>Rozmowa</label>
+              <label class="nt-chip"><input type="checkbox" name="tags" value="Sprzedaż" hidden>Sprzedaż</label>
+              <label class="nt-chip"><input type="checkbox" name="tags" value="Ważne" hidden>Ważne</label>
+            </div>
+            <button class="btn btn-o" type="submit" style="width:100%"><svg><use href="#i-plus"/></svg>Dodaj notatkę</button>
+          </form>
         </div>
       </div>
 
@@ -224,5 +318,6 @@
   </div>
 </div>
 <script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+<script th:src="@{/js/admin-crm.js}" src="/js/admin-crm.js" defer></script>
 </body>
 </html>

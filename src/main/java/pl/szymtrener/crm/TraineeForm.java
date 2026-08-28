@@ -13,6 +13,11 @@ public class TraineeForm {
     private String planName;
     private int sessionCount;
     private TraineeStatus status = TraineeStatus.ACTIVE;
+    private String email;
+    private String phone;
+    private String fixedSlots;
+    private String source;
+    private String goalNote;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -34,4 +39,14 @@ public class TraineeForm {
     public void setSessionCount(int sessionCount) { this.sessionCount = sessionCount; }
     public TraineeStatus getStatus() { return status; }
     public void setStatus(TraineeStatus status) { this.status = status; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getFixedSlots() { return fixedSlots; }
+    public void setFixedSlots(String fixedSlots) { this.fixedSlots = fixedSlots; }
+    public String getSource() { return source; }
+    public void setSource(String source) { this.source = source; }
+    public String getGoalNote() { return goalNote; }
+    public void setGoalNote(String goalNote) { this.goalNote = goalNote; }
 }

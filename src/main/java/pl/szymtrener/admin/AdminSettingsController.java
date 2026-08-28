@@ -27,20 +27,24 @@ public class AdminSettingsController {
     private final String smtpHost;
     private final String smtpPort;
     private final JavaMailSender mailSender;
+    private final pl.szymtrener.crm.ReplyTemplateRepository replyTemplates;
 
     public AdminSettingsController(SettingsService settings, AppProperties props,
                                    @Value("${spring.mail.host:—}") String smtpHost,
                                    @Value("${spring.mail.port:—}") String smtpPort,
-                                   JavaMailSender mailSender) {
+                                   JavaMailSender mailSender,
+                                   pl.szymtrener.crm.ReplyTemplateRepository replyTemplates) {
         this.settings = settings;
         this.props = props;
         this.smtpHost = smtpHost;
         this.smtpPort = smtpPort;
         this.mailSender = mailSender;
+        this.replyTemplates = replyTemplates;
     }
 
     @GetMapping("/admin/ustawienia")
     public String form(Model model) {
+        model.addAttribute("templates", replyTemplates.findAllByOrderBySortOrderAsc());
         model.addAttribute("pageSize", settings.getInt(SettingsService.BLOG_PAGE_SIZE, 9));
         model.addAttribute("recipient", settings.get(SettingsService.MAIL_RECIPIENT, props.mail().recipient()));
         model.addAttribute("mailEnabled", settings.getBoolean(SettingsService.MAIL_ENABLED, true));
@@ -102,6 +106,30 @@ public class AdminSettingsController {
         settings.set(SettingsService.SEO_DESC, seoDesc == null ? "" : seoDesc.trim());
 
         flash.addFlashAttribute("info", "Ustawienia zapisane.");
+        return "redirect:/admin/ustawienia";
+    }
+
+    /**
+     * Zapis szablonu odpowiedzi. Kod (`first`, `terms`…) jest niezmienny — odwoluje
+     * sie do niego przycisk w rozmowie, wiec zmiana kodu zerwalaby to powiazanie.
+     */
+    @PostMapping("/admin/ustawienia/szablony/{id}")
+    public String saveTemplate(@org.springframework.web.bind.annotation.PathVariable Long id,
+                               @RequestParam String label,
+                               @RequestParam String body,
+                               @RequestParam(defaultValue = "0") int sortOrder,
+                               org.springframework.web.servlet.mvc.support.RedirectAttributes flash) {
+        pl.szymtrener.crm.ReplyTemplate tpl = replyTemplates.findById(id)
+                .orElseThrow(() -> new pl.szymtrener.common.NotFoundException("Nie ma szablonu " + id));
+        if (label.isBlank() || body.isBlank()) {
+            flash.addFlashAttribute("error", "Szablon potrzebuje nazwy i treści.");
+            return "redirect:/admin/ustawienia";
+        }
+        tpl.setLabel(label.trim());
+        tpl.setBody(body.trim());
+        tpl.setSortOrder(sortOrder);
+        replyTemplates.save(tpl);
+        flash.addFlashAttribute("info", "Zapisano szablon „" + tpl.getLabel() + "”.");
         return "redirect:/admin/ustawienia";
     }
 }
