@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
 > AUTO-GENEROWANY 2026-08-28 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 47 · Endpointy: 71 · Metody: 837 · Front: 0
+> Beany: 47 · Endpointy: 72 · Metody: 839 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -99,6 +99,7 @@ POST    /admin/klienci/zapisz                         AdminTraineeController.sav
 POST    /admin/klienci/ze-zgloszenia/{submissionId}   AdminTraineeController.fromSubmission() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
 POST    /admin/klienci/{id}/usun                      AdminTraineeController.delete() — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
 POST    /admin/media/{id}/usun                        AdminMediaController.delete() — src/main/java/pl/szymtrener/admin/AdminMediaController.java
+POST    /admin/oferta/dieta                           AdminOfferController.saveDiet() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/faq                             AdminOfferController.addQuestion() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/faq/{id}                        AdminOfferController.saveQuestion() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/faq/{id}/usun                   AdminOfferController.deleteQuestion() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
@@ -166,23 +167,23 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### AdminOfferController  (src/main/java/pl/szymtrener/admin/AdminOfferController.java)
 - [pub] overview(Model model): String  :56
-- [pub] addPackage(@RequestParam String name, RedirectAttributes flash): String  :87
-- [pub] editPackage(@PathVariable Long id, Model model): String  :105
-- [pub] deletePackage(@PathVariable Long id, RedirectAttributes flash): String  :178
-- [pub] addTestimonial(@RequestParam String name, @RequestParam String body, RedirectAttributes flash): String  :189
-- [pub] editTestimonial(@PathVariable Long id, Model model): String  :205
-- [pub] deleteTestimonial(@PathVariable Long id, RedirectAttributes flash): String  :243
-- [pub] addQuestion(@RequestParam String question, RedirectAttributes flash): String  :254
-- [pub] deleteQuestion(@PathVariable Long id, RedirectAttributes flash): String  :296
-- [pub] stationary(Model model): String  :307
-- [prv] pricesInZloty(List<StationaryPackage> all): Map<Long, String>  :320
-- [pub] addStationary(@RequestParam StationaryKind kind, @RequestParam String name, RedirectAttributes flash): String  :371
-- [pub] deleteStationary(@PathVariable Long id, RedirectAttributes flash): String  :392
-- [prv] text(String v): String  :416
-- [   ] weeks(String input): Integer  :421
-- [   ] grosze(String input): Integer  :436
-- [   ] zlote(int grosze): String  :451
-- [prv] blankToNull(String v): String  :456
+- [pub] addPackage(@RequestParam String name, RedirectAttributes flash): String  :106
+- [pub] editPackage(@PathVariable Long id, Model model): String  :124
+- [pub] deletePackage(@PathVariable Long id, RedirectAttributes flash): String  :197
+- [pub] addTestimonial(@RequestParam String name, @RequestParam String body, RedirectAttributes flash): String  :208
+- [pub] editTestimonial(@PathVariable Long id, Model model): String  :224
+- [pub] deleteTestimonial(@PathVariable Long id, RedirectAttributes flash): String  :262
+- [pub] addQuestion(@RequestParam String question, RedirectAttributes flash): String  :273
+- [pub] deleteQuestion(@PathVariable Long id, RedirectAttributes flash): String  :315
+- [pub] stationary(Model model): String  :326
+- [prv] pricesInZloty(List<StationaryPackage> all): Map<Long, String>  :339
+- [pub] addStationary(@RequestParam StationaryKind kind, @RequestParam String name, RedirectAttributes flash): String  :390
+- [pub] deleteStationary(@PathVariable Long id, RedirectAttributes flash): String  :411
+- [prv] text(String v): String  :435
+- [   ] weeks(String input): Integer  :440
+- [   ] grosze(String input): Integer  :455
+- [   ] zlote(int grosze): String  :470
+- [prv] blankToNull(String v): String  :475
 
 ### AdminOfferControllerTest  (src/test/java/pl/szymtrener/admin/AdminOfferControllerTest.java)
 - [   ] parsesHumanInput(): void  :17
@@ -476,7 +477,7 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### HomeController  (src/main/java/pl/szymtrener/web/HomeController.java)
 - [pub] home(Model model): String  :35
-- [pub] privacy(Model model): String  :69
+- [pub] privacy(Model model): String  :70
 
 ### HtmlSanitizer  (src/main/java/pl/szymtrener/content/HtmlSanitizer.java)
 - [pub] clean(String html): String  :52
@@ -612,14 +613,16 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findAllByOrderBySortOrderAsc(): List<OnlineFaq>  :9
 
 ### OnlineOfferService  (src/main/java/pl/szymtrener/offer/OnlineOfferService.java)
-- [pub] consultation(): ConsultationView  :41
-- [pub] consultPriceGr(): int  :47
-- [pub] packages(): List<PackageView>  :64
-- [   ] toView(OnlinePackage p): PackageView  :69
-- [pub] money(int grosze): String  :97
-- [pub] lowestMonthly(): String  :108
-- [pub] testimonials(): List<Testimonial>  :119
-- [pub] faq(): List<OnlineFaq>  :128
+- [pub] consultation(): SimplePriceView  :46
+- [pub] consultPriceGr(): int  :52
+- [pub] diet(): SimplePriceView  :61
+- [pub] dietPriceGr(): int  :67
+- [pub] packages(): List<PackageView>  :84
+- [   ] toView(OnlinePackage p): PackageView  :89
+- [pub] money(int grosze): String  :117
+- [pub] lowestMonthly(): String  :128
+- [pub] testimonials(): List<Testimonial>  :139
+- [pub] faq(): List<OnlineFaq>  :148
 
 ### OnlineOfferServiceTest  (src/test/java/pl/szymtrener/offer/OnlineOfferServiceTest.java)
 - [prv] pack(int seatsTaken, int seatsTotal, PricingMode mode): OnlinePackage  :14
@@ -941,12 +944,12 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] trim(String value): String  :121
 
 ### SettingsService  (src/main/java/pl/szymtrener/settings/SettingsService.java)
-- [pub] get(String key, String fallback): String  :52
-- [pub] getInt(String key, int fallback): int  :58
-- [pub] getBoolean(String key, boolean fallback): boolean  :69
-- [pub] set(String key, String value): void  :75
-- [pub] all(): Map<String, String>  :85
-- [prv] ensureLoaded(): void  :90
+- [pub] get(String key, String fallback): String  :55
+- [pub] getInt(String key, int fallback): int  :61
+- [pub] getBoolean(String key, boolean fallback): boolean  :72
+- [pub] set(String key, String value): void  :78
+- [pub] all(): Map<String, String>  :88
+- [prv] ensureLoaded(): void  :93
 
 ### SlugUtil  (src/main/java/pl/szymtrener/common/SlugUtil.java)
 - [pub] slugify(String input): String  :10

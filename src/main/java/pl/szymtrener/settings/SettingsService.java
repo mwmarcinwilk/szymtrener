@@ -37,6 +37,9 @@ public class SettingsService {
      */
     public static final String OFFER_CONSULT_PRICE_GR = "offer.consult.price.gr";
     public static final String OFFER_CONSULT_VISIBLE = "offer.consult.visible";
+    /** Jadlospis dietetyczny: jedna kwota, tak samo jak konsultacja. W GROSZACH. */
+    public static final String OFFER_DIET_PRICE_GR = "offer.diet.price.gr";
+    public static final String OFFER_DIET_VISIBLE = "offer.diet.visible";
     public static final String SEO_TITLE = "seo.default.title";
     public static final String SEO_DESC = "seo.default.desc";
 

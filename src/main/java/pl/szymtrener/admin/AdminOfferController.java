@@ -60,6 +60,9 @@ public class AdminOfferController {
         model.addAttribute("consultPrice", zlote(offer.consultPriceGr()));
         model.addAttribute("consultVisible",
                 settings.getBoolean(SettingsService.OFFER_CONSULT_VISIBLE, true));
+        model.addAttribute("dietPrice", zlote(offer.dietPriceGr()));
+        model.addAttribute("dietVisible",
+                settings.getBoolean(SettingsService.OFFER_DIET_VISIBLE, true));
         model.addAttribute("title", "Oferta online");
         return "admin/offer";
     }
@@ -78,6 +81,22 @@ public class AdminOfferController {
         settings.set(SettingsService.OFFER_CONSULT_PRICE_GR, String.valueOf(gr));
         settings.set(SettingsService.OFFER_CONSULT_VISIBLE, String.valueOf(visible));
         flash.addFlashAttribute("info", "Zapisano ścieżkę „Konsultacja + Plan”.");
+        return "redirect:/admin/oferta";
+    }
+
+    /** Jadlospis dietetyczny. Jedna kwota, tak samo jak konsultacja. */
+    @PostMapping("/dieta")
+    public String saveDiet(@RequestParam String price,
+                           @RequestParam(defaultValue = "false") boolean visible,
+                           RedirectAttributes flash) {
+        Integer gr = grosze(price);
+        if (gr == null) {
+            flash.addFlashAttribute("error", "Cena jadłospisu musi być liczbą, np. 129.");
+            return "redirect:/admin/oferta";
+        }
+        settings.set(SettingsService.OFFER_DIET_PRICE_GR, String.valueOf(gr));
+        settings.set(SettingsService.OFFER_DIET_VISIBLE, String.valueOf(visible));
+        flash.addFlashAttribute("info", "Zapisano jadłospis dietetyczny.");
         return "redirect:/admin/oferta";
     }
 

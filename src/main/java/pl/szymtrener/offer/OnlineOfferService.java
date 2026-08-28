@@ -19,6 +19,8 @@ public class OnlineOfferService {
 
     /** Cena Sciezki 1 z briefu, gdy nikt jej jeszcze nie zmienil w panelu. */
     public static final int DEFAULT_CONSULT_PRICE_GR = 34900;
+    /** Cena jadlospisu ze strony sprzed przeniesienia jej do panelu. */
+    public static final int DEFAULT_DIET_PRICE_GR = 12900;
 
     private final OnlinePackageRepository packages;
     private final TestimonialRepository testimonials;
@@ -35,17 +37,35 @@ public class OnlineOfferService {
         this.settings = settings;
     }
 
-    /** Sciezka 1 — jedna kwota i przelacznik widocznosci, wiec bez wlasnej tabeli. */
-    public record ConsultationView(String price, boolean visible) {}
+    /**
+     * Produkt opisany jedna kwota i przelacznikiem widocznosci: konsultacja
+     * z planem (Sciezka 1) i jadlospis. Za malo danych na wlasna tabele.
+     */
+    public record SimplePriceView(String price, boolean visible) {}
 
-    public ConsultationView consultation() {
-        return new ConsultationView(
+    public SimplePriceView consultation() {
+        return new SimplePriceView(
                 money(consultPriceGr()),
                 settings.getBoolean(SettingsService.OFFER_CONSULT_VISIBLE, true));
     }
 
     public int consultPriceGr() {
         return settings.getInt(SettingsService.OFFER_CONSULT_PRICE_GR, DEFAULT_CONSULT_PRICE_GR);
+    }
+
+    /**
+     * Jadlospis dietetyczny. Nie jest ani pakietem online, ani stacjonarnym —
+     * jedna kwota bez waznosci i bez naboru, wiec tak jak konsultacja siedzi
+     * w ustawieniach, a nie we wlasnej tabeli.
+     */
+    public SimplePriceView diet() {
+        return new SimplePriceView(
+                money(dietPriceGr()),
+                settings.getBoolean(SettingsService.OFFER_DIET_VISIBLE, true));
+    }
+
+    public int dietPriceGr() {
+        return settings.getInt(SettingsService.OFFER_DIET_PRICE_GR, DEFAULT_DIET_PRICE_GR);
     }
 
     /**

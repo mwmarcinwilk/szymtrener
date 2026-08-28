@@ -48,6 +48,7 @@ public class HomeController {
         // zmieniac z panelu. Pusta lista = sekcja chowa sie w calosci, bez placeholdera.
         model.addAttribute("packages", offer.packages());
         model.addAttribute("consult", offer.consultation());
+        model.addAttribute("diet", offer.diet());
         model.addAttribute("testimonials", offer.testimonials());
         model.addAttribute("onlineFaq", offer.faq());
         // Cena w danych strukturalnych musi zgadzac sie z ta na stronie — rozbieznosc

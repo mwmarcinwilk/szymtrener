@@ -62,6 +62,32 @@
         </div>
       </div>
 
+      <!-- ══ JADŁOSPIS ═════════════════════════════════════════════════════ -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-h">
+          <h2>Jadłospis dietetyczny</h2>
+          <span class="bg" th:classappend="${dietVisible} ? 'pub' : 'arch'"
+                th:text="${dietVisible} ? 'Widoczny' : 'Ukryty'">Widoczny</span>
+        </div>
+        <div class="card-b">
+          <form method="post" action="/admin/oferta/dieta" class="f-row">
+            <div class="fld" style="max-width:200px">
+              <label for="dietPrice">Cena od</label>
+              <input type="text" id="dietPrice" name="price" th:value="${dietPrice}" inputmode="decimal">
+              <div class="hint"><span>w złotych, np. 129</span></div>
+            </div>
+            <div class="fld">
+              <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
+                <input type="checkbox" name="visible" value="true" th:checked="${dietVisible}" style="width:auto">
+                Pokazuj jadłospis na stronie
+              </label>
+              <div class="hint"><span>Karta w sekcji „Nie mieszkasz w Łodzi?” i kwota w odpowiedzi FAQ o cenach</span></div>
+            </div>
+            <button class="btn btn-p" type="submit"><svg><use href="#i-check"/></svg>Zapisz</button>
+          </form>
+        </div>
+      </div>
+
       <!-- ══ PAKIETY ═══════════════════════════════════════════════════════ -->
       <div class="card" style="margin-bottom:18px">
         <div class="card-h">

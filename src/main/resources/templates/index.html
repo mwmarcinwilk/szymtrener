@@ -139,7 +139,7 @@
           "name": "Ile kosztuje trening personalny w Łodzi?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "[[${stationaryPrices} ?: 'Pojedynczy trening stacjonarny kosztuje 210 zł.']] Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł."
+            "text": "[[${stationaryPrices} ?: 'Pojedynczy trening stacjonarny kosztuje 210 zł.']] Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie[[${diet.visible() ? ', a indywidualny jadłospis dietetyczny od ' + diet.price() : ''}]]."
           }
         },
         {
@@ -470,10 +470,11 @@
         <p>Spersonalizowany plan treningowy, dostęp do aplikacji treningowej na telefon, stały kontakt i analiza postępów. Pracujesz z dowolnego miejsca w Polsce.</p>
         <a href="#online" class="btn btn-outline">Poznaj szczegóły online</a>
       </div>
-      <div class="online-card">
+      <div class="online-card" th:if="${diet.visible()}">
         <div class="ic">🥗</div>
         <h3>Jadłospis dietetyczny</h3>
-        <div class="online-price">od 129 <span>zł / rozpiska</span></div>
+        <!--/* Kwota z panelu, jak wszystkie pozostałe ceny na stronie. */-->
+        <div class="online-price">od <span th:text="${diet.price()}">129 zł</span> <span>/ rozpiska</span></div>
         <p>Indywidualnie opracowany jadłospis dostosowany do Twoich potrzeb, celów zdrowotnych i stylu życia.</p>
         <a href="#kontakt" class="btn btn-outline">Zamów jadłospis</a>
       </div>
@@ -867,7 +868,7 @@
         <!--/* Zdanie i tabela pochodzą z tych samych danych co cennik wyżej.
                Brief stacjonarny 5.3: cennik jest na stronie dwa razy i obie
                instancje muszą czerpać z jednego źródła. */-->
-        <p class="faq-a" th:inline="text">[[${stationaryPrices} ?: 'Pojedynczy trening stacjonarny kosztuje 210 zł.']] Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie, a indywidualny jadłospis dietetyczny od 129 zł.</p>
+        <p class="faq-a" th:inline="text">[[${stationaryPrices} ?: 'Pojedynczy trening stacjonarny kosztuje 210 zł.']] Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie[[${diet.visible() ? ', a indywidualny jadłospis dietetyczny od ' + diet.price() : ''}]].</p>
         <table class="price-table" th:if="${!individualPackages.isEmpty()}">
           <caption>Cennik treningów personalnych – 1 osoba</caption>
           <thead>
