@@ -16,8 +16,26 @@ postgres://uzytkownik:haslo@nazwa-bazy:5432/baza
 Aplikacja przyjmuje go **wprost** — wystarczy przekazać jako `DATABASE_URL`.
 Rozbija go `DatabaseUrlEnvironmentPostProcessor` na `spring.datasource.{url,username,password}`,
 bo sterownik JDBC nie akceptuje schematu `postgres://` ani danych logowania w adresie.
-Obsłużone są też: brak portu (domyślnie 5432), parametry typu `?sslmode=require`
-i hasło ze znakami specjalnymi (zakodowane procentowo, np. `p%40ss` → `p@ss`).
+Obsłużone są też: brak portu (domyślnie 5432), parametry typu `?sslmode=require`,
+podkreślnik w nazwie hosta, schemat pisany wielkimi literami i hasło ze znakami
+specjalnymi zakodowanymi procentowo (`p%40ss%2F1` → `p@ss/1`). Znaki `@`, `:` i `+`
+mogą stać w haśle także bez kodowania. `%` również, chyba że stoją po nim dwie cyfry
+szesnastkowe: `abc%12def` zostanie odczytane jako kod, więc wpisz `abc%2512def`.
+
+Pusta pozycja w nazwie hosta (`db,` albo `,db`) zatrzymuje start, bo sterownik
+potraktowałby ją jako localhost.
+
+Link `postgres://`, którego nie da się rozebrać (brak hosta, port nie jest liczbą,
+nieznany schemat), zatrzymuje start komunikatem z nazwą zmiennej. Hasła w komunikacie nie ma.
+
+Aplikacja nie wstanie też, gdy przed ostatnim `@` w linku stoi `/`, `?` albo `#`.
+Taki link da się odczytać na dwa sposoby: `db/baza?app=x@prod` to baza na hoście `db`
+albo login `db` i hasło `baza?app=x` na hoście `prod`. Zgadywanie mogłoby wysłać
+hasło na obcy host. Te trzy znaki w haśle zakoduj (`/` → `%2F`, `?` → `%3F`, `#` → `%23`),
+`@` w parametrach jako `%40`, albo użyj `DB_URL`/`DB_USER`/`DB_PASSWORD`.
+Hasła generowane przez Coolify są alfanumeryczne, więc tego nie dotyczą.
+
+Zepsuty `DATABASE_URL` nie przełącza się na `DB_URL`: usuń zmienną, której nie używasz.
 
 Jeśli wolisz rozbić to samodzielnie, podaj zamiast tego `DB_URL` w formacie
 `jdbc:postgresql://host:5432/baza` plus `DB_USER` i `DB_PASSWORD` — taki adres

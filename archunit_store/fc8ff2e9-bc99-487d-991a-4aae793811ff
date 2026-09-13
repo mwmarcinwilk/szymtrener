@@ -1,0 +1,22 @@
+Cycle detected: Slice crm -> \
+                Slice submission -> \
+                Slice crm\
+  1. Dependencies of Slice crm\
+    - Constructor <pl.szymtrener.crm.TraineeService.<init>(pl.szymtrener.crm.TraineeRepository, pl.szymtrener.submission.SubmissionRepository)> has parameter of type <pl.szymtrener.submission.SubmissionRepository> in (TraineeService.java:0)\
+    - Field <pl.szymtrener.crm.TraineeService.submissions> has type <pl.szymtrener.submission.SubmissionRepository> in (TraineeService.java:0)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.SubmissionRepository.findById(java.lang.Object)> in (TraineeService.java:37)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.Submission.getName()> in (TraineeService.java:43)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.Submission.getCity()> in (TraineeService.java:44)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.Submission.getType()> in (TraineeService.java:45)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> gets field <pl.szymtrener.submission.SubmissionType.ONLINE> in (TraineeService.java:45)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.Submission.getEmail()> in (TraineeService.java:50)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.Submission.getPhone()> in (TraineeService.java:51)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.Submission.getSource()> in (TraineeService.java:52)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.Submission.getGoal()> in (TraineeService.java:53)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.Submission.setStatus(pl.szymtrener.submission.SubmissionStatus)> in (TraineeService.java:57)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> gets field <pl.szymtrener.submission.SubmissionStatus.CLIENT> in (TraineeService.java:57)\
+    - Method <pl.szymtrener.crm.TraineeService.fromSubmission(java.lang.Long)> calls method <pl.szymtrener.submission.SubmissionRepository.save(java.lang.Object)> in (TraineeService.java:58)\
+  2. Dependencies of Slice submission\
+    - Constructor <pl.szymtrener.submission.SubmissionService.<init>(pl.szymtrener.submission.SubmissionRepository, pl.szymtrener.submission.SubmissionNoteRepository, pl.szymtrener.submission.MailService, pl.szymtrener.config.AppProperties, pl.szymtrener.crm.MessageService)> has parameter of type <pl.szymtrener.crm.MessageService> in (SubmissionService.java:0)\
+    - Field <pl.szymtrener.submission.SubmissionService.messages> has type <pl.szymtrener.crm.MessageService> in (SubmissionService.java:0)\
+    - Method <pl.szymtrener.submission.SubmissionService.persist(pl.szymtrener.submission.Submission, java.lang.String, java.lang.String)> calls method <pl.szymtrener.crm.MessageService.recordSubmission(java.lang.Long, java.lang.String)> in (SubmissionService.java:70)

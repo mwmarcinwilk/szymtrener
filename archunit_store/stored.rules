@@ -1,0 +1,6 @@
+#
+#Tue Sep 01 15:46:20 CEST 2026
+no\ classes\ that\ are\ annotated\ with\ @Controller\ or\ are\ annotated\ with\ @RestController\ should\ be\ annotated\ with\ @Transactional=0b1b6d7d-429b-4170-8f94-4a1046b2b55b
+no\ classes\ that\ reside\ in\ any\ package\ ['..controller..',\ '..web..',\ '..api..']\ should\ depend\ on\ classes\ that\ reside\ in\ a\ package\ '..repository..'=d0ba289a-d21e-47a7-b7f3-55c402496840
+no\ classes\ that\ reside\ in\ any\ package\ ['..service..',\ '..domain..']\ should\ depend\ on\ classes\ that\ reside\ in\ any\ package\ ['..controller..',\ '..web..']=646d7fca-e460-4fd8-a508-bc844af2610f
+slices\ matching\ 'pl.szymtrener.(*)..'\ should\ be\ free\ of\ cycles=fc8ff2e9-bc99-487d-991a-4aae793811ff
