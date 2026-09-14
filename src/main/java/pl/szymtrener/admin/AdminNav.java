@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import pl.szymtrener.content.PostRepository;
+import pl.szymtrener.crm.MessageRepository;
 import pl.szymtrener.content.PostStatus;
 import pl.szymtrener.submission.SubmissionRepository;
 import pl.szymtrener.submission.SubmissionStatus;
@@ -23,11 +24,14 @@ public class AdminNav {
     private final PostRepository posts;
     private final AdminUserRepository admins;
     private final SubmissionRepository submissions;
+    private final MessageRepository messages;
 
-    public AdminNav(PostRepository posts, SubmissionRepository submissions, AdminUserRepository admins) {
+    public AdminNav(PostRepository posts, SubmissionRepository submissions, AdminUserRepository admins,
+                    MessageRepository messages) {
         this.posts = posts;
         this.submissions = submissions;
         this.admins = admins;
+        this.messages = messages;
     }
 
     /** Przy „Postach" liczba opublikowanych — tyle realnie stoi na blogu. */
@@ -38,6 +42,16 @@ public class AdminNav {
     /** Przy „Zgloszeniach" tylko nowe: tylko one wymagaja reakcji. */
     public long newSubmissions() {
         return submissions.countByStatus(SubmissionStatus.NEW);
+    }
+
+    /** Zgloszenia, w ktorych klient odpisal mailem, a trener jeszcze nie otworzyl watku. */
+    public long unreadSubmissionReplies() {
+        return messages.countSubmissionsWithUnread();
+    }
+
+    /** To samo dla klientow: odpowiedzi w watkach po konwersji zgloszenia. */
+    public long unreadClientReplies() {
+        return messages.countTraineesWithUnread();
     }
 
     /**

@@ -65,6 +65,9 @@ Ustaw w Coolify (zakładka *Environment Variables*). Żadna z nich nie może tra
 | `MAIL_USER` | adres Gmail | |
 | `MAIL_PASSWORD` | hasło aplikacji (16 znaków) | **nie** zwykłe hasło do konta |
 | `MAIL_RECIPIENT` | `szymtrener@gmail.com` | dokąd idą zgłoszenia |
+| `MAIL_INBOX_ENABLED` | `true` | odbiór odpowiedzi klientów do wątku (domyślnie wyłączony) |
+| `MAIL_IMAP_HOST` | `ssl0.ovh.net` | Gmail: `imap.gmail.com` |
+| `MAIL_IMAP_PORT` | `993` | tylko IMAPS |
 | `INDEXNOW_ENABLED` | `true` | powiadamianie Bing po publikacji |
 | `INDEXNOW_KEY` | losowy ciąg 32 znaków | |
 
@@ -86,7 +89,30 @@ zostać drugie konto ze starym adresem. Aplikacja ostrzeże o tym w logu. Usunie
 DELETE FROM admin_user WHERE email <> 'aktualny@adres';
 ```
 
-## 4. Poczta przez Gmail
+## 4. Poczta przez OVH (MX Plan)
+
+| Zmienna | Wartość |
+|---|---|
+| `MAIL_HOST` | `ssl0.ovh.net` |
+| `MAIL_PORT` | `587` (STARTTLS; 465 wymagałby `mail.smtp.ssl.enable`) |
+| `MAIL_USER` | pełny adres skrzynki, np. `kontakt@szymtrener.pl` |
+| `MAIL_PASSWORD` | hasło skrzynki z panelu OVH, **bez spacji** (MailConfig usuwa spacje z każdego hasła) |
+| `MAIL_FROM` | puste albo ten sam adres co `MAIL_USER` |
+| `MAIL_INBOX_ENABLED` | `true` |
+| `MAIL_IMAP_HOST` / `MAIL_IMAP_PORT` | `ssl0.ovh.net` / `993` |
+
+Email Pro i Exchange mają inny host (panel OVH → E-maile). DNS domeny: SPF `v=spf1 include:mx.ovh.com ~all`,
+DKIM włączony w panelu OVH, DMARC na start `p=none`.
+
+### Odbiór odpowiedzi klientów
+
+Co dwie minuty aplikacja czyta INBOX tylko do odczytu (bez zmiany flag, nic nie przenosi ani nie kasuje).
+Odpowiedź na mail wysłany z panelu trafia do wątku po nagłówku `In-Reply-To`; nowy mail z adresu
+zgłoszenia lub klienta trafia tam z etykietą „dopasowano po adresie". Mail od nieznanego nadawcy,
+autoresponder i lista mailingowa zostają tylko w skrzynce. Pierwsze uruchomienie nie importuje historii.
+Wynik ostatniego sprawdzenia widać w Ustawieniach → Poczta.
+
+## 4a. Poczta przez Gmail
 
 1. Włącz weryfikację dwuetapową na koncie Google — bez niej nie ma haseł aplikacji.
 2. Konto Google → Bezpieczeństwo → **Hasła aplikacji** → wygeneruj hasło.

@@ -42,17 +42,19 @@ class ReplySendTest {
                 new AppProperties.Mail("trener@szymtrener.pl", "kontakt@szymtrener.pl", true),
                 null, null, null, null);
 
-        MessageService service = new MessageService(mock(MessageRepository.class), mock(ReplyTemplateRepository.class),
-                sender, props, settings, engine());
+        MessageRepository repository = mock(MessageRepository.class);
+        MessageService service = new MessageService(repository, mock(ReplyTemplateRepository.class),
+                sender, props, settings, engine(), mock(TraineeRepository.class));
 
         String body = "Cześć Jan!\n\n<script>alert(1)</script>";
         MessageService.SendResult result = service.sendEmail(1L, null, "jan@example.test", "Jan", body, null);
 
         assertThat(result.sent()).isTrue();
+        ArgumentCaptor<Message> saved = ArgumentCaptor.forClass(Message.class);
+        verify(repository).save(saved.capture());
         ArgumentCaptor<MimeMessage> sent = ArgumentCaptor.forClass(MimeMessage.class);
         verify(sender).send(sent.capture());
         MimeMessage mime = sent.getValue();
-        mime.saveChanges();
 
         List<Part> leaves = new ArrayList<>();
         collect(mime, leaves);
@@ -64,6 +66,9 @@ class ReplySendTest {
                 .contains("&lt;script&gt;alert(1)&lt;/script&gt;")
                 .doesNotContain("<script>")
                 .contains("Armii Krajowej 32a");
+        // Po tym identyfikatorze odpowiedz klienta trafi do watku (In-Reply-To).
+        assertThat(saved.getValue().getMailMessageId()).isEqualTo(mime.getMessageID())
+                .matches("<[0-9a-f-]{36}@szymtrener\\.pl>");
     }
 
     private static boolean isType(Part part, String type) {

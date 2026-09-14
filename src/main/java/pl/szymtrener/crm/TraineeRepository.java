@@ -24,5 +24,8 @@ public interface TraineeRepository extends JpaRepository<Trainee, Long> {
 
     Optional<Trainee> findBySubmissionId(Long submissionId);
 
+    /** Klient z adresem nadawcy odebranej poczty; przy duplikatach adresu najnowszy. */
+    Optional<Trainee> findFirstByEmailIgnoreCaseOrderByIdDesc(String email);
+
     long countByMode(TraineeMode mode);
 }

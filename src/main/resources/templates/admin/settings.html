@@ -90,6 +90,14 @@
                   <input type="text" id="mailFrom" th:value="${mailFrom}" readonly disabled>
                   <div class="hint"><span>Serwer, port i nadawca pochodzą ze zmiennych środowiskowych.</span></div>
                 </div>
+                <!--/* Odbiór odpowiedzi klientów do wątku. Tylko podgląd: włącza go MAIL_INBOX_ENABLED. */-->
+                <div class="fld" style="margin:13px 0 0">
+                  <label for="inbox">Odbiór odpowiedzi klientów (IMAP)</label>
+                  <input type="text" id="inbox" readonly disabled
+                         th:value="${inboxEnabled} ? 'włączony, ' + ${inboxServer} : 'wyłączony'">
+                  <div class="hint"><span th:if="${inboxEnabled}" th:text="'Ostatnie sprawdzenie: ' + ${inboxLastCheck}">Ostatnie sprawdzenie: …</span><span
+                       th:unless="${inboxEnabled}">Włączysz go zmienną MAIL_INBOX_ENABLED=true. Odpowiedzi na maile z panelu trafią wtedy do wątku.</span></div>
+                </div>
                 <!--/* Atrybut form= wiąże przycisk z osobnym formularzem na końcu strony:
                        formularza nie wolno zagnieżdżać w formularzu ustawień. */-->
                 <button type="submit" form="mail-test" class="btn btn-o btn-s"

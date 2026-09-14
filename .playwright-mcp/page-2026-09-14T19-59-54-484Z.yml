@@ -1,0 +1,215 @@
+- generic [ref=f7e2]:
+  - complementary [ref=f7e3]:
+    - generic [ref=f7e4]:
+      - generic [ref=f7e5]: Szymon Domagała
+      - generic [ref=f7e6]: Panel trenera
+    - navigation [ref=f7e7]:
+      - link "Pulpit" [ref=f7e8] [cursor=pointer]:
+        - /url: /admin
+      - generic [ref=f7e11]: Blog
+      - link "Posty" [ref=f7e12] [cursor=pointer]:
+        - /url: /admin/posty
+      - link "Nowy post" [ref=f7e15] [cursor=pointer]:
+        - /url: /admin/posty/nowy
+      - link "Media" [ref=f7e18] [cursor=pointer]:
+        - /url: /admin/media
+      - generic [ref=f7e21]: Oferta
+      - link "Oferta online" [ref=f7e22] [cursor=pointer]:
+        - /url: /admin/oferta
+      - generic [ref=f7e25]: Klienci
+      - link "Zgłoszenia 1 1" [ref=f7e26] [cursor=pointer]:
+        - /url: /admin/zgloszenia
+        - text: Zgłoszenia
+        - generic "Nowe zgłoszenia" [ref=f7e29]: "1"
+        - generic "Nowe odpowiedzi klientów" [ref=f7e30]: "1"
+      - link "Klienci" [ref=f7e31] [cursor=pointer]:
+        - /url: /admin/klienci
+      - generic [ref=f7e34]: Analiza
+      - link "Statystyki" [ref=f7e35] [cursor=pointer]:
+        - /url: /admin/statystyki
+      - link "Ustawienia" [ref=f7e38] [cursor=pointer]:
+        - /url: /admin/ustawienia
+      - link "Administratorzy" [ref=f7e41] [cursor=pointer]:
+        - /url: /admin/administratorzy
+    - generic [ref=f7e44]:
+      - generic [ref=f7e45]: SD
+      - generic [ref=f7e46]:
+        - generic [ref=f7e47]: Szymon Domagała
+        - generic [ref=f7e48]:
+          - link "Hasło" [ref=f7e49] [cursor=pointer]:
+            - /url: /admin/haslo
+          - text: ·
+          - link "Wyloguj" [ref=f7e50] [cursor=pointer]:
+            - /url: /admin/wyloguj
+  - generic [ref=f7e51]:
+    - banner [ref=f7e52]:
+      - heading "Statystyki" [level=1] [ref=f7e53]
+      - generic [ref=f7e54]:
+        - search [ref=f7e55]:
+          - searchbox "Szukaj wpisu" [ref=f7e58]
+        - link "Nowy post" [ref=f7e59] [cursor=pointer]:
+          - /url: /admin/posty/nowy
+    - generic [ref=f7e62]:
+      - generic [ref=f7e63]:
+        - generic [ref=f7e64]:
+          - heading "Statystyki odwiedzin" [level=2] [ref=f7e65]
+          - paragraph [ref=f7e66]: Dane własne, bez ciasteczek stron trzecich
+        - generic [ref=f7e67]:
+          - link "7 dni" [ref=f7e68] [cursor=pointer]:
+            - /url: /admin/statystyki?dni=7
+          - link "30 dni" [ref=f7e69] [cursor=pointer]:
+            - /url: /admin/statystyki?dni=30
+          - link "90 dni" [ref=f7e70] [cursor=pointer]:
+            - /url: /admin/statystyki?dni=90
+          - link "12 mies." [ref=f7e71] [cursor=pointer]:
+            - /url: /admin/statystyki?dni=365
+      - generic [ref=f7e72]:
+        - generic [ref=f7e73]:
+          - generic [ref=f7e77]: "0"
+          - generic [ref=f7e78]: Odsłony (bez botów)
+          - generic [ref=f7e79]: brak danych
+        - generic [ref=f7e81]:
+          - generic [ref=f7e85]: "0"
+          - generic [ref=f7e86]: Sesje
+          - generic [ref=f7e87]: brak danych
+        - generic [ref=f7e89]:
+          - generic [ref=f7e93]: 0,0
+          - generic [ref=f7e94]: Odsłon na sesję
+        - generic [ref=f7e95]:
+          - generic [ref=f7e99]: "0"
+          - generic [ref=f7e100]: Wizyty botów AI
+      - generic [ref=f7e101]:
+        - generic [ref=f7e103]:
+          - heading "Boty AI" [level=2] [ref=f7e104]
+          - generic [ref=f7e105]: Kto po Ciebie sięgał, żeby zbudować odpowiedź
+        - table [ref=f7e107]:
+          - rowgroup [ref=f7e108]:
+            - row [ref=f7e109]:
+              - columnheader "Bot" [ref=f7e110]
+              - columnheader "Wizyty" [ref=f7e111]
+              - columnheader "Udział" [ref=f7e112]
+          - rowgroup [ref=f7e113]:
+            - row [ref=f7e114] [cursor=pointer]:
+              - cell [ref=f7e115]:
+                - text: Żaden bot AI jeszcze nie zajrzał w tym okresie. Sprawdź, czy
+                - link "robots.txt" [ref=f7e116]:
+                  - /url: /robots.txt
+                - text: jest dostępny.
+      - generic [ref=f7e117]:
+        - generic [ref=f7e118]:
+          - generic [ref=f7e119]:
+            - heading "Sesje w czasie" [level=2] [ref=f7e120]
+            - generic [ref=f7e121]: bez botów
+          - generic [ref=f7e123]:
+            - generic [ref=f7e124]: Dzień roboczy
+            - generic [ref=f7e126]: Weekend
+        - generic [ref=f7e129]:
+          - generic [ref=f7e130]:
+            - 'generic "16 sie: 0" [ref=f7e131]'
+            - generic [ref=f7e132]: 16 sie
+          - generic [ref=f7e133]:
+            - 'generic "17 sie: 0" [ref=f7e134]'
+            - generic [ref=f7e135]: 17 sie
+          - generic [ref=f7e136]:
+            - 'generic "18 sie: 0" [ref=f7e137]'
+            - generic [ref=f7e138]: 18 sie
+          - generic [ref=f7e139]:
+            - 'generic "19 sie: 0" [ref=f7e140]'
+            - generic [ref=f7e141]: 19 sie
+          - generic [ref=f7e142]:
+            - 'generic "20 sie: 0" [ref=f7e143]'
+            - generic [ref=f7e144]: 20 sie
+          - generic [ref=f7e145]:
+            - 'generic "21 sie: 0" [ref=f7e146]'
+            - generic [ref=f7e147]: 21 sie
+          - generic [ref=f7e148]:
+            - 'generic "22 sie: 0" [ref=f7e149]'
+            - generic [ref=f7e150]: 22 sie
+          - generic [ref=f7e151]:
+            - 'generic "23 sie: 0" [ref=f7e152]'
+            - generic [ref=f7e153]: 23 sie
+          - generic [ref=f7e154]:
+            - 'generic "24 sie: 0" [ref=f7e155]'
+            - generic [ref=f7e156]: 24 sie
+          - generic [ref=f7e157]:
+            - 'generic "25 sie: 0" [ref=f7e158]'
+            - generic [ref=f7e159]: 25 sie
+          - generic [ref=f7e160]:
+            - 'generic "26 sie: 0" [ref=f7e161]'
+            - generic [ref=f7e162]: 26 sie
+          - generic [ref=f7e163]:
+            - 'generic "27 sie: 0" [ref=f7e164]'
+            - generic [ref=f7e165]: 27 sie
+          - generic [ref=f7e166]:
+            - 'generic "28 sie: 0" [ref=f7e167]'
+            - generic [ref=f7e168]: 28 sie
+          - generic [ref=f7e169]:
+            - 'generic "29 sie: 0" [ref=f7e170]'
+            - generic [ref=f7e171]: 29 sie
+          - generic [ref=f7e172]:
+            - 'generic "30 sie: 0" [ref=f7e173]'
+            - generic [ref=f7e174]: 30 sie
+          - generic [ref=f7e175]:
+            - 'generic "31 sie: 0" [ref=f7e176]'
+            - generic [ref=f7e177]: 31 sie
+          - generic [ref=f7e178]:
+            - 'generic "1 wrz: 0" [ref=f7e179]'
+            - generic [ref=f7e180]: 1 wrz
+          - generic [ref=f7e181]:
+            - 'generic "2 wrz: 0" [ref=f7e182]'
+            - generic [ref=f7e183]: 2 wrz
+          - generic [ref=f7e184]:
+            - 'generic "3 wrz: 0" [ref=f7e185]'
+            - generic [ref=f7e186]: 3 wrz
+          - generic [ref=f7e187]:
+            - 'generic "4 wrz: 0" [ref=f7e188]'
+            - generic [ref=f7e189]: 4 wrz
+          - generic [ref=f7e190]:
+            - 'generic "5 wrz: 0" [ref=f7e191]'
+            - generic [ref=f7e192]: 5 wrz
+          - generic [ref=f7e193]:
+            - 'generic "6 wrz: 0" [ref=f7e194]'
+            - generic [ref=f7e195]: 6 wrz
+          - generic [ref=f7e196]:
+            - 'generic "7 wrz: 0" [ref=f7e197]'
+            - generic [ref=f7e198]: 7 wrz
+          - generic [ref=f7e199]:
+            - 'generic "8 wrz: 0" [ref=f7e200]'
+            - generic [ref=f7e201]: 8 wrz
+          - generic [ref=f7e202]:
+            - 'generic "9 wrz: 0" [ref=f7e203]'
+            - generic [ref=f7e204]: 9 wrz
+          - generic [ref=f7e205]:
+            - 'generic "10 wrz: 0" [ref=f7e206]'
+            - generic [ref=f7e207]: 10 wrz
+          - generic [ref=f7e208]:
+            - 'generic "11 wrz: 0" [ref=f7e209]'
+            - generic [ref=f7e210]: 11 wrz
+          - generic [ref=f7e211]:
+            - 'generic "12 wrz: 0" [ref=f7e212]'
+            - generic [ref=f7e213]: 12 wrz
+          - generic [ref=f7e214]:
+            - 'generic "13 wrz: 0" [ref=f7e215]'
+            - generic [ref=f7e216]: 13 wrz
+          - generic [ref=f7e217]:
+            - 'generic "14 wrz: 0" [ref=f7e218]'
+            - generic [ref=f7e219]: 14 wrz
+      - generic [ref=f7e220]:
+        - generic [ref=f7e221]:
+          - heading "Najczęściej odwiedzane" [level=2] [ref=f7e223]
+          - table [ref=f7e225]:
+            - rowgroup [ref=f7e226]:
+              - row [ref=f7e227]:
+                - columnheader "Ścieżka" [ref=f7e228]
+                - columnheader "Odsłony" [ref=f7e229]
+                - columnheader "%" [ref=f7e230]
+            - rowgroup [ref=f7e231]:
+              - row [ref=f7e232] [cursor=pointer]:
+                - cell "Brak danych w tym okresie." [ref=f7e233]
+        - generic [ref=f7e234]:
+          - generic [ref=f7e235]:
+            - heading "Źródła ruchu" [level=2] [ref=f7e237]
+            - paragraph [ref=f7e240]: Brak danych o źródłach w tym okresie.
+          - generic [ref=f7e241]:
+            - heading "Urządzenia" [level=2] [ref=f7e243]
+            - paragraph [ref=f7e246]: Brak danych o urządzeniach w tym okresie.

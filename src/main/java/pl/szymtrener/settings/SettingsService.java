@@ -40,6 +40,16 @@ public class SettingsService {
     /** Jadlospis dietetyczny: jedna kwota, tak samo jak konsultacja. W GROSZACH. */
     public static final String OFFER_DIET_PRICE_GR = "offer.diet.price.gr";
     public static final String OFFER_DIET_VISIBLE = "offer.diet.visible";
+    /**
+     * Stan odbioru odpowiedzi ze skrzynki (InboundMailService). Nie sa to ustawienia do edycji,
+     * tylko pamiec postepu: ktory UID juz przeczytalismy i w jakiej numeracji skrzynki.
+     */
+    public static final String INBOX_UID_VALIDITY = "mail.inbox.uidvalidity";
+    public static final String INBOX_LAST_UID = "mail.inbox.lastuid";
+    /** Wynik ostatniego odbioru do wyswietlenia w Ustawieniach, np. „2026-09-14T19:30:00Z OK". */
+    public static final String INBOX_LAST_CHECK = "mail.inbox.lastcheck";
+    /** Wiadomosc, ktorej odbior sie wywraca, i liczba prob („uid:proby"), zeby nie blokowala skrzynki na zawsze. */
+    public static final String INBOX_FAILED_UID = "mail.inbox.faileduid";
     public static final String SEO_TITLE = "seo.default.title";
     public static final String SEO_DESC = "seo.default.desc";
 
@@ -63,6 +73,17 @@ public class SettingsService {
         if (raw == null) return fallback;
         try {
             return Integer.parseInt(raw.trim());
+        } catch (NumberFormatException e) {
+            log.warn("Ustawienie {} nie jest liczba ({}), uzywam {}", key, raw, fallback);
+            return fallback;
+        }
+    }
+
+    public long getLong(String key, long fallback) {
+        String raw = get(key, null);
+        if (raw == null) return fallback;
+        try {
+            return Long.parseLong(raw.trim());
         } catch (NumberFormatException e) {
             log.warn("Ustawienie {} nie jest liczba ({}), uzywam {}", key, raw, fallback);
             return fallback;

@@ -28,18 +28,21 @@ public class AdminSettingsController {
     private final String smtpPort;
     private final JavaMailSender mailSender;
     private final pl.szymtrener.crm.ReplyTemplateRepository replyTemplates;
+    private final pl.szymtrener.crm.InboxProperties inbox;
 
     public AdminSettingsController(SettingsService settings, AppProperties props,
                                    @Value("${spring.mail.host:—}") String smtpHost,
                                    @Value("${spring.mail.port:—}") String smtpPort,
                                    JavaMailSender mailSender,
-                                   pl.szymtrener.crm.ReplyTemplateRepository replyTemplates) {
+                                   pl.szymtrener.crm.ReplyTemplateRepository replyTemplates,
+                                   pl.szymtrener.crm.InboxProperties inbox) {
         this.settings = settings;
         this.props = props;
         this.smtpHost = smtpHost;
         this.smtpPort = smtpPort;
         this.mailSender = mailSender;
         this.replyTemplates = replyTemplates;
+        this.inbox = inbox;
     }
 
     @GetMapping("/admin/ustawienia")
@@ -55,6 +58,9 @@ public class AdminSettingsController {
         model.addAttribute("smtpHost", smtpHost);
         model.addAttribute("smtpPort", smtpPort);
         model.addAttribute("mailFrom", props.mail().from());
+        model.addAttribute("inboxEnabled", inbox.enabled());
+        model.addAttribute("inboxServer", inbox.host() + ":" + inbox.port());
+        model.addAttribute("inboxLastCheck", settings.get(SettingsService.INBOX_LAST_CHECK, "jeszcze nie sprawdzano"));
         model.addAttribute("siteUrl", props.siteUrl());
         model.addAttribute("indexNow", props.indexnow().enabled());
         model.addAttribute("title", "Ustawienia");

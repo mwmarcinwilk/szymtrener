@@ -38,6 +38,15 @@ public class Message {
     /** SENT / FAILED dla poczty, null dla notatek i zdarzen. */
     @Column(name = "mail_status") private String mailStatus;
 
+    /** Naglowek Message-ID: wychodzacy do dopasowania odpowiedzi, przychodzacy przeciw duplikatom. */
+    @Column(name = "mail_message_id") private String mailMessageId;
+
+    /** Odebrana odpowiedz, ktorej trener jeszcze nie otworzyl. */
+    @Column(nullable = false) private boolean unread;
+
+    /** REPLY albo ADDRESS dla odebranych, null dla reszty. */
+    @Enumerated(EnumType.STRING) @Column(name = "matched_by") private MatchedBy matchedBy;
+
     @Transient
     public boolean system() {
         return channel == MessageChannel.SYSTEM;
@@ -52,6 +61,12 @@ public class Message {
     @Transient
     public boolean failed() {
         return "FAILED".equals(mailStatus);
+    }
+
+    /** Dopasowana tylko po adresie nadawcy: naglowek From da sie podrobic, wiec watek to mowi. */
+    @Transient
+    public boolean matchedByAddress() {
+        return matchedBy == MatchedBy.ADDRESS;
     }
 
     @Transient
@@ -77,4 +92,10 @@ public class Message {
     public void setSentAt(Instant sentAt) { this.sentAt = sentAt; }
     public String getMailStatus() { return mailStatus; }
     public void setMailStatus(String mailStatus) { this.mailStatus = mailStatus; }
+    public String getMailMessageId() { return mailMessageId; }
+    public void setMailMessageId(String mailMessageId) { this.mailMessageId = mailMessageId; }
+    public boolean isUnread() { return unread; }
+    public void setUnread(boolean unread) { this.unread = unread; }
+    public MatchedBy getMatchedBy() { return matchedBy; }
+    public void setMatchedBy(MatchedBy matchedBy) { this.matchedBy = matchedBy; }
 }

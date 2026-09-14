@@ -13,8 +13,10 @@ import pl.szymtrener.config.AppProperties;
 import pl.szymtrener.settings.SettingsService;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -34,7 +36,6 @@ public class MessageService {
     private static final Logger log = LoggerFactory.getLogger(MessageService.class);
     private static final Pattern PARAGRAPH_BREAK = Pattern.compile("\\R\\s*\\R");
     private static final Pattern LINE_BREAK = Pattern.compile("\\R");
-    private static final Pattern EXTRA_BLANK_LINES = Pattern.compile("\\n(?:\\h*+\\n){2,}+");
     /** Pusty {imie} zabiera ze soba spacje i przecinek przed soba: „Cześć, {imie}!" daje „Cześć!". */
     private static final Pattern EMPTY_NAME = Pattern.compile("(?<![ ,])[ ,]*+\\{imie\\}");
 
@@ -44,16 +45,18 @@ public class MessageService {
     private final AppProperties props;
     private final SettingsService settings;
     private final TemplateEngine mailTemplates;
+    private final TraineeRepository trainees;
 
     public MessageService(MessageRepository messages, ReplyTemplateRepository templates,
                           JavaMailSender sender, AppProperties props, SettingsService settings,
-                          TemplateEngine mailTemplates) {
+                          TemplateEngine mailTemplates, TraineeRepository trainees) {
         this.messages = messages;
         this.templates = templates;
         this.sender = sender;
         this.props = props;
         this.settings = settings;
         this.mailTemplates = mailTemplates;
+        this.trainees = trainees;
     }
 
     /** Wynik wysylki: co pokazac trenerowi po kliknieciu „Wyślij". */
@@ -119,7 +122,15 @@ public class MessageService {
             helper.setSubject("Wiadomość od Szymona Domagały");
             // Tekst dokladnie taki, jak w panelu; HTML to ta sama formatka co potwierdzenie zgloszenia.
             helper.setText(body, replyHtml(body));
+            // Message-ID nadajemy przed wysylka: JavaMailSenderImpl zachowuje juz ustawiony naglowek.
+            // Po nim odpowiedz klienta trafi do tego watku (In-Reply-To).
+            mime.saveChanges();
+            // Losowy Message-ID zamiast domyslnego (hashCode.licznik.czas): po nim odpowiedz trafia do
+            // watku bez etykiety ostrzegawczej, wiec nie moze dac sie przewidziec.
+            String messageId = "<" + java.util.UUID.randomUUID() + "@" + props.siteHost() + ">";
+            mime.setHeader("Message-ID", messageId);
             sender.send(mime);
+            m.setMailMessageId(messageId);
             m.setMailStatus("SENT");
             messages.save(m);
             log.info("Wyslano wiadomosc do {} (zgloszenie {}, klient {})", to, submissionId, traineeId);
@@ -146,6 +157,66 @@ public class MessageService {
         return PARAGRAPH_BREAK.splitAsStream(body.strip())
                 .map(para -> LINE_BREAK.splitAsStream(para).map(String::strip).toList())
                 .toList();
+    }
+
+    /**
+     * Odpowiedz klienta odebrana ze skrzynki. Trafia do watku jako nieprzeczytana, a u klienta
+     * odswieza „ostatni kontakt", tak jak wiadomosc wyslana z panelu.
+     */
+    @Transactional
+    public Message recordInbound(InboundMatcher.Target target, InboundMail mail, String mailMessageId) {
+        Message m = new Message();
+        m.setSubmissionId(target.submissionId());
+        m.setTraineeId(target.traineeId());
+        m.setDirection(MessageDirection.IN);
+        m.setChannel(MessageChannel.EMAIL);
+        m.setBody(mail.body());
+        m.setSentAt(mail.sentAt());
+        m.setMailMessageId(mailMessageId);
+        m.setMatchedBy(target.matchedBy());
+        m.setUnread(true);
+        if (target.traineeId() != null) {
+            trainees.findById(target.traineeId()).ifPresent(t -> {
+                if (t.getLastContactAt() == null || t.getLastContactAt().isBefore(mail.sentAt())) {
+                    t.setLastContactAt(mail.sentAt());
+                }
+            });
+        }
+        return messages.save(m);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean alreadyRecorded(String mailMessageId) {
+        return messages.existsByMailMessageId(mailMessageId);
+    }
+
+    /**
+     * Watek zgloszenia do wyswietlenia. Otwarcie gasi znacznik „nowa odpowiedz", ale zwrocone
+     * wiadomosci niosa stan sprzed otwarcia, wiec widok wie, ktore pokazac jako nowe.
+     */
+    @Transactional
+    public List<Message> openSubmissionThread(Long submissionId) {
+        List<Message> thread = messages.findBySubmissionIdOrderBySentAtAsc(submissionId);
+        if (thread.stream().anyMatch(Message::isUnread)) messages.markSubmissionRead(submissionId);
+        return thread;
+    }
+
+    @Transactional
+    public List<Message> openTraineeThread(Long traineeId) {
+        List<Message> thread = messages.findByTraineeIdOrderBySentAtAsc(traineeId);
+        if (thread.stream().anyMatch(Message::isUnread)) messages.markTraineeRead(traineeId);
+        return thread;
+    }
+
+    /** Ktore z podanych zgloszen maja nieprzeczytana odpowiedz. Jedno zapytanie na cala strone listy. */
+    @Transactional(readOnly = true)
+    public Set<Long> submissionsWithUnread(Collection<Long> ids) {
+        return ids.isEmpty() ? Set.of() : Set.copyOf(messages.unreadSubmissionIds(ids));
+    }
+
+    @Transactional(readOnly = true)
+    public Set<Long> traineesWithUnread(Collection<Long> ids) {
+        return ids.isEmpty() ? Set.of() : Set.copyOf(messages.unreadTraineeIds(ids));
     }
 
     /** Zapis rozmowy telefonicznej. Trafia do watku i NIC nie wychodzi do klienta. */
@@ -213,7 +284,7 @@ public class MessageService {
                 })
                 .filter(java.util.Objects::nonNull)
                 .collect(java.util.stream.Collectors.joining("\n"));
-        return EXTRA_BLANK_LINES.matcher(joined).replaceAll("\n\n");
+        return InboundMailText.EXTRA_BLANK_LINES.matcher(joined).replaceAll("\n\n");
     }
 
     /** Wycina zdanie wokol pozycji: od konca poprzedniego zdania do kropki, wykrzyknika albo pytajnika. */

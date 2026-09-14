@@ -1,0 +1,100 @@
+- generic [ref=f9e2]:
+  - complementary [ref=f9e3]:
+    - generic [ref=f9e4]:
+      - generic [ref=f9e5]: Szymon Domagała
+      - generic [ref=f9e6]: Panel trenera
+    - navigation [ref=f9e7]:
+      - link "Pulpit" [ref=f9e8] [cursor=pointer]:
+        - /url: /admin
+      - generic [ref=f9e11]: Blog
+      - link "Posty" [ref=f9e12] [cursor=pointer]:
+        - /url: /admin/posty
+      - link "Nowy post" [ref=f9e15] [cursor=pointer]:
+        - /url: /admin/posty/nowy
+      - link "Media" [ref=f9e18] [cursor=pointer]:
+        - /url: /admin/media
+      - generic [ref=f9e21]: Oferta
+      - link "Oferta online" [ref=f9e22] [cursor=pointer]:
+        - /url: /admin/oferta
+      - generic [ref=f9e25]: Klienci
+      - link "Zgłoszenia 1 1" [ref=f9e26] [cursor=pointer]:
+        - /url: /admin/zgloszenia
+        - text: Zgłoszenia
+        - generic "Nowe zgłoszenia" [ref=f9e29]: "1"
+        - generic "Nowe odpowiedzi klientów" [ref=f9e30]: "1"
+      - link "Klienci" [ref=f9e31] [cursor=pointer]:
+        - /url: /admin/klienci
+      - generic [ref=f9e34]: Analiza
+      - link "Statystyki" [ref=f9e35] [cursor=pointer]:
+        - /url: /admin/statystyki
+      - link "Ustawienia" [ref=f9e38] [cursor=pointer]:
+        - /url: /admin/ustawienia
+      - link "Administratorzy" [ref=f9e41] [cursor=pointer]:
+        - /url: /admin/administratorzy
+    - generic [ref=f9e44]:
+      - generic [ref=f9e45]: SD
+      - generic [ref=f9e46]:
+        - generic [ref=f9e47]: Szymon Domagała
+        - generic [ref=f9e48]:
+          - link "Hasło" [ref=f9e49] [cursor=pointer]:
+            - /url: /admin/haslo
+          - text: ·
+          - link "Wyloguj" [ref=f9e50] [cursor=pointer]:
+            - /url: /admin/wyloguj
+  - generic [ref=f9e51]:
+    - banner [ref=f9e52]:
+      - button "Menu" [ref=f9e53] [cursor=pointer]
+      - heading "Zgłoszenia" [level=1] [ref=f9e56]
+      - link "Nowy post" [ref=f9e58] [cursor=pointer]:
+        - /url: /admin/posty/nowy
+    - generic [ref=f9e61]:
+      - generic [ref=f9e63]:
+        - heading "Zgłoszenia od klientów" [level=2] [ref=f9e64]
+        - paragraph [ref=f9e65]: Wszystkie wypełnione formularze w jednym miejscu
+      - generic [ref=f9e66]:
+        - link "Wszystkie 2" [ref=f9e67] [cursor=pointer]:
+          - /url: /admin/zgloszenia
+        - link "Nowe 1" [ref=f9e68] [cursor=pointer]:
+          - /url: /admin/zgloszenia?status=NEW
+        - link "W kontakcie 1" [ref=f9e69] [cursor=pointer]:
+          - /url: /admin/zgloszenia?status=IN_CONTACT
+        - link "Rozmowa umówiona" [ref=f9e70] [cursor=pointer]:
+          - /url: /admin/zgloszenia?status=CALL_BOOKED
+        - link "Klient 0" [ref=f9e71] [cursor=pointer]:
+          - /url: /admin/zgloszenia?status=CLIENT
+        - link "Archiwum 0" [ref=f9e72] [cursor=pointer]:
+          - /url: /admin/zgloszenia?status=ARCHIVED
+      - table [ref=f9e75]:
+        - rowgroup [ref=f9e76]:
+          - row [ref=f9e77] [cursor=pointer]:
+            - cell "Ewa Nowak ewa@example.test" [ref=f9e78]:
+              - generic [ref=f9e79]: Ewa Nowak
+              - generic [ref=f9e80]: ewa@example.test
+            - cell "Kontakt ogólny" [ref=f9e81]
+            - cell "—" [ref=f9e83]
+            - cell "—" [ref=f9e84]
+            - cell "Nowe" [ref=f9e85]
+            - cell "14 wrz 2026, 21:57" [ref=f9e87]
+            - cell [ref=f9e89]:
+              - generic [ref=f9e90]:
+                - link "Otwórz" [ref=f9e91]:
+                  - /url: /admin/zgloszenia/2
+                - link "Napisz" [ref=f9e94]:
+                  - /url: mailto:ewa@example.test
+          - row [ref=f9e97] [cursor=pointer]:
+            - cell "Jan Kowalski nowa odpowiedź jan@example.test" [ref=f9e98]:
+              - generic [ref=f9e99]:
+                - text: Jan Kowalski
+                - generic [ref=f9e100]: nowa odpowiedź
+              - generic [ref=f9e101]: jan@example.test
+            - cell "Prowadzenie online" [ref=f9e102]
+            - cell "—" [ref=f9e104]
+            - cell "—" [ref=f9e105]
+            - cell "W kontakcie" [ref=f9e106]
+            - cell "12 wrz 2026, 21:57" [ref=f9e108]
+            - cell [ref=f9e110]:
+              - generic [ref=f9e111]:
+                - link "Otwórz" [ref=f9e112]:
+                  - /url: /admin/zgloszenia/1
+                - link "Napisz" [ref=f9e115]:
+                  - /url: mailto:jan@example.test

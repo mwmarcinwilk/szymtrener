@@ -1,1 +1,1 @@
-- [Pełny zestaw bez Dockera](reference_it_bez_dockera.md) — wszystkie IT na zewnętrznej bazie; równoległy Maven nadpisuje raporty surefire
+- [Pełny zestaw bez Dockera, sondy poczty](reference_it_bez_dockera.md) — IT na zewnętrznej bazie; obce raporty surefire; sondy MIME/IMAP i bomba QP

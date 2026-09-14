@@ -47,7 +47,8 @@
             <tbody>
               <tr th:each="s : ${items.content}" style="cursor:pointer"
                   th:onclick="|location.href='/admin/zgloszenia/${s.id}'|">
-                <td><div class="t-main" th:text="${s.name}">Imię</div><div class="t-sub" th:text="${s.email}">e-mail</div></td>
+                <td><div class="t-main"><span th:text="${s.name}">Imię</span><span class="new-reply"
+                     th:if="${unread.contains(s.id)}">nowa odpowiedź</span></div><div class="t-sub" th:text="${s.email}">e-mail</div></td>
                 <td><span class="chip" th:text="${s.interest} ?: ${s.type.label()}">Prowadzenie online</span></td>
                 <td th:text="${s.city} ?: '—'">Łódź</td>
                 <td>

@@ -78,7 +78,7 @@ public class MailConfig {
     }
 
     /** j***.k***@gmail.com — wystarczy, zeby rozpoznac konto, za malo zeby je wyciec. */
-    private static String mask(String address) {
+    public static String mask(String address) {
         int at = address.indexOf('@');
         if (at <= 1) return "***";
         return address.charAt(0) + "***" + address.substring(at);

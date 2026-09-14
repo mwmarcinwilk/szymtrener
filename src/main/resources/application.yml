@@ -85,6 +85,13 @@ app:
     # z obcego adresu — podmieni go na konto uwierzytelnione albo odrzuci wiadomosc.
     from: ${MAIL_FROM:${MAIL_USER:}}
     auto-reply: true
+  # Odbior odpowiedzi klientow do watku rozmowy (IMAPS, login i haslo jak do wysylki).
+  # Wylaczony, dopoki nie ustawisz MAIL_INBOX_ENABLED=true. OVH MX Plan: ssl0.ovh.net:993,
+  # Gmail: imap.gmail.com:993 (to samo haslo aplikacji co do SMTP).
+  inbox:
+    enabled: ${MAIL_INBOX_ENABLED:false}
+    host: ${MAIL_IMAP_HOST:ssl0.ovh.net}
+    port: ${MAIL_IMAP_PORT:993}
   admin:
     email: ${ADMIN_EMAIL:szymtrener@gmail.com}
     # haslo startowe: ustaw ADMIN_PASSWORD przy pierwszym uruchomieniu, potem zmien w panelu

@@ -84,6 +84,7 @@ public class AdminTraineeController {
                 rows.stream().filter(r -> r.pack().endingSoon() && !r.pack().none()).toList();
 
         model.addAttribute("rows", shown);
+        model.addAttribute("unread", messages.traineesWithUnread(shown.stream().map(r -> r.trainee().getId()).toList()));
         model.addAttribute("ending", ending);
         model.addAttribute("filtr", filtr == null ? "" : filtr);
         model.addAttribute("countAll", rows.size());
@@ -138,7 +139,7 @@ public class AdminTraineeController {
         model.addAttribute("log", insight.log(id, 12));
         model.addAttribute("progress", insight.progress(id));
         model.addAttribute("weight", insight.weightChange(id));
-        model.addAttribute("thread", messages.traineeThread(id));
+        model.addAttribute("thread", messages.openTraineeThread(id));
         model.addAttribute("notes", all);
         model.addAttribute("warnings", all.stream().filter(SubmissionNote::warning).limit(4).toList());
         model.addAttribute("done", insight.doneSessions(id));

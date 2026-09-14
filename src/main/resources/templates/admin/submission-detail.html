@@ -100,6 +100,9 @@
                         <svg><use th:href="${m.channel.name() == 'FORM'} ? '#i-inbox' : (${m.channel.name() == 'PHONE'} ? '#i-phone' : '#i-mail')"/></svg>
                         <span th:text="${m.channel.label()}">E-mail</span>
                       </span>
+                      <span class="new-reply" th:if="${m.unread}">nowa</span>
+                      <span class="chip" th:if="${m.matchedByAddress()}"
+                            title="Mail nie był odpowiedzią na wiadomość z panelu. Przypisany po adresie nadawcy, który da się podrobić.">dopasowano po adresie</span>
                       <time th:text="${m.sentLabel()}">28 sie, 10:29</time>
                       <span class="ch" style="background:var(--red-pale);color:var(--red)" th:if="${m.failed()}">nie wyszło</span>
                     </div>

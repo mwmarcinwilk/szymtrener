@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -56,9 +57,12 @@ public class AdminSubmissionController {
     @GetMapping
     public String list(@RequestParam(required = false) SubmissionStatus status,
                        @RequestParam(defaultValue = "0") int strona, Model model) {
-        model.addAttribute("items", status == null
+        Page<Submission> items = status == null
                 ? submissions.findAllByOrderByCreatedAtDesc(PageRequest.of(strona, PAGE_SIZE))
-                : submissions.findByStatusOrderByCreatedAtDesc(status, PageRequest.of(strona, PAGE_SIZE)));
+                : submissions.findByStatusOrderByCreatedAtDesc(status, PageRequest.of(strona, PAGE_SIZE));
+        model.addAttribute("items", items);
+        // „Nowa odpowiedz" przy pozycjach z biezacej strony: jedno zapytanie, nie jedno na wiersz.
+        model.addAttribute("unread", messages.submissionsWithUnread(items.map(Submission::getId).getContent()));
         model.addAttribute("activeStatus", status);
         model.addAttribute("statuses", SubmissionStatus.values());
         model.addAttribute("mailEnabled", settings.getBoolean(SettingsService.MAIL_ENABLED, true));
@@ -84,7 +88,7 @@ public class AdminSubmissionController {
         // Karta „Na co uwazac": wyciag z notatek oznaczonych Zdrowie albo Wazne,
         // zeby przeciwwskazania byly widoczne bez czytania calosci.
         model.addAttribute("warnings", all.stream().filter(SubmissionNote::warning).limit(4).toList());
-        model.addAttribute("thread", messages.thread(id));
+        model.addAttribute("thread", messages.openSubmissionThread(id));
         model.addAttribute("templates", messages.replyTemplates());
         model.addAttribute("statuses", SubmissionStatus.values());
         model.addAttribute("title", "Zgłoszenie: " + submission.getName());

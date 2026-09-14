@@ -38,6 +38,11 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .side-link.on svg{opacity:1}
 .side-link .cnt{margin-left:auto;background:rgba(255,255,255,.16);border-radius:99px;padding:1px 7px;font-size:10.5px;font-weight:800}
 .side-link.on .cnt{background:rgba(0,0,0,.22)}
+/* Kilka plakietek obok siebie: tylko pierwsza odpycha sie do prawej, reszta stoi przy niej. */
+.side-link .cnt+.cnt{margin-left:4px}
+/* Na ciemnym menu blade tla z listy sa nieczytelne, dlatego pelne kolory. */
+.side-link .cnt.warn{background:var(--amber);color:#fff}
+.side-link .cnt.reply{background:var(--blue);color:#fff}
 .side-foot{padding:14px;border-top:1px solid rgba(255,255,255,.09);display:flex;align-items:center;gap:10px}
 .avatar{width:34px;height:34px;border-radius:50%;background:var(--mint);display:grid;place-content:center;font-weight:900;font-size:12px;flex-shrink:0}
 .side-foot .nm{font-size:12.5px;font-weight:700;line-height:1.3}
@@ -150,6 +155,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .bg.new{background:var(--amber-pale);color:var(--amber)}
 .bg.done{background:var(--mint-pale);color:var(--mint-2)}
 .bg.arch{background:var(--red-pale);color:var(--red)}
+.new-reply{display:inline-block;margin-left:8px;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:800;letter-spacing:.01em;background:var(--blue-pale);color:var(--blue);vertical-align:middle}
 .chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;font-size:10.5px;font-weight:700;background:var(--bg);color:var(--ink-2);border:1px solid var(--line)}
 .chip.src{background:var(--blue-pale);color:var(--blue);border-color:transparent}
 
