@@ -7,11 +7,15 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import pl.szymtrener.config.AppProperties;
 import pl.szymtrener.settings.SettingsService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Watek rozmowy z klientem.
@@ -28,20 +32,28 @@ import java.util.List;
 public class MessageService {
 
     private static final Logger log = LoggerFactory.getLogger(MessageService.class);
+    private static final Pattern PARAGRAPH_BREAK = Pattern.compile("\\R\\s*\\R");
+    private static final Pattern LINE_BREAK = Pattern.compile("\\R");
+    private static final Pattern EXTRA_BLANK_LINES = Pattern.compile("\\n(?:\\h*+\\n){2,}+");
+    /** Pusty {imie} zabiera ze soba spacje i przecinek przed soba: „Cześć, {imie}!" daje „Cześć!". */
+    private static final Pattern EMPTY_NAME = Pattern.compile("(?<![ ,])[ ,]*+\\{imie\\}");
 
     private final MessageRepository messages;
     private final ReplyTemplateRepository templates;
     private final JavaMailSender sender;
     private final AppProperties props;
     private final SettingsService settings;
+    private final TemplateEngine mailTemplates;
 
     public MessageService(MessageRepository messages, ReplyTemplateRepository templates,
-                          JavaMailSender sender, AppProperties props, SettingsService settings) {
+                          JavaMailSender sender, AppProperties props, SettingsService settings,
+                          TemplateEngine mailTemplates) {
         this.messages = messages;
         this.templates = templates;
         this.sender = sender;
         this.props = props;
         this.settings = settings;
+        this.mailTemplates = mailTemplates;
     }
 
     /** Wynik wysylki: co pokazac trenerowi po kliknieciu „Wyślij". */
@@ -105,7 +117,8 @@ public class MessageService {
             helper.setFrom(props.mail().from());
             helper.setTo(to);
             helper.setSubject("Wiadomość od Szymona Domagały");
-            helper.setText(body, false);
+            // Tekst dokladnie taki, jak w panelu; HTML to ta sama formatka co potwierdzenie zgloszenia.
+            helper.setText(body, replyHtml(body));
             sender.send(mime);
             m.setMailStatus("SENT");
             messages.save(m);
@@ -118,6 +131,21 @@ public class MessageService {
             system(submissionId, traineeId, "Wysyłka nie powiodła się: " + e.getMessage(), true);
             return new SendResult(false, "Nie udało się wysłać: " + e.getMessage());
         }
+    }
+
+    private String replyHtml(String body) {
+        Context context = new Context(Locale.forLanguageTag("pl-PL"));
+        context.setVariable("paragraphs", paragraphs(body));
+        context.setVariable("siteUrl", props.siteUrl());
+        context.setVariable("siteHost", props.siteHost());
+        return mailTemplates.process("mail/reply", context);
+    }
+
+    /** Akapity rozdziela pusta linia, pojedynczy enter to zlamanie wiersza w akapicie. */
+    static List<List<String>> paragraphs(String body) {
+        return PARAGRAPH_BREAK.splitAsStream(body.strip())
+                .map(para -> LINE_BREAK.splitAsStream(para).map(String::strip).toList())
+                .toList();
     }
 
     /** Zapis rozmowy telefonicznej. Trafia do watku i NIC nie wychodzi do klienta. */
@@ -155,12 +183,57 @@ public class MessageService {
     public String fill(String code, String firstName, String context) {
         return templates.findByCode(code)
                 .map(ReplyTemplate::getBody)
-                .map(body -> body
-                        .replace("{imie}", firstName == null ? "" : firstName)
-                        // Kontekst wchodzi w srodek zdania zakonczonego kropka, wiec
-                        // jego wlasna kropka dalaby „w domu..". Ucinamy ja przy wstawianiu.
-                        .replace("{kontekst}", trimEnding(context)))
+                .map(body -> fillBody(body, firstName, context))
                 .orElse("");
+    }
+
+    static String fillBody(String body, String firstName, String context) {
+        String name = firstName == null ? "" : firstName.strip();
+        String filled = name.isEmpty()
+                ? EMPTY_NAME.matcher(body).replaceAll("")
+                : body.replace("{imie}", name);
+        // Kontekst wchodzi w srodek zdania zakonczonego kropka, wiec
+        // jego wlasna kropka dalaby „w domu..". Ucinamy ja przy wstawianiu.
+        String ctx = trimEnding(context);
+        if (ctx.isEmpty()) filled = dropContextSentences(filled);
+        return filled.replace("{kontekst}", ctx).strip();
+    }
+
+    /**
+     * Pusty kontekst dalby „napisałeś: „”.", wiec znika ZDANIE z {kontekst}, nie caly akapit:
+     * w szablonie poprawionym przez trenera to zdanie moze stac obok propozycji rozmowy.
+     * Linia, w ktorej nic wiecej nie zostalo, znika razem z nadmiarowym odstepem.
+     */
+    private static String dropContextSentences(String body) {
+        String joined = LINE_BREAK.splitAsStream(body)
+                .map(line -> {
+                    if (!line.contains("{kontekst}")) return line;
+                    while (line.contains("{kontekst}")) line = withoutSentenceAt(line, line.indexOf("{kontekst}"));
+                    return line.isBlank() ? null : line.stripTrailing();
+                })
+                .filter(java.util.Objects::nonNull)
+                .collect(java.util.stream.Collectors.joining("\n"));
+        return EXTRA_BLANK_LINES.matcher(joined).replaceAll("\n\n");
+    }
+
+    /** Wycina zdanie wokol pozycji: od konca poprzedniego zdania do kropki, wykrzyknika albo pytajnika. */
+    private static String withoutSentenceAt(String line, int at) {
+        int start = 0;
+        for (int i = at - 1; i > 0; i--) {
+            if (Character.isWhitespace(line.charAt(i)) && isSentenceEnd(line.charAt(i - 1))) {
+                start = i + 1;
+                break;
+            }
+        }
+        int end = at;
+        while (end < line.length() && !isSentenceEnd(line.charAt(end))) end++;
+        if (end < line.length()) end++;
+        while (end < line.length() && Character.isWhitespace(line.charAt(end))) end++;
+        return line.substring(0, start) + line.substring(end);
+    }
+
+    private static boolean isSentenceEnd(char c) {
+        return c == '.' || c == '!' || c == '?';
     }
 
     private static String trimEnding(String text) {

@@ -24,4 +24,9 @@ public record AppProperties(
         String base = siteUrl.endsWith("/") ? siteUrl.substring(0, siteUrl.length() - 1) : siteUrl;
         return path.startsWith("/") ? base + path : base + "/" + path;
     }
+
+    /** Domena bez schematu, do wyswietlenia w stopce maili: „szymtrener.pl". */
+    public String siteHost() {
+        return siteUrl.replaceFirst("^https?://", "");
+    }
 }

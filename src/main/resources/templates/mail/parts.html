@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Wspolne kawalki formatek do klienta. Style w atrybutach i uklad na tabelach,
+       bo klienci pocztowi wycinaja <style>. Fragmenty sa wierszami <tr> tabeli 600 px. */-->
+<body>
+<table>
+
+  <tr th:fragment="header"><td style="background:#1A2B3C;padding:22px 24px">
+    <div style="font-size:16px;font-weight:bold;color:#FFFFFF">Szymon <span style="color:#4ECBA3">Domagała</span></div>
+    <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:3px">
+      Trener personalny · Trener Longevity</div>
+  </td></tr>
+
+  <tr th:fragment="contact"><td style="padding:0 24px 24px">
+    <div style="border-top:1px solid #E3E9ED;padding-top:16px;font-size:13px;line-height:1.7;color:#5A6B7A">
+      <strong style="color:#16232F">Szymon Domagała</strong><br>
+      Trener personalny, Trener Longevity<br>
+      Armii Krajowej 32a, 94-046 Łódź<br>
+      <a href="tel:+48502338373" style="color:#1D9E75;text-decoration:none">502 338 373</a> ·
+      <a th:href="${siteUrl}" th:text="${siteHost}" style="color:#1D9E75;text-decoration:none">szymtrener.pl</a>
+    </div>
+  </td></tr>
+
+</table>
+</body>
+</html>

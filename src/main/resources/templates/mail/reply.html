@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Odpowiedz trenera wyslana z panelu. Tresc pisze czlowiek, wiec idzie WYLACZNIE
+       przez th:text (escapowanie). Akapity i linie dzieli MessageService.paragraphs. */-->
+<head><meta charset="UTF-8"><title>Wiadomość od Szymona Domagały</title></head>
+<body style="margin:0;padding:0;background:#F5F7F9;font-family:Arial,Helvetica,sans-serif;color:#16232F">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F5F7F9;padding:24px 12px">
+  <tr><td align="center">
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0"
+           style="width:600px;max-width:100%;background:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #E3E9ED">
+
+      <tr th:replace="~{mail/parts :: header}"></tr>
+
+      <tr><td style="padding:26px 24px 8px">
+        <p th:each="para : ${paragraphs}" style="font-size:15px;line-height:1.7;margin:0 0 14px"><th:block
+            th:each="line, it : ${para}"><th:block th:text="${line}">Treść</th:block><br th:unless="${it.last}"></th:block></p>
+      </td></tr>
+
+      <tr th:replace="~{mail/parts :: contact}"></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

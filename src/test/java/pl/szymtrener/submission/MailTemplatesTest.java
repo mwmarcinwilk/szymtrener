@@ -117,10 +117,50 @@ class MailTemplatesTest {
     void clientConfirmationRenders() {
         String html = engine.process("mail/confirm-client", context(submission()));
 
-        assertThat(html).contains("Marta Kowalczyk");
-        assertThat(html).contains("odezwę się w ciągu 24 godzin");
+        assertThat(html).contains("Cześć Marta!");
+        assertThat(html).doesNotContain("Kowalczyk");
+        assertThat(html).contains("Dziękuję za wiadomość. Dostałem Twoje zgłoszenie i odezwę się w ciągu 24&nbsp;godzin.");
         assertThat(html).contains("502 338 373");
         assertThat(html).contains("szymtrener.pl");
+        assertThat(html).doesNotContain(" — ");
+    }
+
+    @Test
+    @DisplayName("imię wpisane małymi literami trafia do powitania od wielkiej")
+    void firstNameIsCapitalized() {
+        Submission s = submission();
+        s.setName("  jan   kowalski ");
+
+        assertThat(s.firstName()).isEqualTo("Jan");
+        assertThat(engine.process("mail/confirm-client", context(s))).contains("Cześć Jan!");
+    }
+
+    @Test
+    @DisplayName("tekstowa wersja potwierdzenia wita samym imieniem i zaczyna treść wielką literą")
+    void plainConfirmationGreetsByFirstName() {
+        org.springframework.mail.javamail.JavaMailSender sender =
+                org.mockito.Mockito.mock(org.springframework.mail.javamail.JavaMailSender.class);
+        pl.szymtrener.config.AppProperties props = new pl.szymtrener.config.AppProperties(
+                "https://szymtrener.pl", "Szymtrener", null, null, null, null, null);
+        MailService mail = new MailService(sender, engine, props,
+                org.mockito.Mockito.mock(SubmissionRepository.class),
+                org.mockito.Mockito.mock(pl.szymtrener.settings.SettingsService.class));
+        Submission s = submission();
+        s.setName("jan kowalski");
+
+        assertThat(mail.plainAutoReply(s))
+                .startsWith("Cześć Jan!\n\nDziękuję za wiadomość.")
+                .doesNotContain("kowalski");
+    }
+
+    @Test
+    @DisplayName("bez imienia powitanie to samo „Cześć!”")
+    void greetingWithoutName() {
+        Submission s = submission();
+        s.setName(" ");
+
+        assertThat(s.firstName()).isEmpty();
+        assertThat(engine.process("mail/confirm-client", context(s))).contains("Cześć!");
     }
 
     @Test

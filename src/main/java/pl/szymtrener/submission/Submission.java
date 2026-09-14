@@ -165,6 +165,21 @@ public class Submission {
         return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase(java.util.Locale.ROOT);
     }
 
+    /** Samo imie do powitania, od wielkiej litery: „jan kowalski" daje „Jan". */
+    @Transient
+    public String firstName() {
+        if (name == null || name.isBlank()) return "";
+        String first = name.trim().split("\\s+")[0];
+        return first.substring(0, 1).toUpperCase(java.util.Locale.forLanguageTag("pl-PL")) + first.substring(1);
+    }
+
+    /** Powitanie w mailu: „Cześć Jan!", a bez imienia samo „Cześć!". */
+    @Transient
+    public String greeting() {
+        String first = firstName();
+        return first.isEmpty() ? "Cześć!" : "Cześć " + first + "!";
+    }
+
     /** Data gotowa do wyswietlenia — szablon nie formatuje dat samodzielnie. */
     @Transient
     public String getCreatedLabel() {

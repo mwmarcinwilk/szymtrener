@@ -103,22 +103,22 @@ public class MailService {
         Context context = new Context(PL);
         context.setVariable("s", s);
         context.setVariable("siteUrl", props.siteUrl());
-        context.setVariable("siteHost", props.siteUrl().replaceFirst("^https?://", ""));
+        context.setVariable("siteHost", props.siteHost());
 
         MimeMessage message = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
         helper.setFrom(props.mail().from());
         helper.setTo(s.getEmail());
-        helper.setSubject("Dostałem Twoje zgłoszenie – Szymon Domagała");
+        helper.setSubject("Dostałem Twoje zgłoszenie · Szymon Domagała");
         helper.setText(plainAutoReply(s), templates.process("mail/confirm-client", context));
         return message;
     }
 
-    private String plainAutoReply(Submission s) {
+    String plainAutoReply(Submission s) {
         return """
-                Cześć %s,
+                %s
 
-                dziękuję za wiadomość. Dostałem Twoje zgłoszenie i odezwę się w ciągu 24 godzin.
+                Dziękuję za wiadomość. Dostałem Twoje zgłoszenie i odezwę się w ciągu 24 godzin.
 
                 Jeśli sprawa jest pilna, zadzwoń: 502 338 373.
 
@@ -126,7 +126,7 @@ public class MailService {
                 Szymon Domagała
                 Trener personalny, Trener Longevity
                 %s
-                """.formatted(s.getName(), props.siteUrl());
+                """.formatted(s.greeting(), props.siteUrl());
     }
 
     private String plainTrainerNotification(Submission s) {

@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
-> AUTO-GENEROWANY 2026-08-28 przez tools/index_project.py — NIE edytuj ręcznie.
+> AUTO-GENEROWANY 2026-09-13 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 51 · Endpointy: 90 · Metody: 1049 · Front: 0
+> Beany: 51 · Endpointy: 90 · Metody: 1067 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -423,18 +423,31 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] contactLabels(): void  :79
 
 ### DatabaseUrlEnvironmentPostProcessor  (src/main/java/pl/szymtrener/config/DatabaseUrlEnvironmentPostProcessor.java)
-- [pub] postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application): void  :34
-- [   ] translate(String raw): Map<String, Object>  :52
-- [prv] decode(String value): String  :92
+- [pub] postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application): void  :40
+- [   ] translate(String raw): Map<String, Object>  :68
+- [prv] stripScheme(String raw): String  :138
+- [prv] parsePort(String value): int  :145
+- [prv] decode(String value): String  :161
 
 ### DatabaseUrlEnvironmentPostProcessorTest  (src/test/java/pl/szymtrener/config/DatabaseUrlEnvironmentPostProcessorTest.java)
-- [   ] translatesPlainUrl(): void  :18
-- [   ] decodesEncodedPassword(): void  :29
-- [   ] defaultsPort(): void  :38
-- [   ] keepsQueryString(): void  :47
-- [   ] acceptsBothSchemes(): void  :57
-- [   ] leavesJdbcUrlAlone(): void  :64
-- [   ] garbageIsIgnored(): void  :71
+- [   ] translatesPlainUrl(): void  :23
+- [   ] decodesEncodedPassword(): void  :34
+- [   ] defaultsPort(): void  :43
+- [   ] keepsQueryString(): void  :52
+- [   ] acceptsBothSchemes(): void  :62
+- [   ] leavesJdbcUrlAlone(): void  :69
+- [   ] nonPostgresValueIsIgnored(): void  :76
+- [   ] translatesRealCoolifyUrl(): void  :82
+- [   ] handlesUnencodedPassword(String password): void  :95
+- [   ] acceptsUnderscoreInHost(): void  :106
+- [   ] brokenPostgresUrlFailsLoudly(String raw): void  :135
+- [   ] brokenDatabaseUrlDoesNotFallBackToDbUrl(): void  :147
+- [   ] percentFollowedByHexIsDecoded(): void  :160
+- [   ] acceptsMultipleHosts(): void  :169
+- [   ] schemeIsCaseInsensitive(): void  :176
+- [   ] dropsFragment(): void  :183
+- [   ] encodedAtInQueryKeepsHost(): void  :190
+- [   ] postProcessorOverridesDatasource(): void  :198
 
 ### DocImportService  (src/main/java/pl/szymtrener/docimport/DocImportService.java)
 - [pub] importDocument(MultipartFile file): ImportResult  :24
@@ -523,6 +536,13 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] missingAltIsRejected(): void  :182
 - [   ] videoThumbnailIsExempt(): void  :193
 - [   ] completeAltsPass(): void  :199
+
+### GanwilkArchitectureTest  (src/test/java/pl/szymtrener/arch/GanwilkArchitectureTest.java)
+- [   ] importClasses(): void  :35
+- [   ] brak_cykli_miedzy_pakietami(): void  :43
+- [   ] kontrolery_nie_siegaja_wprost_do_repozytoriow(): void  :53
+- [   ] transakcje_nie_na_kontrolerach(): void  :63
+- [   ] serwisy_nie_zaleza_od_warstwy_web(): void  :74
 
 ### GlobalExceptionHandler  (src/main/java/pl/szymtrener/common/GlobalExceptionHandler.java)
 - [pub] handle(Exception exception, HttpServletRequest request): Object  :39

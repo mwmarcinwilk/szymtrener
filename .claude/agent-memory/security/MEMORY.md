@@ -1,0 +1,1 @@
+- [Pełny zestaw bez Dockera](reference_it_bez_dockera.md) — wszystkie IT na zewnętrznej bazie; równoległy Maven nadpisuje raporty surefire

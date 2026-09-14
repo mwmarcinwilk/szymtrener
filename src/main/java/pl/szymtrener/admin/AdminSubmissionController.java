@@ -161,8 +161,7 @@ public class AdminSubmissionController {
     public Map<String, String> template(@PathVariable Long id, @PathVariable String code) {
         Submission s = submissions.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie ma zgłoszenia " + id));
-        String firstName = s.getName() == null ? "" : s.getName().trim().split("\\s+")[0];
-        return Map.of("body", messages.fill(code, firstName, s.getCurrentTraining()));
+        return Map.of("body", messages.fill(code, s.firstName(), s.getCurrentTraining()));
     }
 
     /** Przypomnienie: „za ile" albo konkretna data. */

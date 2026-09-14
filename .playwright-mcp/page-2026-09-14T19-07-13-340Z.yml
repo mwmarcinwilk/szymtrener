@@ -1,0 +1,16 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Szymon Domagała
+  - generic [ref=e3]: Trener personalny · Trener Longevity
+  - paragraph [ref=e4]: Cześć Jak!
+  - paragraph [ref=e5]: Dzięki za zgłoszenie.
+  - paragraph [ref=e6]: Proponuję 20 minut rozmowy, żebym poznał Twój tydzień i historię treningową. Bez zobowiązań, po prostu sprawdzimy, czy mogę Ci realnie pomóc.
+  - paragraph [ref=e7]: Pasuje Ci czwartek o 18:00 albo piątek o 17:30?
+  - paragraph [ref=e8]: Pozdrawiam,Szymon
+  - generic [ref=e9]:
+    - strong [ref=e10]: Szymon Domagała
+    - text: Trener personalny, Trener Longevity Armii Krajowej 32a, 94-046 Łódź
+    - link "502 338 373" [ref=e11] [cursor=pointer]:
+      - /url: tel:+48502338373
+    - text: ·
+    - link "szymtrener.pl" [ref=e12] [cursor=pointer]:
+      - /url: https://szymtrener.pl
