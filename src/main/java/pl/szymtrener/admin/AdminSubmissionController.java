@@ -17,6 +17,7 @@ import pl.szymtrener.common.SlugUtil;
 import pl.szymtrener.crm.*;
 import pl.szymtrener.settings.SettingsService;
 import pl.szymtrener.submission.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.charset.StandardCharsets;
@@ -88,7 +89,9 @@ public class AdminSubmissionController {
         // Karta „Na co uwazac": wyciag z notatek oznaczonych Zdrowie albo Wazne,
         // zeby przeciwwskazania byly widoczne bez czytania calosci.
         model.addAttribute("warnings", all.stream().filter(SubmissionNote::warning).limit(4).toList());
-        model.addAttribute("thread", messages.openSubmissionThread(id));
+        List<Message> thread = messages.openSubmissionThread(id);
+        model.addAttribute("thread", thread);
+        model.addAttribute("attachments", messages.attachmentsOf(thread));
         model.addAttribute("templates", messages.replyTemplates());
         model.addAttribute("statuses", SubmissionStatus.values());
         model.addAttribute("title", "Zgłoszenie: " + submission.getName());
@@ -135,6 +138,7 @@ public class AdminSubmissionController {
     public String message(@PathVariable Long id,
                           @RequestParam String body,
                           @RequestParam(defaultValue = "mail") String way,
+                          @RequestParam(value = "pliki", required = false) List<MultipartFile> pliki,
                           RedirectAttributes flash) {
 
         Submission s = submissions.findById(id)
@@ -144,12 +148,18 @@ public class AdminSubmissionController {
             return "redirect:/admin/zgloszenia/" + id;
         }
 
+        AttachmentPolicy.Outgoing files = AttachmentPolicy.forReply(way, pliki);
+        if (!files.ok()) {
+            flash.addFlashAttribute("error", files.error());
+            return "redirect:/admin/zgloszenia/" + id;
+        }
+
         if ("tel".equals(way)) {
             messages.logPhoneCall(id, null, body.trim());
             flash.addFlashAttribute("info", "Zapisano rozmowę. Do klienta nic nie poszło.");
         } else {
             MessageService.SendResult result =
-                    messages.sendEmail(id, null, s.getEmail(), s.getName(), body.trim(), null);
+                    messages.sendEmail(id, null, s.getEmail(), s.getName(), body.trim(), files.files());
             if (result.sent()) {
                 flash.addFlashAttribute("info", "Wiadomość poszła do " + s.getEmail() + ".");
             } else {

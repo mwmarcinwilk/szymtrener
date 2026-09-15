@@ -462,6 +462,29 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .way.on{border-color:var(--mint);background:var(--mint-pale);color:var(--mint-2)}
 .cmp textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:13.5px;line-height:1.65;color:var(--ink);outline:none;resize:vertical;min-height:104px;background:#fff}
 .cmp textarea:focus{border-color:var(--mint);box-shadow:0 0 0 3px rgba(29,158,117,.13)}
+/* Załączniki: wybór w formularzu i pliki pod dymkiem w wątku. */
+.cmp-files{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.cmp-files label{position:relative;cursor:pointer}
+.cmp-files .sr-file{position:absolute;inset:0;opacity:0;cursor:pointer}
+.cmp-files label:focus-within{box-shadow:0 0 0 3px rgba(29,158,117,.2)}
+.cmp-files-hint{font-size:11px;color:var(--ink-3);font-weight:600}
+.cmp-chosen{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.cmp-chosen:empty{display:none}
+.cmp-chosen li{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;border:1px solid var(--line);border-radius:99px;background:#fff;font-size:12px;font-weight:600;max-width:100%}
+.cmp-chosen li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.cmp-chosen li i{font-style:normal;color:var(--ink-3);font-size:11px}
+.cmp-chosen button{border:none;background:var(--bg);border-radius:50%;width:20px;height:20px;cursor:pointer;color:var(--ink-2);line-height:1}
+.cmp-chosen button:hover{background:var(--red-pale);color:var(--red)}
+.cmp-chosen li.err{border-color:var(--red);color:var(--red)}
+.cmp-files.off{display:none}
+.att{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.att-f{display:inline-flex;align-items:center;gap:9px;padding:6px 11px 6px 6px;border:1px solid var(--line);border-radius:10px;background:#fff;max-width:100%;transition:border-color .2s,background .2s}
+.att-f:hover{border-color:var(--mint);background:var(--mint-pale)}
+.att-f img{width:44px;height:44px;border-radius:7px;object-fit:cover;flex-shrink:0;background:var(--bg)}
+.att-f svg{width:20px;height:20px;margin:0 6px;color:var(--ink-2);flex-shrink:0}
+.att-t{display:flex;flex-direction:column;min-width:0}
+.att-t .nm{font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px}
+.att-t .sz{font-size:11px;color:var(--ink-3);font-weight:600}
 .cmp-foot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:10px}
 .cmp-foot .sp{margin-left:auto;font-size:11px;color:var(--ink-3);font-weight:600}
 

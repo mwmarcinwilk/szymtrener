@@ -112,6 +112,13 @@ zgłoszenia lub klienta trafia tam z etykietą „dopasowano po adresie". Mail o
 autoresponder i lista mailingowa zostają tylko w skrzynce. Pierwsze uruchomienie nie importuje historii.
 Wynik ostatniego sprawdzenia widać w Ustawieniach → Poczta.
 
+### Załączniki w wątku
+
+Pliki wysłane z panelu i odebrane od klientów leżą w bazie (`message_attachment_blob`), jak media —
+backup `pg_dump` je obejmuje, a baza rośnie o ich rozmiar. Nie ma dla nich publicznego adresu:
+pobiera je tylko zalogowany admin (`/admin/zalaczniki/{id}`). Usunięcie zgłoszenia lub klienta
+usuwa jego pliki. Limit uploadu z panelu: 20 MB (nginx `client_max_body_size 30m` wystarcza).
+
 ## 4a. Poczta przez Gmail
 
 1. Włącz weryfikację dwuetapową na koncie Google — bez niej nie ma haseł aplikacji.

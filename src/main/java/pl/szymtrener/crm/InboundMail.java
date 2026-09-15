@@ -6,6 +6,8 @@ import jakarta.mail.Multipart;
 import jakarta.mail.Part;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimePart;
+import jakarta.mail.internet.MimeUtility;
 import org.slf4j.Logger;
 import pl.szymtrener.config.MailConfig;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,7 @@ import java.util.regex.Pattern;
  * @param automatic autoresponder, lista mailingowa albo inna wiadomosc bez czlowieka po drugiej stronie
  */
 record InboundMail(String messageId, List<String> replyTo, String from, boolean automatic,
-                   Instant sentAt, String body) {
+                   Instant sentAt, String body, List<AttachmentFile> attachments) {
 
     private static final Logger log = LoggerFactory.getLogger(InboundMail.class);
     private static final Pattern MESSAGE_ID = Pattern.compile("<[^<>\\s]{1,990}>");
@@ -47,16 +49,17 @@ record InboundMail(String messageId, List<String> replyTo, String from, boolean 
         String text = content.plain != null ? content.plain
                 : content.html != null ? InboundMailText.htmlToText(content.html) : "";
         String body = InboundMailText.clean(text);
-        if (content.attachments > 0) {
-            body = (body.isBlank() ? "" : body + "\n\n") + "[pominięto załączniki: " + content.attachments + "]";
+        if (!content.notes.isEmpty()) {
+            body = (body.isBlank() ? "" : body + "\n\n") + String.join("\n", content.notes);
         }
-        if (body.isBlank()) body = "[wiadomość bez treści]";
+        // Sam plik bez tekstu to normalna odpowiedz („w zalaczniku wyniki"), nie pusta wiadomosc.
+        if (body.isBlank() && content.files.isEmpty()) body = "[wiadomość bez treści]";
 
         Instant sent = message.getSentDate() == null ? null : message.getSentDate().toInstant();
         if (sent == null || sent.isAfter(now)) sent = now;
 
         return new InboundMail(firstId(message.getMessageID()), replyTo(message), sender(message),
-                automatic(message), sent, body);
+                automatic(message), sent, body, List.copyOf(content.files));
     }
 
     private static List<String> replyTo(MimeMessage message) throws MessagingException {
@@ -107,11 +110,15 @@ record InboundMail(String messageId, List<String> replyTo, String from, boolean 
 
     private static void collect(Part part, Content content, int depth) throws MessagingException {
         if (depth > MAX_DEPTH) return;
+        if (part.isMimeType("message/rfc822")) {
+            content.notes.add("[przekazana wiadomość: jest w skrzynce]");
+            return;
+        }
         String disposition = part.getDisposition();
         boolean attachment = Part.ATTACHMENT.equalsIgnoreCase(disposition)
                 || (part.getFileName() != null && !part.isMimeType("multipart/*"));
-        if (attachment || part.isMimeType("message/rfc822")) {
-            content.attachments++;
+        if (attachment) {
+            attachment(part, content);
             return;
         }
         if (part.isMimeType("multipart/*")) {
@@ -137,6 +144,7 @@ record InboundMail(String messageId, List<String> replyTo, String from, boolean 
         try (var in = part.getInputStream()) {
             return new String(in.readNBytes(MAX_TEXT_PART_BYTES), StandardCharsets.UTF_8);
         } catch (IOException e) {
+            rethrowConnectionError(e);
             log.debug("Nie udalo sie odczytac czesci tekstowej: {}", e.getMessage());
             return null;
         }
@@ -146,6 +154,50 @@ record InboundMail(String messageId, List<String> replyTo, String from, boolean 
         try {
             return part.getContent();
         } catch (IOException e) {
+            rethrowConnectionError(e);
+            return null;
+        }
+    }
+
+    private static void attachment(Part part, Content content) throws MessagingException {
+        if (AttachmentPolicy.rejectBeforeReading(fileName(part), content.files.size(), content.notes)) return;
+        byte[] data;
+        boolean truncated;
+        try (var in = part.getInputStream()) {
+            // Czytamy najwyzej limit + 1 bajt: wiekszy plik nie laduje sie do pamieci w calosci.
+            data = in.readNBytes((int) AttachmentPolicy.IN_MAX_FILE + 1);
+            truncated = data.length > AttachmentPolicy.IN_MAX_FILE;
+        } catch (IOException e) {
+            rethrowConnectionError(e);
+            content.notes.add("[" + AttachmentPolicy.safeName(fileName(part)) + ": nie udało się odczytać, jest w skrzynce]");
+            return;
+        }
+        // Obrazek wstawiony w tresc z Content-ID i maly to ozdoba stopki (logo), nie plik od klienta.
+        boolean inlineWithContentId = !Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())
+                && part instanceof MimePart mime && mime.getContentID() != null;
+        if (AttachmentPolicy.decoration(inlineWithContentId, part.isMimeType("image/*"), data.length)) return;
+        AttachmentFile file = AttachmentPolicy.incoming(fileName(part), truncated ? new byte[0] : data, truncated,
+                content.files.size(), content.bytes, content.notes);
+        if (file != null) {
+            content.files.add(file);
+            content.bytes += file.data().length;
+        }
+    }
+
+    /**
+     * Angus opakowuje zerwane polaczenie IMAP w IOException z FolderClosedException albo
+     * MessagingException w srodku. To nie jest zepsuty plik, tylko powod do ponownego odbioru:
+     * przekazujemy wyzej, zeby InboundMailService nie przesunal UID i nie zgubil zalacznika.
+     */
+    private static void rethrowConnectionError(IOException e) throws MessagingException {
+        if (e.getCause() instanceof MessagingException connection) throw connection;
+    }
+
+    private static String fileName(Part part) {
+        try {
+            String name = part.getFileName();
+            return name == null ? null : MimeUtility.decodeText(name);
+        } catch (MessagingException | java.io.UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -153,7 +205,9 @@ record InboundMail(String messageId, List<String> replyTo, String from, boolean 
     private static final class Content {
         String plain;
         String html;
-        int attachments;
+        final List<AttachmentFile> files = new ArrayList<>();
+        final List<String> notes = new ArrayList<>();
+        long bytes;
     }
 
     /** Dla testow i logow: sama tresc nigdy nie idzie do logu. */

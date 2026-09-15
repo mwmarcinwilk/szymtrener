@@ -43,11 +43,13 @@ class ReplySendTest {
                 null, null, null, null);
 
         MessageRepository repository = mock(MessageRepository.class);
+        when(repository.save(any(Message.class))).thenAnswer(inv -> inv.getArgument(0));
         MessageService service = new MessageService(repository, mock(ReplyTemplateRepository.class),
-                sender, props, settings, engine(), mock(TraineeRepository.class));
+                sender, props, settings, engine(), mock(TraineeRepository.class), mock(AttachmentService.class));
 
         String body = "Cześć Jan!\n\n<script>alert(1)</script>";
-        MessageService.SendResult result = service.sendEmail(1L, null, "jan@example.test", "Jan", body, null);
+        AttachmentFile plan = new AttachmentFile("plan treningowy.pdf", "application/pdf", "%PDF-1.7 plan".getBytes());
+        MessageService.SendResult result = service.sendEmail(1L, null, "jan@example.test", "Jan", body, List.of(plan));
 
         assertThat(result.sent()).isTrue();
         ArgumentCaptor<Message> saved = ArgumentCaptor.forClass(Message.class);
@@ -59,6 +61,9 @@ class ReplySendTest {
         List<Part> leaves = new ArrayList<>();
         collect(mime, leaves);
         Part text = leaves.stream().filter(p -> isType(p, "text/plain")).findFirst().orElseThrow();
+        Part pdf = leaves.stream().filter(p -> isType(p, "application/pdf")).findFirst().orElseThrow();
+        assertThat(pdf.getFileName()).isEqualTo("plan treningowy.pdf");
+        assertThat(pdf.getDisposition()).isEqualTo(Part.ATTACHMENT);
         Part html = leaves.stream().filter(p -> isType(p, "text/html")).findFirst().orElseThrow();
 
         assertThat(text.getContent()).isEqualTo(body);

@@ -76,8 +76,6 @@ public class MediaFile {
     }
 
     public String humanSize() {
-        if (sizeBytes < 1024) return sizeBytes + " B";
-        if (sizeBytes < 1024 * 1024) return Math.round(sizeBytes / 1024.0) + " KB";
-        return String.format(java.util.Locale.forLanguageTag("pl-PL"), "%.1f MB", sizeBytes / 1048576.0);
+        return pl.szymtrener.common.Bytes.human(sizeBytes);
     }
 }

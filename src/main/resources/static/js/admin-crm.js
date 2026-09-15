@@ -10,6 +10,68 @@
 
   const tx = $('#cmp-tx');
 
+  /* ── Załączniki ────────────────────────────────────────────────────────
+     Lista wybranych plików z rozmiarem i przyciskiem usunięcia. Limity pilnuje
+     serwer; tu tylko ostrzeżenie, zanim trener wyśle za dużo. */
+  const fileInput = $('#cmp-pliki');
+  const chosen = $('#cmp-chosen');
+  const picker = $('#cmp-files');
+  const maxFiles = Number(picker?.dataset.maxFiles || 5);
+  const maxBytes = Number(picker?.dataset.maxBytes || 20 * 1048576);
+  const maxFile = Number(picker?.dataset.maxFile || 10 * 1048576);
+
+  /* Za duzy upload odbija sie od filtra CSRF (Tomcat nie czyta wtedy pol formularza) i trener
+     dostaje 403 z utrata tresci. Dlatego limity blokuja wyslanie juz w przegladarce; serwer
+     i tak sprawdza je ponownie. */
+  function overLimit() {
+    if (!fileInput) return null;
+    const files = Array.from(fileInput.files);
+    const big = files.find(f => f.size > maxFile);
+    if (files.length > maxFiles) return 'Najwyżej ' + maxFiles + ' plików';
+    if (big) return big.name + ': więcej niż ' + size(maxFile);
+    if (files.reduce((s, f) => s + f.size, 0) > maxBytes) return 'Razem ponad ' + size(maxBytes);
+    return null;
+  }
+  fileInput?.form?.addEventListener('submit', e => {
+    if (overLimit()) { e.preventDefault(); renderChosen(); chosen?.lastElementChild?.scrollIntoView({ block: 'nearest' }); }
+  });
+  // Ten sam format co Bytes.human() na serwerze.
+  const size = b => b < 1024 ? b + ' B'
+    : b < 1048576 ? Math.round(b / 1024) + ' KB'
+    : (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
+  function renderChosen() {
+    if (!chosen || !fileInput) return;
+    chosen.replaceChildren();
+    const files = Array.from(fileInput.files);
+    files.forEach((f, i) => {
+      const li = document.createElement('li');
+      const name = document.createElement('span');
+      name.textContent = f.name;
+      const sz = document.createElement('i');
+      sz.textContent = size(f.size);
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.textContent = '×';
+      rm.setAttribute('aria-label', 'Usuń ' + f.name);
+      rm.addEventListener('click', () => {
+        const dt = new DataTransfer();
+        Array.from(fileInput.files).forEach((g, j) => { if (j !== i) dt.items.add(g); });
+        fileInput.files = dt.files;
+        renderChosen();
+      });
+      li.append(name, sz, rm);
+      chosen.append(li);
+    });
+    const problem = overLimit();
+    if (problem) {
+      const li = document.createElement('li');
+      li.className = 'err';
+      li.textContent = problem;
+      chosen.append(li);
+    }
+  }
+  fileInput?.addEventListener('change', renderChosen);
+
   /* ── Tryb odpowiedzi: e-mail albo notatka z telefonu ──────────────────
      Tryb telefoniczny nic nie wysyła do klienta, więc podpowiedź w polu
      musi to mówić wprost — inaczej łatwo wysłać notatkę jako wiadomość. */
@@ -19,6 +81,11 @@
     ways.forEach(x => x.classList.toggle('on', x === b));
     const mode = b.dataset.way;
     if (wayField) wayField.value = mode;
+    // Rozmowa telefoniczna nie wysyla plikow, wiec pole znika, a wybrane pliki sa czyszczone.
+    if (picker) {
+      picker.classList.toggle('off', mode === 'tel');
+      if (mode === 'tel' && fileInput) { fileInput.value = ''; renderChosen(); }
+    }
     if (!tx) return;
     tx.placeholder = mode === 'tel'
       ? 'Zapisz, co ustaliliście przez telefon — trafi do wątku, ale nie zostanie wysłane do klienta…'

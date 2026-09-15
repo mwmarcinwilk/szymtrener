@@ -1,0 +1,161 @@
+- generic [ref=f1e2]:
+  - complementary [ref=f1e3]:
+    - generic [ref=f1e4]:
+      - generic [ref=f1e5]: Szymon Domagała
+      - generic [ref=f1e6]: Panel trenera
+    - navigation [ref=f1e7]:
+      - link "Pulpit" [ref=f1e8] [cursor=pointer]:
+        - /url: /admin
+      - generic [ref=f1e11]: Blog
+      - link "Posty" [ref=f1e12] [cursor=pointer]:
+        - /url: /admin/posty
+      - link "Nowy post" [ref=f1e15] [cursor=pointer]:
+        - /url: /admin/posty/nowy
+      - link "Media" [ref=f1e18] [cursor=pointer]:
+        - /url: /admin/media
+      - generic [ref=f1e21]: Oferta
+      - link "Oferta online" [ref=f1e22] [cursor=pointer]:
+        - /url: /admin/oferta
+      - generic [ref=f1e25]: Klienci
+      - link "Zgłoszenia 1" [ref=f1e26] [cursor=pointer]:
+        - /url: /admin/zgloszenia
+        - text: Zgłoszenia
+        - generic "Nowe odpowiedzi klientów" [ref=f1e29]: "1"
+      - link "Klienci" [ref=f1e30] [cursor=pointer]:
+        - /url: /admin/klienci
+      - generic [ref=f1e33]: Analiza
+      - link "Statystyki" [ref=f1e34] [cursor=pointer]:
+        - /url: /admin/statystyki
+      - link "Ustawienia" [ref=f1e37] [cursor=pointer]:
+        - /url: /admin/ustawienia
+      - link "Administratorzy" [ref=f1e40] [cursor=pointer]:
+        - /url: /admin/administratorzy
+    - generic [ref=f1e43]:
+      - generic [ref=f1e44]: SD
+      - generic [ref=f1e45]:
+        - generic [ref=f1e46]: Szymon Domagała
+        - generic [ref=f1e47]:
+          - link "Hasło" [ref=f1e48] [cursor=pointer]:
+            - /url: /admin/haslo
+          - text: ·
+          - link "Wyloguj" [ref=f1e49] [cursor=pointer]:
+            - /url: /admin/wyloguj
+  - generic [ref=f1e50]:
+    - banner [ref=f1e51]:
+      - heading "Pulpit" [level=1] [ref=f1e52]
+      - generic [ref=f1e53]:
+        - search [ref=f1e54]:
+          - searchbox "Szukaj wpisu" [ref=f1e57]
+        - link "Nowy post" [ref=f1e58] [cursor=pointer]:
+          - /url: /admin/posty/nowy
+    - generic [ref=f1e61]:
+      - generic [ref=f1e62]:
+        - generic [ref=f1e63]:
+          - generic [ref=f1e67]: "0"
+          - generic [ref=f1e68]: Odsłony (30 dni)
+          - generic [ref=f1e69]: brak danych
+        - generic [ref=f1e71]:
+          - generic [ref=f1e75]: "0"
+          - generic [ref=f1e76]: Nowe zgłoszenia
+        - generic [ref=f1e77]:
+          - generic [ref=f1e81]: —
+          - generic [ref=f1e82]: Konwersja formularza
+          - generic [ref=f1e83]: 0 sesji
+        - generic [ref=f1e84]:
+          - generic [ref=f1e88]: "0"
+          - generic [ref=f1e89]: Opublikowane posty
+          - generic [ref=f1e90]: 0 zaplanowane
+      - generic [ref=f1e91]:
+        - generic [ref=f1e92]:
+          - generic [ref=f1e93]:
+            - generic [ref=f1e94]:
+              - heading "Odwiedziny" [level=2] [ref=f1e95]
+              - generic [ref=f1e96]: Ostatnie 14 dni
+            - link "Statystyki" [ref=f1e98] [cursor=pointer]:
+              - /url: /admin/statystyki
+          - generic [ref=f1e100]:
+            - generic [ref=f1e101]:
+              - 'generic "1 wrz: 0" [ref=f1e102]'
+              - generic [ref=f1e103]: 1 wrz
+            - generic [ref=f1e104]:
+              - 'generic "2 wrz: 0" [ref=f1e105]'
+              - generic [ref=f1e106]: 2 wrz
+            - generic [ref=f1e107]:
+              - 'generic "3 wrz: 0" [ref=f1e108]'
+              - generic [ref=f1e109]: 3 wrz
+            - generic [ref=f1e110]:
+              - 'generic "4 wrz: 0" [ref=f1e111]'
+              - generic [ref=f1e112]: 4 wrz
+            - generic [ref=f1e113]:
+              - 'generic "5 wrz: 0" [ref=f1e114]'
+              - generic [ref=f1e115]: 5 wrz
+            - generic [ref=f1e116]:
+              - 'generic "6 wrz: 0" [ref=f1e117]'
+              - generic [ref=f1e118]: 6 wrz
+            - generic [ref=f1e119]:
+              - 'generic "7 wrz: 0" [ref=f1e120]'
+              - generic [ref=f1e121]: 7 wrz
+            - generic [ref=f1e122]:
+              - 'generic "8 wrz: 0" [ref=f1e123]'
+              - generic [ref=f1e124]: 8 wrz
+            - generic [ref=f1e125]:
+              - 'generic "9 wrz: 0" [ref=f1e126]'
+              - generic [ref=f1e127]: 9 wrz
+            - generic [ref=f1e128]:
+              - 'generic "10 wrz: 0" [ref=f1e129]'
+              - generic [ref=f1e130]: 10 wrz
+            - generic [ref=f1e131]:
+              - 'generic "11 wrz: 0" [ref=f1e132]'
+              - generic [ref=f1e133]: 11 wrz
+            - generic [ref=f1e134]:
+              - 'generic "12 wrz: 0" [ref=f1e135]'
+              - generic [ref=f1e136]: 12 wrz
+            - generic [ref=f1e137]:
+              - 'generic "13 wrz: 0" [ref=f1e138]'
+              - generic [ref=f1e139]: 13 wrz
+            - generic [ref=f1e140]:
+              - 'generic "14 wrz: 0" [ref=f1e141]'
+              - generic [ref=f1e142]: 14 wrz
+        - generic [ref=f1e143]:
+          - generic [ref=f1e144]:
+            - heading "Najnowsze zgłoszenia" [level=2] [ref=f1e145]
+            - link "Wszystkie" [ref=f1e147] [cursor=pointer]:
+              - /url: /admin/zgloszenia
+          - link "AN Anna Nowak Prowadzenie online W kontakcie 13 wrz 2026, 23:16" [ref=f1e149] [cursor=pointer]:
+            - /url: /admin/zgloszenia/1
+            - generic [ref=f1e150]: AN
+            - generic [ref=f1e151]:
+              - generic [ref=f1e152]: Anna Nowak
+              - generic [ref=f1e153]: Prowadzenie online
+            - generic [ref=f1e154]:
+              - generic [ref=f1e155]: W kontakcie
+              - generic [ref=f1e156]: 13 wrz 2026, 23:16
+      - generic [ref=f1e157]:
+        - generic [ref=f1e158]:
+          - generic [ref=f1e159]:
+            - heading "Kolejka publikacji" [level=2] [ref=f1e160]
+            - link "Kalendarz" [ref=f1e162] [cursor=pointer]:
+              - /url: /admin/posty
+          - paragraph [ref=f1e164]:
+            - text: Nic nie czeka w kolejce.
+            - link "Napisz nowy wpis" [ref=f1e165] [cursor=pointer]:
+              - /url: /admin/posty/nowy
+            - text: .
+        - generic [ref=f1e166]:
+          - generic [ref=f1e167]:
+            - heading "Skąd przychodzą" [level=2] [ref=f1e168]
+            - generic [ref=f1e169]: 30 dni
+          - paragraph [ref=f1e172]: Jeszcze nie ma danych o źródłach ruchu.
+      - generic [ref=f1e173]:
+        - generic [ref=f1e174]:
+          - heading "Wizyty botów AI (30 dni)" [level=2] [ref=f1e175]
+          - link "Szczegóły" [ref=f1e177] [cursor=pointer]:
+            - /url: /admin/statystyki
+        - table [ref=f1e179]:
+          - rowgroup [ref=f1e180]:
+            - row [ref=f1e181]:
+              - columnheader "Bot" [ref=f1e182]
+              - columnheader "Wizyty" [ref=f1e183]
+          - rowgroup [ref=f1e184]:
+            - row [ref=f1e185] [cursor=pointer]:
+              - cell "Jeszcze żaden bot AI tu nie zajrzał." [ref=f1e186]

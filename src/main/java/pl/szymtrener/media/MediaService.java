@@ -9,7 +9,6 @@ import pl.szymtrener.config.AppProperties;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.security.MessageDigest;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,7 +69,7 @@ public class MediaService {
             }
         }
 
-        String checksum = sha256(bytes);
+        String checksum = pl.szymtrener.common.Bytes.sha256(bytes);
         Optional<MediaFile> duplicate = repository.findByChecksum(checksum);
         if (duplicate.isPresent()) return duplicate.get();   // ten sam plik wgrany drugi raz
 
@@ -96,7 +95,7 @@ public class MediaService {
     /** Wariant dla plikow, ktore nie przyszly z formularza (np. obrazki z DOCX). */
     @Transactional
     public MediaFile store(byte[] bytes, String originalName, String mime, String altText) {
-        String checksum = sha256(bytes);
+        String checksum = pl.szymtrener.common.Bytes.sha256(bytes);
         Optional<MediaFile> duplicate = repository.findByChecksum(checksum);
         if (duplicate.isPresent()) return duplicate.get();
 
@@ -181,12 +180,4 @@ public class MediaService {
         return name.replaceAll("[\\\\/:*?\"<>|]", "_");
     }
 
-    private static String sha256(byte[] data) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            return HexFormat.of().formatHex(md.digest(data));
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
 }

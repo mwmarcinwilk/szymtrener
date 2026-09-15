@@ -106,7 +106,8 @@
                       <time th:text="${m.sentLabel()}">28 sie, 10:29</time>
                       <span class="ch" style="background:var(--red-pale);color:var(--red)" th:if="${m.failed()}">nie wyszło</span>
                     </div>
-                    <p th:text="${m.body}">Treść wiadomości.</p>
+                    <p th:text="${m.body}" th:unless="${#strings.isEmpty(m.body)}">Treść wiadomości.</p>
+                    <div th:replace="~{fragments/thread-attachments :: files(${attachments.get(m.id)})}"></div>
                   </div>
                   <div class="mav" th:if="${m.outgoing()}">SD</div>
                 </div>
@@ -119,7 +120,7 @@
             <!--/* Pole odpowiedzi z dwoma trybami. Tryb telefoniczny NIC nie wysyła —
                    zapisuje ustalenia w wątku. */-->
             <div class="cmp" id="composer">
-              <form method="post" th:action="@{/admin/zgloszenia/{id}/wiadomosc(id=${item.id})}">
+              <form method="post" enctype="multipart/form-data" th:action="@{/admin/zgloszenia/{id}/wiadomosc(id=${item.id})}">
                 <div class="cmp-way">
                   <button class="way on" type="button" data-way="mail"><svg><use href="#i-mail"/></svg>Wyślij e-mail</button>
                   <button class="way" type="button" data-way="tel"><svg><use href="#i-phone"/></svg>Zapisz rozmowę telefoniczną</button>
@@ -132,6 +133,7 @@
                 </div>
                 <textarea id="cmp-tx" name="body" required
                           th:placeholder="'Napisz wiadomość do ' + ${item.name} + '… Możesz zacząć od gotowego szablonu powyżej.'"></textarea>
+                <div th:replace="~{fragments/thread-attachments :: picker}"></div>
                 <div class="cmp-foot">
                   <button class="btn btn-p" type="submit"><svg><use href="#i-send"/></svg>Wyślij</button>
                   <span class="sp" th:text="'Wysyłka na ' + ${item.email} + ' · kopia trafia do wątku'">

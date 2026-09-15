@@ -1,0 +1,10 @@
+- generic [ref=e2]:
+  - generic [ref=e3]: Szymon Domagała
+  - paragraph [ref=e4]: Panel trenera
+  - generic [ref=e5]:
+    - generic [ref=e6]: E-mail
+    - textbox "E-mail" [active] [ref=e7]
+  - generic [ref=e8]:
+    - generic [ref=e9]: Hasło
+    - textbox "Hasło" [ref=e10]
+  - button "Zaloguj" [ref=e11] [cursor=pointer]

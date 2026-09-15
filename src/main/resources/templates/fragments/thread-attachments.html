@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<!--/* Załączniki w wątku rozmowy, wspólne dla zgłoszenia i profilu klienta.
+       Pliki są prywatne: linki prowadzą do /admin/zalaczniki, czyli tylko po zalogowaniu.
+       Miniaturę dostaje wyłącznie obraz rozpoznany po treści (previewable), nigdy SVG ani HTML. */-->
+<body>
+
+<div th:fragment="files(list)" class="att" th:if="${list != null and !#lists.isEmpty(list)}">
+  <a th:each="f : ${list}" class="att-f" th:href="@{/admin/zalaczniki/{id}(id=${f.id})}"
+     th:title="'Pobierz: ' + ${f.originalName}">
+    <img th:if="${f.previewable()}" th:src="@{/admin/zalaczniki/{id}/podglad(id=${f.id})}" alt="" loading="lazy">
+    <svg th:unless="${f.previewable()}"><use th:href="${f.mimeType == 'application/pdf'} ? '#i-pdf' : '#i-note'"/></svg>
+    <span class="att-t"><span class="nm" th:text="${f.originalName}">wyniki-badan.pdf</span><span
+          class="sz" th:text="${f.sizeLabel()}">1,2 MB</span></span>
+  </a>
+</div>
+
+<!--/* Wybór plików w formularzu odpowiedzi. Bez JavaScriptu działa zwykłe pole pliku;
+       admin-crm.js pokazuje listę wybranych z rozmiarem i pozwala coś usunąć przed wysłaniem. */-->
+<div th:fragment="picker" class="cmp-files" id="cmp-files"
+     th:data-max-files="${T(pl.szymtrener.crm.AttachmentPolicy).OUT_MAX_FILES}"
+     th:data-max-bytes="${T(pl.szymtrener.crm.AttachmentPolicy).OUT_MAX_TOTAL}"
+     th:data-max-file="${T(pl.szymtrener.crm.AttachmentPolicy).OUT_MAX_FILE}">
+  <label class="btn btn-o btn-s">
+    <svg><use href="#i-link"/></svg>Dołącz pliki
+    <input type="file" name="pliki" id="cmp-pliki" multiple class="sr-file"
+           accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.doc,.docx,.xls,.xlsx,.txt,.csv">
+  </label>
+  <span class="cmp-files-hint">PDF, zdjęcia, Word, Excel. Do 5 plików, razem 20 MB.</span>
+  <ul class="cmp-chosen" id="cmp-chosen" aria-live="polite"></ul>
+</div>
+
+</body>
+</html>

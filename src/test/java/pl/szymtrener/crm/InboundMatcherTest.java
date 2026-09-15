@@ -21,7 +21,7 @@ class InboundMatcherTest {
     private final InboundMatcher matcher = new InboundMatcher(messages, trainees);
 
     private static InboundMail mail(List<String> replyTo, String from) {
-        return new InboundMail("<x@example.test>", replyTo, from, false, Instant.now(), "Treść");
+        return new InboundMail("<x@example.test>", replyTo, from, false, Instant.now(), "Treść", List.of());
     }
 
     @Test

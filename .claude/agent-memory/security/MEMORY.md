@@ -1,1 +1,1 @@
-- [Pełny zestaw bez Dockera, sondy poczty](reference_it_bez_dockera.md) — IT na zewnętrznej bazie; obce raporty surefire; sondy MIME/IMAP i bomba QP
+- [Pełny zestaw bez Dockera, sondy poczty](reference_it_bez_dockera.md) — IT na zewnętrznej bazie; obce raporty surefire; sondy MIME/IMAP, bomba QP, nazwy plików (końcowa kropka, U+202E)

@@ -3,6 +3,7 @@ package pl.szymtrener.crm;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -46,10 +48,11 @@ public class MessageService {
     private final SettingsService settings;
     private final TemplateEngine mailTemplates;
     private final TraineeRepository trainees;
+    private final AttachmentService attachments;
 
     public MessageService(MessageRepository messages, ReplyTemplateRepository templates,
                           JavaMailSender sender, AppProperties props, SettingsService settings,
-                          TemplateEngine mailTemplates, TraineeRepository trainees) {
+                          TemplateEngine mailTemplates, TraineeRepository trainees, AttachmentService attachments) {
         this.messages = messages;
         this.templates = templates;
         this.sender = sender;
@@ -57,6 +60,7 @@ public class MessageService {
         this.settings = settings;
         this.mailTemplates = mailTemplates;
         this.trainees = trainees;
+        this.attachments = attachments;
     }
 
     /** Wynik wysylki: co pokazac trenerowi po kliknieciu „Wyślij". */
@@ -95,23 +99,26 @@ public class MessageService {
      * Wysyla e-mail do klienta i zapisuje kopie w watku. Gdy wysylka sie nie uda,
      * wiadomosc i tak zostaje w watku ze statusem FAILED — trener widzi, ze
      * probowal, i moze ponowic. Cisza byla by tu gorsza niz czerwony wpis.
+     * Zalaczniki zapisujemy przy wiadomosci takze wtedy: widac, co mialo wyjsc.
+     *
+     * @param files pliki juz sprawdzone przez {@link AttachmentPolicy#outgoing}
      */
     @Transactional
     public SendResult sendEmail(Long submissionId, Long traineeId, String to, String name,
-                                String body, Long attachmentId) {
+                                String body, List<AttachmentFile> attachmentFiles) {
+        List<AttachmentFile> files = attachmentFiles == null ? List.of() : attachmentFiles;
         Message m = new Message();
         m.setSubmissionId(submissionId);
         m.setTraineeId(traineeId);
         m.setDirection(MessageDirection.OUT);
         m.setChannel(MessageChannel.EMAIL);
         m.setBody(body);
-        m.setAttachmentId(attachmentId);
 
         if (!mailEnabled()) {
             // Wylaczona poczta to decyzja w ustawieniach, nie awaria — ale trener
             // musi wiedziec, ze wiadomosc NIE wyszla do klienta.
             m.setMailStatus("FAILED");
-            messages.save(m);
+            saveWithFiles(m, files);
             return new SendResult(false, "Wysyłka e-mail jest wyłączona w Ustawieniach. Wiadomość zapisana w wątku, ale nie poszła do klienta.");
         }
         try {
@@ -122,6 +129,9 @@ public class MessageService {
             helper.setSubject("Wiadomość od Szymona Domagały");
             // Tekst dokladnie taki, jak w panelu; HTML to ta sama formatka co potwierdzenie zgloszenia.
             helper.setText(body, replyHtml(body));
+            for (AttachmentFile file : files) {
+                helper.addAttachment(file.name(), new ByteArrayResource(file.data()), file.mimeType());
+            }
             // Message-ID nadajemy przed wysylka: JavaMailSenderImpl zachowuje juz ustawiony naglowek.
             // Po nim odpowiedz klienta trafi do tego watku (In-Reply-To).
             mime.saveChanges();
@@ -132,16 +142,21 @@ public class MessageService {
             sender.send(mime);
             m.setMailMessageId(messageId);
             m.setMailStatus("SENT");
-            messages.save(m);
+            saveWithFiles(m, files);
             log.info("Wyslano wiadomosc do {} (zgloszenie {}, klient {})", to, submissionId, traineeId);
             return new SendResult(true, null);
         } catch (Exception e) {
             log.error("Nie udalo sie wyslac wiadomosci do {}", to, e);
             m.setMailStatus("FAILED");
-            messages.save(m);
+            saveWithFiles(m, files);
             system(submissionId, traineeId, "Wysyłka nie powiodła się: " + e.getMessage(), true);
             return new SendResult(false, "Nie udało się wysłać: " + e.getMessage());
         }
+    }
+
+    private void saveWithFiles(Message m, List<AttachmentFile> files) {
+        Message saved = messages.save(m);
+        attachments.store(saved.getId(), files);
     }
 
     private String replyHtml(String body) {
@@ -175,6 +190,8 @@ public class MessageService {
         m.setMailMessageId(mailMessageId);
         m.setMatchedBy(target.matchedBy());
         m.setUnread(true);
+        Message saved = messages.save(m);
+        attachments.store(saved.getId(), mail.attachments());
         if (target.traineeId() != null) {
             trainees.findById(target.traineeId()).ifPresent(t -> {
                 if (t.getLastContactAt() == null || t.getLastContactAt().isBefore(mail.sentAt())) {
@@ -182,7 +199,12 @@ public class MessageService {
                 }
             });
         }
-        return messages.save(m);
+        return saved;
+    }
+
+    /** Pliki wiadomosci z watku, pogrupowane po id wiadomosci (jedno zapytanie). */
+    public Map<Long, List<MessageAttachment>> attachmentsOf(List<Message> thread) {
+        return attachments.forMessages(thread.stream().map(Message::getId).toList());
     }
 
     @Transactional(readOnly = true)

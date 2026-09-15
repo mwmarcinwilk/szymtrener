@@ -232,7 +232,8 @@
                             title="Mail nie był odpowiedzią na wiadomość z panelu. Przypisany po adresie nadawcy, który da się podrobić.">dopasowano po adresie</span>
                       <time th:text="${m.sentLabel()}">wczoraj, 20:11</time>
                     </div>
-                    <p th:text="${m.body}">Treść.</p>
+                    <p th:text="${m.body}" th:unless="${#strings.isEmpty(m.body)}">Treść.</p>
+                    <div th:replace="~{fragments/thread-attachments :: files(${attachments.get(m.id)})}"></div>
                   </div>
                   <div class="mav" th:if="${m.outgoing()}">SD</div>
                 </div>
@@ -241,7 +242,7 @@
                 Wątek jest pusty.</p>
             </div>
             <div class="cmp">
-              <form method="post" th:action="@{/admin/klienci/{id}/wiadomosc(id=${t.id})}">
+              <form method="post" enctype="multipart/form-data" th:action="@{/admin/klienci/{id}/wiadomosc(id=${t.id})}">
                 <div class="cmp-way">
                   <button class="way on" type="button" data-way="mail"><svg><use href="#i-mail"/></svg>Wyślij e-mail</button>
                   <button class="way" type="button" data-way="tel"><svg><use href="#i-phone"/></svg>Zapisz rozmowę telefoniczną</button>
@@ -249,6 +250,7 @@
                 <input type="hidden" name="way" id="cmp-way" value="mail">
                 <textarea id="cmp-tx" name="body" required style="min-height:76px"
                           th:placeholder="'Napisz do ' + ${t.name} + '…'"></textarea>
+                <div th:replace="~{fragments/thread-attachments :: picker}"></div>
                 <div class="cmp-foot">
                   <button class="btn btn-p" type="submit"><svg><use href="#i-send"/></svg>Wyślij</button>
                   <span class="sp" th:if="${t.email} != null" th:text="'Wysyłka na ' + ${t.email}">Wysyłka</span>

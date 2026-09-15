@@ -1,5 +1,11 @@
 package pl.szymtrener.common;
 
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +40,33 @@ import java.util.UUID;
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Pattern REPLY_FORM = Pattern.compile("(/admin/(?:zgloszenia|klienci)/\\d+)/wiadomosc");
+
+    /**
+     * Za duze pliki w formularzu panelu. Limit uploadu (spring.servlet.multipart) wywraca zadanie
+     * przed kontrolerem, wiec bez tego trener dostalby strone bledu zamiast komunikatu przy watku.
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public Object tooLarge(MaxUploadSizeExceededException exception, HttpServletRequest request,
+                           HttpServletResponse response) {
+        if (wantsJson(request)) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                    .body(Map.of("ok", false, "message", "Plik jest za duży."));
+        }
+        // Powrot tylko z formularza odpowiedzi w watku, pod strone tego watku; nigdy pod Referer.
+        Matcher reply = REPLY_FORM.matcher(request.getRequestURI());
+        if (!reply.matches()) {
+            ModelAndView view = new ModelAndView("error");
+            view.setStatus(HttpStatus.PAYLOAD_TOO_LARGE);
+            return view;
+        }
+        String back = reply.group(1);
+        FlashMap flash = RequestContextUtils.getOutputFlashMap(request);
+        flash.put("error", "Pliki są za duże. Razem możesz wysłać najwyżej "
+                + (pl.szymtrener.crm.AttachmentPolicy.OUT_MAX_TOTAL >> 20) + " MB.");
+        RequestContextUtils.saveOutputFlashMap(back, request, response);
+        return new ModelAndView("redirect:" + back);
+    }
 
     @ExceptionHandler(Exception.class)
     public Object handle(Exception exception, HttpServletRequest request) throws Exception {

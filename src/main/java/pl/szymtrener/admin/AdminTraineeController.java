@@ -4,6 +4,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.szymtrener.common.NotFoundException;
 import pl.szymtrener.crm.*;
@@ -139,7 +140,9 @@ public class AdminTraineeController {
         model.addAttribute("log", insight.log(id, 12));
         model.addAttribute("progress", insight.progress(id));
         model.addAttribute("weight", insight.weightChange(id));
-        model.addAttribute("thread", messages.openTraineeThread(id));
+        List<Message> thread = messages.openTraineeThread(id);
+        model.addAttribute("thread", thread);
+        model.addAttribute("attachments", messages.attachmentsOf(thread));
         model.addAttribute("notes", all);
         model.addAttribute("warnings", all.stream().filter(SubmissionNote::warning).limit(4).toList());
         model.addAttribute("done", insight.doneSessions(id));
@@ -299,11 +302,17 @@ public class AdminTraineeController {
     @PostMapping("/{id}/wiadomosc")
     public String message(@PathVariable Long id, @RequestParam String body,
                           @RequestParam(defaultValue = "mail") String way,
+                          @RequestParam(value = "pliki", required = false) List<MultipartFile> pliki,
                           RedirectAttributes flash) {
         Trainee t = trainees.findById(id)
                 .orElseThrow(() -> new NotFoundException("Nie ma klienta " + id));
         if (body == null || body.isBlank()) {
             flash.addFlashAttribute("error", "Pusta wiadomość nie ma czego przenieść.");
+            return "redirect:/admin/klienci/" + id;
+        }
+        AttachmentPolicy.Outgoing files = AttachmentPolicy.forReply(way, pliki);
+        if (!files.ok()) {
+            flash.addFlashAttribute("error", files.error());
             return "redirect:/admin/klienci/" + id;
         }
         if ("tel".equals(way)) {
@@ -314,7 +323,7 @@ public class AdminTraineeController {
             return "redirect:/admin/klienci/" + id;
         } else {
             MessageService.SendResult result =
-                    messages.sendEmail(null, id, t.getEmail(), t.getName(), body.trim(), null);
+                    messages.sendEmail(null, id, t.getEmail(), t.getName(), body.trim(), files.files());
             flash.addFlashAttribute(result.sent() ? "info" : "error",
                     result.sent() ? "Wiadomość poszła do " + t.getEmail() + "." : result.error());
         }

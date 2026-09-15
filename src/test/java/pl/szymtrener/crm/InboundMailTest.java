@@ -124,7 +124,7 @@ class InboundMailTest {
         }
 
         @Test
-        @DisplayName("multipart: tekst ma pierwszeństwo przed HTML, załączniki są liczone, nie czytane")
+        @DisplayName("multipart: tekst ma pierwszeństwo przed HTML, załącznik trafia do pliku z typem z treści")
         void multipartWithAttachment() throws Exception {
             MimeBodyPart plain = new MimeBodyPart();
             plain.setText("Wysyłam wyniki.", "UTF-8");
@@ -134,7 +134,7 @@ class InboundMailTest {
             MimeBodyPart body = new MimeBodyPart();
             body.setContent(alternative);
             MimeBodyPart pdf = new MimeBodyPart();
-            pdf.setContent(new byte[]{1, 2, 3}, "application/pdf");
+            pdf.setDataHandler(new jakarta.activation.DataHandler(new jakarta.mail.util.ByteArrayDataSource("%PDF-1.7 wyniki".getBytes(), "application/pdf")));
             pdf.setFileName("wyniki.pdf");
             MimeMessage m = message();
             m.setContent(new MimeMultipart("mixed", body, pdf));
@@ -142,7 +142,83 @@ class InboundMailTest {
 
             InboundMail mail = InboundMail.parse(m, NOW);
 
-            assertThat(mail.body()).isEqualTo("Wysyłam wyniki.\n\n[pominięto załączniki: 1]");
+            assertThat(mail.body()).isEqualTo("Wysyłam wyniki.");
+            assertThat(mail.attachments()).singleElement().satisfies(f -> {
+                assertThat(f.name()).isEqualTo("wyniki.pdf");
+                assertThat(f.mimeType()).isEqualTo("application/pdf");
+            });
+        }
+
+        @Test
+        @DisplayName("exe udający PDF i przekazana wiadomość zostają w skrzynce z dopiskiem, logo ze stopki znika")
+        void rejectsDangerousAndDecorations() throws Exception {
+            MimeBodyPart text = new MimeBodyPart();
+            text.setText("W załączniku.", "UTF-8");
+            MimeBodyPart exe = new MimeBodyPart();
+            exe.setDataHandler(new jakarta.activation.DataHandler(new jakarta.mail.util.ByteArrayDataSource(new byte[]{'M', 'Z', 0, 0}, "application/pdf")));
+            exe.setFileName("faktura.pdf");
+            exe.setDisposition("attachment");
+            MimeBodyPart logo = new MimeBodyPart();
+            logo.setDataHandler(new jakarta.activation.DataHandler(new jakarta.mail.util.ByteArrayDataSource(new byte[]{(byte) 0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A}, "image/png")));
+            logo.setFileName("logo.png");
+            logo.setDisposition("inline");
+            logo.setContentID("<logo@firma>");
+            MimeBodyPart forwarded = new MimeBodyPart();
+            MimeMessage inner = message();
+            inner.setText("stara");
+            forwarded.setContent(inner, "message/rfc822");
+            MimeMessage m = message();
+            m.setContent(new MimeMultipart("mixed", text, exe, logo, forwarded));
+            m.saveChanges();
+
+            InboundMail mail = InboundMail.parse(m, NOW);
+
+            assertThat(mail.attachments()).isEmpty();
+            assertThat(mail.body()).isEqualTo("W załączniku.\n\n[faktura.pdf: ten typ pliku nie jest pokazywany w panelu, jest w skrzynce]\n[przekazana wiadomość: jest w skrzynce]");
+        }
+
+        @Test
+        @DisplayName("zerwane połączenie w trakcie czytania załącznika przerywa parsowanie zamiast gubić plik")
+        void connectionDropWhileReadingAttachment() throws Exception {
+            MimeBodyPart dropped = new MimeBodyPart() {
+                @Override
+                public java.io.InputStream getInputStream() throws jakarta.mail.MessagingException {
+                    return new java.io.InputStream() {
+                        @Override
+                        public int read() throws java.io.IOException {
+                            throw new java.io.IOException(new jakarta.mail.FolderClosedException(null, "rozłączono"));
+                        }
+                    };
+                }
+            };
+            dropped.setHeader("Content-Type", "application/pdf");
+            dropped.setFileName("wyniki.pdf");
+            dropped.setDisposition("attachment");
+            MimeMultipart mixed = new MimeMultipart("mixed", dropped);
+            MimeMessage m = message();
+            m.setContent(mixed);
+            // Bez saveChanges (nie da sie go zrobic na czesci bez tresci) naglowek trzeba ustawic recznie.
+            m.setHeader("Content-Type", mixed.getContentType());
+
+            org.assertj.core.api.Assertions.assertThatThrownBy(() -> InboundMail.parse(m, NOW))
+                    .isInstanceOf(jakarta.mail.FolderClosedException.class);
+        }
+
+        @Test
+        @DisplayName("sam załącznik bez tekstu to nie „wiadomość bez treści”")
+        void attachmentOnly() throws Exception {
+            MimeBodyPart photo = new MimeBodyPart();
+            photo.setDataHandler(new jakarta.activation.DataHandler(new jakarta.mail.util.ByteArrayDataSource(new byte[]{(byte) 0xFF, (byte) 0xD8, (byte) 0xFF, 1, 2}, "image/jpeg")));
+            photo.setFileName("=?UTF-8?Q?wa=C5=BCenie.jpg?=");
+            photo.setDisposition("attachment");
+            MimeMessage m = message();
+            m.setContent(new MimeMultipart("mixed", photo));
+            m.saveChanges();
+
+            InboundMail mail = InboundMail.parse(m, NOW);
+
+            assertThat(mail.body()).isEmpty();
+            assertThat(mail.attachments()).extracting(AttachmentFile::name).containsExactly("ważenie.jpg");
         }
 
         @Test
