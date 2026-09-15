@@ -18,9 +18,9 @@
 <!--/* Wybór plików w formularzu odpowiedzi. Bez JavaScriptu działa zwykłe pole pliku;
        admin-crm.js pokazuje listę wybranych z rozmiarem i pozwala coś usunąć przed wysłaniem. */-->
 <div th:fragment="picker" class="cmp-files" id="cmp-files"
-     th:data-max-files="${T(pl.szymtrener.crm.AttachmentPolicy).OUT_MAX_FILES}"
-     th:data-max-bytes="${T(pl.szymtrener.crm.AttachmentPolicy).OUT_MAX_TOTAL}"
-     th:data-max-file="${T(pl.szymtrener.crm.AttachmentPolicy).OUT_MAX_FILE}">
+     th:data-max-files="${@attachmentLimits.maxFiles()}"
+     th:data-max-bytes="${@attachmentLimits.maxTotalBytes()}"
+     th:data-max-file="${@attachmentLimits.maxFileBytes()}">
   <label class="btn btn-o btn-s">
     <svg><use href="#i-link"/></svg>Dołącz pliki
     <input type="file" name="pliki" id="cmp-pliki" multiple class="sr-file"
