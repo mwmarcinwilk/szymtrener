@@ -10,10 +10,12 @@
     <div class="footer-copy">
       <p>© <span th:text="${year}">2026</span> Szymon Domagała. Wszelkie prawa zastrzeżone.</p>
       <p style="margin-top:6px;"><a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a> · <a href="tel:+48502338373">502 338 373</a></p>
-      <p style="margin-top:6px;"><a href="/polityka-prywatnosci">Polityka prywatności</a></p>
+      <p class="footer-links"><a href="/polityka-prywatnosci">Polityka prywatności</a> · <a href="/ustawienia-cookies" data-consent-open>Ustawienia cookies</a></p>
     </div>
   </div>
 </footer>
+
+<th:block th:replace="~{fragments/cookie-consent :: consent}"></th:block>
 
 <button class="back-top" id="backTop" aria-label="Wróć do góry">↑</button>
 

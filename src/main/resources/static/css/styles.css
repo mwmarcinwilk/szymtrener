@@ -841,6 +841,130 @@ footer { padding: 52px 0 36px; border-top: 1px solid var(--border); background: 
 .back-top.show { opacity: 1; pointer-events: auto; }
 .back-top:hover { transform: translateY(-4px); }
 
+/* ─── ZGODA NA CIASTECZKA ─── */
+/* Pasek nad przyklejonym menu (150-160) i przyciskiem do góry (120), pod paskiem postępu (200).
+   Okno ustawień to <dialog> w warstwie top layer, więc z-index go nie dotyczy. */
+.consent-bar {
+  position: fixed; left: var(--gutter); right: var(--gutter); bottom: 20px; z-index: 170;
+  max-width: 1080px; margin: 0 auto;
+  display: flex; align-items: center; gap: 24px;
+  padding: 18px 22px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--navy-deep); box-shadow: 0 18px 50px rgba(14,26,38,.6);
+  animation: consent-in .5s var(--ease-out) both;
+}
+.consent-bar[hidden], .consent-tabs[hidden] { display: none; }
+@keyframes consent-in { from { opacity: 0; transform: translateY(16px); } }
+.consent-bar-text { flex: 1; min-width: 0; }
+.consent-bar-title { font-size: var(--fs-sm); font-weight: 800; color: var(--white); margin-bottom: 2px; }
+.consent-bar-text p:not(.consent-bar-title) { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.6; max-width: 62ch; }
+.consent-bar a, .consent-panel a, .consent-record a { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }
+.consent-bar-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex-shrink: 0; }
+.btn.consent-btn { min-height: 44px; padding: 10px 22px; font-size: var(--fs-xs); white-space: nowrap; }
+.btn.consent-btn:active { transform: scale(.97); }
+.consent-bar .consent-link { font-size: var(--fs-sm); font-weight: 700; padding: 10px 6px; }
+.consent-bar a:hover, .consent-panel a:hover, .consent-record a:hover { color: var(--white); }
+.consent-btn:focus-visible, .consent-link:focus-visible, .consent-close:focus-visible, .consent-tab:focus-visible {
+  outline: 2px solid var(--mint); outline-offset: 3px;
+}
+
+.consent-dialog {
+  width: min(720px, calc(100vw - 32px)); max-height: min(88vh, 760px);
+  margin: auto; padding: 0; border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: var(--navy); color: var(--white); overflow: hidden;
+  box-shadow: 0 30px 80px rgba(14,26,38,.7);
+}
+.consent-dialog[open] { animation: consent-in .35s var(--ease-out) both; }
+.consent-dialog::backdrop { background: rgba(14,26,38,.72); backdrop-filter: blur(3px); }
+.consent-panel-dialog { display: flex; flex-direction: column; max-height: inherit; }
+.consent-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 26px 0; }
+.consent-panel-title { font-size: var(--fs-lg); font-weight: 800; letter-spacing: -.01em; }
+.consent-close {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: grid; place-content: center;
+  background: transparent; border: 1px solid var(--border); color: var(--off-white); cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.consent-close:hover { color: var(--mint); border-color: var(--mint); }
+
+.consent-tabs { display: flex; gap: 4px; margin-top: 14px; padding: 0 26px; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+.consent-tabs::-webkit-scrollbar { display: none; }
+.consent-tab {
+  padding: 12px 14px; margin-bottom: -1px; background: none; border: none; border-bottom: 2px solid transparent;
+  font-family: inherit; font-size: var(--fs-sm); font-weight: 700; color: var(--text-muted); white-space: nowrap; cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.consent-tab:hover { color: var(--off-white); }
+.consent-tab[aria-selected="true"] { color: var(--white); border-bottom-color: var(--mint); }
+
+.consent-panel-dialog .consent-panel-body { padding: 22px 26px; overflow-y: auto; min-height: 0; scrollbar-width: thin; }
+.consent-panel .consent-section + .consent-section { margin-top: 28px; }
+.consent-panel .consent-heading, .consent-record .consent-heading {
+  font-size: var(--fs-lg); font-weight: 800; letter-spacing: -.01em; color: var(--white); margin: 0 0 10px;
+}
+.consent-panel .consent-section p { font-size: var(--fs-sm); color: var(--off-white); line-height: 1.7; margin: 0 0 12px; }
+.consent-option {
+  display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 12px;
+  padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card-bg);
+}
+.consent-panel .consent-option .consent-option-name { display: block; font-size: var(--fs-md); font-weight: 700; color: var(--white); margin: 0; }
+.consent-panel .consent-section .consent-option-desc, .consent-record .consent-option-desc {
+  font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.6; margin: 4px 0 0;
+}
+
+.consent-switch { position: relative; flex-shrink: 0; width: 48px; height: 28px; }
+.consent-switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+.consent-switch input:disabled { cursor: not-allowed; }
+.consent-switch-track { display: block; width: 100%; height: 100%; border-radius: 99px; background: rgba(255,255,255,.16); transition: background .2s; }
+.consent-switch-track::after {
+  content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--white); transition: transform .25s var(--ease-out);
+}
+.consent-switch input:checked + .consent-switch-track { background: var(--mint); }
+.consent-switch input:checked + .consent-switch-track::after { transform: translateX(20px); background: var(--navy-deep); }
+.consent-switch input:disabled + .consent-switch-track { opacity: .55; }
+.consent-switch input:focus-visible + .consent-switch-track { outline: 2px solid var(--mint); outline-offset: 3px; }
+
+.consent-table { overflow-x: auto; margin: 4px 0 14px; }
+.consent-table table { width: 100%; border-collapse: collapse; }
+.consent-table th { text-align: left; padding: 8px 10px; font-size: var(--fs-xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+.consent-table td { padding: 11px 10px; font-size: var(--fs-sm); color: var(--off-white); line-height: 1.5; border-bottom: 1px solid var(--border); vertical-align: top; }
+.consent-panel code, .consent-record code, .legal-wrap code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: .85em; color: var(--mint); }
+
+.consent-panel-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+.consent-panel-dialog .consent-panel-actions { padding: 18px 26px 22px; border-top: 1px solid var(--border); }
+.consent-panel-page .consent-panel-actions { justify-content: flex-start; margin-top: 28px; }
+.consent-panel-page .consent-tabs { padding: 0; margin: 0 0 24px; }
+
+.consent-record { margin-bottom: 40px; padding: 22px 24px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card-bg); }
+.consent-record-list { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 28px; margin: 6px 0 14px; }
+.consent-record-list dt { font-size: var(--fs-xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+.consent-record-list dd { margin: 2px 0 0; font-weight: 700; color: var(--white); overflow-wrap: anywhere; }
+.consent-record .btn { margin-top: 16px; text-decoration: none; }
+.consent-record .btn:hover { color: var(--navy-deep); }
+
+.footer-links { margin-top: 6px; }
+
+@media (max-width: 900px) {
+  .consent-bar { flex-direction: column; align-items: stretch; gap: 14px; }
+  .consent-bar-text p:not(.consent-bar-title) { max-width: none; }
+}
+@media (max-width: 760px) {
+  .consent-bar { bottom: 12px; left: 12px; right: 12px; padding: 16px; }
+  .btn.consent-btn { padding: 10px 14px; }
+  .consent-bar-actions .consent-btn { flex: 1 1 140px; }
+  .consent-bar-actions .consent-link { width: 100%; text-align: center; }
+  .consent-tab { padding: 12px 10px; }
+  .consent-panel-head { padding: 18px 18px 0; }
+  .consent-tabs { padding: 0 18px; }
+  .consent-panel-dialog .consent-panel-body { padding: 18px; }
+  .consent-panel-dialog .consent-panel-actions { padding: 14px 18px 18px; }
+  .consent-panel-actions .consent-btn { flex: 1 1 100%; }
+  .consent-record-list { grid-template-columns: 1fr; }
+  .consent-table thead { display: none; }
+  .consent-table tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .consent-table td { display: grid; grid-template-columns: 7.5em 1fr; gap: 10px; padding: 4px 0; border: none; }
+  .consent-table td::before { content: attr(data-label); font-size: var(--fs-xs); font-weight: 700; color: var(--text-muted); }
+}
+
 /* =====================================================================
    RESPONSIVE
    ===================================================================== */

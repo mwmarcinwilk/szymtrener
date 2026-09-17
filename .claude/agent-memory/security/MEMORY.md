@@ -1,1 +1,1 @@
-- [Pełny zestaw bez Dockera, sondy poczty](reference_it_bez_dockera.md) — IT na zewnętrznej bazie; obce raporty surefire; sondy MIME/IMAP, bomba QP, nazwy plików (końcowa kropka, U+202E)
+- [Pełny zestaw (verify + IT, z Dockerem i bez), sondy](reference_it_bez_dockera.md) — clean test pomija IT; api.version=1.43; sondy MIME, nazwy plików, ścieżki springdoc (.yaml)

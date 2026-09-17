@@ -46,6 +46,7 @@ public class AdminStatsController {
         model.addAttribute("visits", visits);
         model.addAttribute("sessions", sessions);
         model.addAttribute("botTotal", botTotal);
+        model.addAttribute("returning", views.countReturningConsented(since));
         model.addAttribute("perSession", sessions == 0 ? "0,0"
                 : String.format(Locale.forLanguageTag("pl-PL"), "%.1f", (double) visits / sessions));
 

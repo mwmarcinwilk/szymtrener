@@ -31,7 +31,7 @@
 
 <main class="legal-wrap">
   <h1>Polityka prywatności</h1>
-  <p class="legal-updated">Ostatnia aktualizacja: <time datetime="2026-06-06">6 czerwca 2026</time></p>
+  <p class="legal-updated">Ostatnia aktualizacja: <time datetime="2026-09-17">17 września 2026</time></p>
 
   <h2>Postanowienia ogólne</h2>
   <p>Administratorem danych osobowych zbieranych za pośrednictwem strony internetowej jest <strong>Szymon Domagała</strong> prowadzący działalność gospodarczą pod firmą Szymon Domagała Trener Personalny, NIP: 7272628265, adres głównego miejsca wykonywania działalności: ul. Retkińska 79A lok. 12, 94-004 Łódź, adres e-mail: <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>, numer telefonu: +48 502 338 373, dalej jako „Administrator”.</p>
@@ -114,8 +114,9 @@
   <p>W sprawach związanych z ochroną danych osobowych można kontaktować się pod adresem: <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a></p>
 
   <h2>Pliki cookies</h2>
-  <p>Strona internetowa może wykorzystywać pliki cookies niezbędne do prawidłowego działania strony oraz cookies analityczne i marketingowe, jeżeli użytkownik wyrazi na to zgodę za pośrednictwem banera cookies.</p>
-  <p>Szczegółowe informacje dotyczące wykorzystywanych plików cookies prezentowane są w ustawieniach banera cookies.</p>
+  <p>Strona wykorzystuje pliki cookies niezbędne do prawidłowego działania: <code>__Host-st_zgoda</code>, który zapamiętuje decyzję z panelu cookies, oraz <code>JSESSIONID</code>, który chroni formularze przed podszyciem. Strona nie korzysta z cookies marketingowych ani z narzędzi analitycznych firm trzecich.</p>
+  <p>Odwiedziny są liczone na serwerze Administratora. Bez zgody zapisywany jest wyłącznie jednodniowy, nieodwracalny skrót, którego nie da się powiązać z osobą. Po wyrażeniu zgody na statystykę odsłony są dodatkowo powiązane z losowym identyfikatorem zgody, co pozwala policzyć powracające osoby. Usunięcie zgody usuwa także te odsłony.</p>
+  <p>Decyzja w sprawie cookies jest zapisywana w bazie danych razem z datą i historią zmian, bez adresu IP. Dane zgody są przechowywane przez 12 miesięcy od ostatniej zmiany, a odsłony przez 12 miesięcy od ich zapisania. Identyfikator zgody, pobranie swoich danych i zmiana decyzji są dostępne na stronie <a href="/ustawienia-cookies">Ustawienia cookies</a>. Na prośbę wysłaną z identyfikatorem zgody Administrator usuwa zgodę.</p>
 
   <h2>Postanowienia końcowe</h2>
   <p>Administrator stosuje odpowiednie środki techniczne i organizacyjne zapewniające ochronę danych osobowych przed ich utratą, zniszczeniem, nieuprawnionym dostępem lub ujawnieniem.</p>
@@ -131,10 +132,12 @@
     </div>
     <div class="footer-copy">
       <p>© 2026 Szymon Domagała. Wszelkie prawa zastrzeżone.</p>
-      <p style="margin-top:6px;"><a href="/">Powrót do strony głównej</a></p>
+      <p class="footer-links"><a href="/">Powrót do strony głównej</a> · <a href="/ustawienia-cookies" data-consent-open>Ustawienia cookies</a></p>
     </div>
   </div>
 </footer>
+
+<th:block th:replace="~{fragments/cookie-consent :: consent}"></th:block>
 
 </body>
 </html>

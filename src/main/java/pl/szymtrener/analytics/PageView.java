@@ -15,6 +15,9 @@ public class PageView {
     /** sha-256(ip + user-agent + sol + data) — brak ciasteczek i danych osobowych. */
     @Column(name = "session_hash") private String sessionHash;
 
+    /** Zgoda na statystyke, pod ktora zapisano odslone; pusto bez zgody. Kaskada od cookie_consent. */
+    @Column(name = "consent_id") private Long consentId;
+
     private String device;
     @Column(name = "is_bot", nullable = false) private boolean bot;
     @Column(name = "bot_name") private String botName;
@@ -27,6 +30,8 @@ public class PageView {
     public void setReferrer(String referrer) { this.referrer = referrer; }
     public String getSessionHash() { return sessionHash; }
     public void setSessionHash(String sessionHash) { this.sessionHash = sessionHash; }
+    public Long getConsentId() { return consentId; }
+    public void setConsentId(Long consentId) { this.consentId = consentId; }
     public String getDevice() { return device; }
     public void setDevice(String device) { this.device = device; }
     public boolean isBot() { return bot; }

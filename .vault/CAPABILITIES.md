@@ -105,3 +105,19 @@
 - `fragments/thread-attachments :: files(list)` / `:: picker` — pliki pod dymkiem i wybór plików w formularzu odpowiedzi (`admin-crm.js` pokazuje listę z rozmiarem i usuwaniem). `GlobalExceptionHandler.tooLarge` zamienia przekroczenie limitu uploadu na komunikat przy wątku.
 - `InboundMail` — załączniki czytane z limitem `readNBytes(limit+1)`; małe obrazki inline z Content-ID (logo stopki) pomijane; przekazana wiadomość (`message/rfc822`) tylko jako dopisek.
 
+
+## Zgoda na ciasteczka (V13)
+- `ConsentService.current(request)` — consent/ — zgoda tej przeglądarki (`Status(key, statistics)`) z ciasteczka `st_zgoda` sprawdzonego w bazie; zapamiętana w atrybucie żądania. Rekord usunięty w panelu = brak decyzji, pasek wraca.
+- `ConsentService.record(existingKey, statistics, source)` — consent/ — jedyne wejście zapisu decyzji: aktualizuje `cookie_consent` i dopisuje `cookie_consent_change` z `POLICY_VERSION` (zmień stałą przy zmianie treści panelu).
+- `ConsentService.export(key)` / `.delete(key)` — consent/ — RODO art. 15 i 17 dla zgody: historia i odsłony za zgodą; usunięcie kasuje też te odsłony.
+- `page_view.consent_id` (FK `on delete cascade`) — `AnalyticsFilter` ustawia go tylko przy zgodzie na statystykę; `session_hash` zostaje dzienny. Eksport czyta odsłony przez interfejs `consent.ConsentedViews` (implementacja `analytics.ConsentedPageViews`), żeby nie zrobić cyklu consent↔analytics.
+- `ConsentCookie.write(key, request, response)` — consent/ — `st_zgoda`, a po HTTPS `__Host-st_zgoda` z Secure; przez `ResponseCookie` (SameSite z `Cookie.setAttribute` nie dociera do MockMvc).
+- `@cookieConsent.current()` / `.returnPath()` — consent/ConsentView — stan zgody i ścieżka powrotu dla szablonów (Thymeleaf 3.1 nie daje obiektu żądania).
+- `ConsentController` — web/ — `GET /ustawienia-cookies`, `POST /zgoda-cookies` (redirect albo 204 dla `X-Requested-With: fetch`), `GET /ustawienia-cookies/moje-dane`. Limit 120 zapisów/h na adres (`new RateLimiter(max, window)`); ta sama decyzja nie dopisuje historii.
+- `AdminConsentController` — admin/ — `/admin/zgody-cookies?q=` (szukanie po początku ID), `/{key}/dane`, `POST /{key}/usun`.
+- `fragments/cookie-consent :: consent` (pasek + okno, dołączone w `footer.html` i polityce) i `:: panel(mode, c, back)` (tryb 'dialog' albo 'page'); `static/js/consent.js` tylko wygoda, bez JS działa POST.
+- `common.Downloads.json(body, filename)` — common/ — plik JSON do pobrania z `no-store`; używaj dla eksportów RODO.
+- `PageViewRepository.countReturningConsented(since)` — analytics/ — powracający za zgodą (≥ 2 różne dni), podpis pod kafelkiem „Sesje” w statystykach.
+- `CleanupScheduler.purgeOldConsents()` — scheduler/ — 4:05, zgody bez zmiany od 365 dni (odsłony za zgodą znikają kaskadą).
+- `spring.thymeleaf.servlet.produce-partial-output-while-processing: false` — application.yml — widok buforowany w całości; bez tego formularz w stopce (token CSRF → sesja) urywał długie strony.
+- springdoc-openapi 2.8.17 — dokumentacja pod `/admin/api-docs` (+ `.yaml`) i `/admin/swagger-ui.html`, więc łapie ją reguła `/admin/**`; domyślne ścieżki i webjar też zamknięte (`SecurityConfig`). Nowy endpoint dostaje `@Operation` + `@ApiResponse` (wzór: `ConsentController`); starsze kontrolery jeszcze bez opisów.

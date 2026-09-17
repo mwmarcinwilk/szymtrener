@@ -33,6 +33,8 @@
           <div class="kpi-v" th:text="${sessions}">0</div>
           <div class="kpi-l">Sesje</div>
           <div th:replace="~{fragments/admin-layout :: trend(${sessionsTrend})}"></div>
+          <!--/* Bez zgody klucz sesji zmienia się co dobę, więc powracających widać tylko wśród zgód. */-->
+          <div class="kpi-s" th:text="|Powracający za zgodą: ${returning}|">Powracający za zgodą: 0</div>
         </div>
         <div class="kpi">
           <div class="kpi-ic a"><svg><use href="#i-chart"/></svg></div>

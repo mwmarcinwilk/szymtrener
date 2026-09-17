@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.szymtrener.analytics.PageViewRepository;
+import pl.szymtrener.consent.ConsentService;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -21,10 +22,15 @@ public class CleanupScheduler {
     private static final Logger log = LoggerFactory.getLogger(CleanupScheduler.class);
     private static final Duration RETENTION = Duration.ofDays(365);
 
-    private final PageViewRepository views;
+    /** Ciasteczko zyje pol roku; drugie pol roku rekord jest jeszcze dowodem udzielonej zgody. */
+    private static final Duration CONSENT_RETENTION = Duration.ofDays(365);
 
-    public CleanupScheduler(PageViewRepository views) {
+    private final PageViewRepository views;
+    private final ConsentService consents;
+
+    public CleanupScheduler(PageViewRepository views, ConsentService consents) {
         this.views = views;
+        this.consents = consents;
     }
 
     @Scheduled(cron = "0 0 4 * * *")
@@ -34,6 +40,14 @@ public class CleanupScheduler {
         int removed = views.deleteOlderThan(cutoff);
         if (removed > 0) {
             log.info("Usunieto odslon starszych niz {} dni: {}", RETENTION.toDays(), removed);
+        }
+    }
+
+    @Scheduled(cron = "0 5 4 * * *")
+    public void purgeOldConsents() {
+        int removed = consents.purgeNotChangedSince(Instant.now().minus(CONSENT_RETENTION));
+        if (removed > 0) {
+            log.info("Usunieto zgod na cookies bez zmiany od {} dni: {}", CONSENT_RETENTION.toDays(), removed);
         }
     }
 }

@@ -20,6 +20,12 @@ spring:
     baseline-on-migrate: true
   thymeleaf:
     cache: true
+    servlet:
+      # Caly widok w buforze, zanim cokolwiek pojdzie do klienta. Formularz zgody w stopce
+      # tworzy token CSRF, a z nim sesje, dopiero pod koniec strony. Przy strumieniowaniu
+      # dlugi wpis przekraczal bufor Tomcata, odpowiedz byla juz wyslana i strona urywala
+      # sie w polowie ze statusem 200 ("Cannot create a session after the response has been committed").
+      produce-partial-output-while-processing: false
   servlet:
     multipart:
       max-file-size: 25MB        # PDF-y planow treningowych
@@ -64,6 +70,15 @@ server:
   error:
     whitelabel:
       enabled: false
+
+springdoc:
+  # Cala dokumentacja pod /admin, wiec kazdy wariant (JSON, .yaml, swagger-config, grupy) lapie
+  # regula /admin/** z SecurityConfig. Domyslne /v3/api-docs.yaml lezalo OBOK /v3/api-docs/**
+  # i przy anyRequest().permitAll() wystawialo anonimowi mape calego panelu.
+  api-docs:
+    path: /admin/api-docs
+  swagger-ui:
+    path: /admin/swagger-ui.html
 
 management:
   endpoints.web.exposure.include: health,info

@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.szymtrener.analytics.PageViewRepository;
 import pl.szymtrener.config.AppProperties;
 import pl.szymtrener.config.SecurityConfig;
+import pl.szymtrener.consent.ConsentService;
 import pl.szymtrener.submission.RateLimiter;
 import pl.szymtrener.submission.SubmissionService;
 
@@ -55,6 +56,7 @@ class PublicFormControllerTest {
 
     /** AnalyticsFilter jest filtrem, wiec wchodzi do warstwy web razem z kontrolerem. */
     @MockitoBean PageViewRepository pageViews;
+    @MockitoBean ConsentService consents;
 
     @BeforeEach
     void allowByDefault() {

@@ -18,6 +18,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/logowanie", "/admin/logowanie/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                // Dokumentacja OpenAPI zyje pod /admin (application.yml). Domyslne sciezki springdoc
+                // i webjar Swagger UI zamkniete na wypadek zmiany konfiguracji; "*" lapie tez .yaml.
+                .requestMatchers("/v3/api-docs*", "/v3/api-docs*/**", "/swagger-ui*", "/swagger-ui/**",
+                        "/webjars/swagger-ui/**").hasRole("ADMIN")
                 .anyRequest().permitAll())
             .formLogin(form -> form
                 .loginPage("/admin/logowanie")

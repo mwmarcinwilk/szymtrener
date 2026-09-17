@@ -63,4 +63,17 @@ public interface PageViewRepository extends JpaRepository<PageView, Long> {
            where v.bot = true and v.botName is not null and v.viewedAt > :since
            group by v.botName order by count(v) desc""")
     List<Object[]> botVisits(@Param("since") Instant since);
+
+    List<PageView> findByConsentIdOrderByViewedAt(Long consentId);
+
+    /**
+     * Powracajacy: zgody na statystyke widziane w co najmniej dwoch roznych dniach.
+     * Bez zgody sesja zmienia sie co dobe, wiec tych osob nie da sie tu policzyc.
+     */
+    @Query(value = "select count(*) from (select consent_id from page_view"
+                 + " where consent_id is not null and is_bot = false and viewed_at > :since"
+                 + " group by consent_id"
+                 + " having count(distinct date_trunc('day', viewed_at at time zone 'Europe/Warsaw')) >= 2) returning_keys",
+           nativeQuery = true)
+    long countReturningConsented(@Param("since") Instant since);
 }

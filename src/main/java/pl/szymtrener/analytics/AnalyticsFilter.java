@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.szymtrener.config.AppProperties;
+import pl.szymtrener.consent.ConsentService;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -17,9 +18,10 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Wlasna statystyka odwiedzin: bez ciasteczek, bez zewnetrznych skryptow,
- * bez zgody na analitykę. Identyfikator sesji to skrot z IP, przegladarki,
- * soli i daty — po dobie sam wygasa i nie da sie go powiazac z osoba.
+ * Wlasna statystyka odwiedzin: bez zewnetrznych skryptow. Identyfikator sesji to skrot
+ * z IP, przegladarki, soli i daty — po dobie sam wygasa i nie da sie go powiazac z osoba.
+ * Ze zgoda na statystyke odslona dostaje dodatkowo {@code consent_id}, wiec panel liczy
+ * powracajacych, a usuniecie zgody kasuje jej odslony.
  *
  * Boty AI zapisujemy osobno: liczba wizyt GPTBota czy ClaudeBota jest jedynym
  * sygnalem widocznosci, ktory da sie zmierzyc z wlasnego serwera.
@@ -41,10 +43,12 @@ public class AnalyticsFilter extends OncePerRequestFilter {
 
     private final PageViewRepository repository;
     private final AppProperties props;
+    private final ConsentService consents;
 
-    public AnalyticsFilter(PageViewRepository repository, AppProperties props) {
+    public AnalyticsFilter(PageViewRepository repository, AppProperties props, ConsentService consents) {
         this.repository = repository;
         this.props = props;
+        this.consents = consents;
     }
 
     @Override
@@ -84,6 +88,8 @@ public class AnalyticsFilter extends OncePerRequestFilter {
         view.setDevice(userAgent.contains("mobi") ? "mobile" : "desktop");
         if (!view.isBot()) {
             view.setSessionHash(hash(clientIp(request) + userAgent + props.analytics().salt() + LocalDate.now()));
+            consents.current(request).filter(ConsentService.Status::statistics)
+                    .ifPresent(consent -> view.setConsentId(consent.id()));
         }
         repository.save(view);
     }

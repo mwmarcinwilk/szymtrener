@@ -22,6 +22,8 @@
     <jsoup.version>1.18.3</jsoup.version>
     <poi.version>5.4.0</poi.version>
     <thumbnailator.version>0.4.20</thumbnailator.version>
+    <!-- Linia 2.8 jest budowana na Spring Boot 3.5 (3.x jest pod Boot 4). -->
+    <springdoc.version>2.8.17</springdoc.version>
   </properties>
 
   <dependencies>
@@ -29,6 +31,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!-- OpenAPI: /v3/api-docs i Swagger UI, tylko dla zalogowanego admina (SecurityConfig) -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

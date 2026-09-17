@@ -20,16 +20,29 @@ public class RateLimiter {
     private record Bucket(int count, Instant windowStart) {}
 
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
+    private final int maxPerWindow;
+    private final Duration window;
+
+    /** Limit formularzy kontaktowych: bean wstrzykiwany do kontrolera formularzy. */
+    public RateLimiter() {
+        this(MAX_PER_WINDOW, WINDOW);
+    }
+
+    /** Osobna pula z wlasnym limitem, np. dla zgody na ciasteczka, zeby nie zjadala limitu formularzy. */
+    public RateLimiter(int maxPerWindow, Duration window) {
+        this.maxPerWindow = maxPerWindow;
+        this.window = window;
+    }
 
     public boolean allow(String key) {
         Instant now = Instant.now();
         Bucket updated = buckets.compute(key, (k, current) -> {
-            if (current == null || current.windowStart().plus(WINDOW).isBefore(now)) {
+            if (current == null || current.windowStart().plus(window).isBefore(now)) {
                 return new Bucket(1, now);
             }
             return new Bucket(current.count() + 1, current.windowStart());
         });
         if (buckets.size() > 10_000) buckets.clear();   // zabezpieczenie pamieci
-        return updated.count() <= MAX_PER_WINDOW;
+        return updated.count() <= maxPerWindow;
     }
 }

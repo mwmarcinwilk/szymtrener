@@ -1,18 +1,23 @@
 # INVENTORY — szymtrener
-> AUTO-GENEROWANY 2026-09-13 przez tools/index_project.py — NIE edytuj ręcznie.
+> AUTO-GENEROWANY 2026-09-17 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 51 · Endpointy: 90 · Metody: 1067 · Front: 0
+> Beany: 62 · Endpointy: 98 · Metody: 1307 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
 @Component      AnalyticsFilter — src/main/java/pl/szymtrener/analytics/AnalyticsFilter.java
 @Component      AnalyticsView — src/main/java/pl/szymtrener/analytics/AnalyticsView.java
+@Component      AttachmentLimits — src/main/java/pl/szymtrener/crm/AttachmentLimits.java
 @Component      CleanupScheduler — src/main/java/pl/szymtrener/scheduler/CleanupScheduler.java
+@Component      ConsentView — src/main/java/pl/szymtrener/consent/ConsentView.java
+@Component      ConsentedPageViews — src/main/java/pl/szymtrener/analytics/ConsentedPageViews.java
 @Component      ContentMetrics — src/main/java/pl/szymtrener/content/ContentMetrics.java
 @Component      DatabaseUrlEnvironmentPostProcessor — src/main/java/pl/szymtrener/config/DatabaseUrlEnvironmentPostProcessor.java
 @Component      DocxToHtmlConverter — src/main/java/pl/szymtrener/docimport/DocxToHtmlConverter.java
 @Component      EditorHtml — src/main/java/pl/szymtrener/content/EditorHtml.java
 @Component      HtmlSanitizer — src/main/java/pl/szymtrener/content/HtmlSanitizer.java
+@Component      InboundMailScheduler — src/main/java/pl/szymtrener/scheduler/InboundMailScheduler.java
+@Component      InboundMatcher — src/main/java/pl/szymtrener/crm/InboundMatcher.java
 @Component      LegacyDocConverter — src/main/java/pl/szymtrener/docimport/LegacyDocConverter.java
 @Component      LoginAuditListener — src/main/java/pl/szymtrener/admin/LoginAuditListener.java
 @Component      PostPageModel — src/main/java/pl/szymtrener/web/PostPageModel.java
@@ -23,6 +28,8 @@
 @Configuration  MailConfig — src/main/java/pl/szymtrener/config/MailConfig.java
 @Configuration  SecurityConfig — src/main/java/pl/szymtrener/config/SecurityConfig.java
 @Configuration  WebConfig — src/main/java/pl/szymtrener/config/WebConfig.java
+@Controller     AdminAttachmentController — src/main/java/pl/szymtrener/admin/AdminAttachmentController.java
+@Controller     AdminConsentController — src/main/java/pl/szymtrener/admin/AdminConsentController.java
 @Controller     AdminController — src/main/java/pl/szymtrener/admin/AdminController.java
 @Controller     AdminMediaController — src/main/java/pl/szymtrener/admin/AdminMediaController.java
 @Controller     AdminOfferController — src/main/java/pl/szymtrener/admin/AdminOfferController.java
@@ -33,6 +40,7 @@
 @Controller     AdminTraineeController — src/main/java/pl/szymtrener/admin/AdminTraineeController.java
 @Controller     AdminUsersController — src/main/java/pl/szymtrener/admin/AdminUsersController.java
 @Controller     BlogController — src/main/java/pl/szymtrener/web/BlogController.java
+@Controller     ConsentController — src/main/java/pl/szymtrener/web/ConsentController.java
 @Controller     HomeController — src/main/java/pl/szymtrener/web/HomeController.java
 @Controller     NoteController — src/main/java/pl/szymtrener/admin/NoteController.java
 @RestController AdminApiController — src/main/java/pl/szymtrener/admin/AdminApiController.java
@@ -41,8 +49,11 @@
 @RestController SeoController — src/main/java/pl/szymtrener/seo/SeoController.java
 @Service        AdminUserDetailsService — src/main/java/pl/szymtrener/admin/AdminUserDetailsService.java
 @Service        AiReadinessAnalyzer — src/main/java/pl/szymtrener/seo/AiReadinessAnalyzer.java
+@Service        AttachmentService — src/main/java/pl/szymtrener/crm/AttachmentService.java
 @Service        ClientInsightService — src/main/java/pl/szymtrener/crm/ClientInsightService.java
+@Service        ConsentService — src/main/java/pl/szymtrener/consent/ConsentService.java
 @Service        DocImportService — src/main/java/pl/szymtrener/docimport/DocImportService.java
+@Service        InboundMailService — src/main/java/pl/szymtrener/crm/InboundMailService.java
 @Service        IndexNowService — src/main/java/pl/szymtrener/seo/IndexNowService.java
 @Service        JsonLdService — src/main/java/pl/szymtrener/seo/JsonLdService.java
 @Service        MailService — src/main/java/pl/szymtrener/submission/MailService.java
@@ -80,10 +91,14 @@ GET     /admin/posty/{id}                             AdminPostController.edit()
 GET     /admin/posty/{id}/podglad                     AdminPostController.preview() — src/main/java/pl/szymtrener/admin/AdminPostController.java
 GET     /admin/statystyki                             AdminStatsController.stats() — src/main/java/pl/szymtrener/admin/AdminStatsController.java
 GET     /admin/ustawienia                             AdminSettingsController.form() — src/main/java/pl/szymtrener/admin/AdminSettingsController.java
+GET     /admin/zalaczniki/{id}                        AdminAttachmentController.download() — src/main/java/pl/szymtrener/admin/AdminAttachmentController.java
+GET     /admin/zalaczniki/{id}/podglad                AdminAttachmentController.preview() — src/main/java/pl/szymtrener/admin/AdminAttachmentController.java
 GET     /admin/zgloszenia                             AdminSubmissionController.list() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 GET     /admin/zgloszenia/{id}                        AdminSubmissionController.detail() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 GET     /admin/zgloszenia/{id}/dane                   AdminSubmissionController.export() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 GET     /admin/zgloszenia/{id}/szablon/{code}         AdminSubmissionController.template() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
+GET     /admin/zgody-cookies                          AdminConsentController.list() — src/main/java/pl/szymtrener/admin/AdminConsentController.java
+GET     /admin/zgody-cookies/{key}/dane               AdminConsentController.export() — src/main/java/pl/szymtrener/admin/AdminConsentController.java
 GET     /blog                                         BlogController.list() — src/main/java/pl/szymtrener/web/BlogController.java
 GET     /blog/kategoria/{slug}                        BlogController.byCategory() — src/main/java/pl/szymtrener/web/BlogController.java
 GET     /blog/szukaj                                  BlogController.search() — src/main/java/pl/szymtrener/web/BlogController.java
@@ -95,6 +110,8 @@ GET     /pliki/{id}/**                                MediaController.download()
 GET     /polityka-prywatnosci                         HomeController.privacy() — src/main/java/pl/szymtrener/web/HomeController.java
 GET     /robots.txt                                   SeoController.robots() — src/main/java/pl/szymtrener/seo/SeoController.java
 GET     /sitemap.xml                                  SeoController.sitemap() — src/main/java/pl/szymtrener/seo/SeoController.java
+GET     /ustawienia-cookies                           ConsentController.settings() — src/main/java/pl/szymtrener/web/ConsentController.java
+GET     /ustawienia-cookies/moje-dane                 ConsentController.myData() — src/main/java/pl/szymtrener/web/ConsentController.java
 GET     /{key}.txt                                    SeoController.indexNowKey() — src/main/java/pl/szymtrener/seo/SeoController.java
 POST    /admin/administratorzy                        AdminUsersController.add() — src/main/java/pl/szymtrener/admin/AdminUsersController.java
 POST    /admin/administratorzy/{id}                   AdminUsersController.update() — src/main/java/pl/szymtrener/admin/AdminUsersController.java
@@ -145,8 +162,10 @@ POST    /admin/zgloszenia/{id}/przypomnienie/zalatwione AdminSubmissionControlle
 POST    /admin/zgloszenia/{id}/status                 AdminSubmissionController.changeStatus() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 POST    /admin/zgloszenia/{id}/usun                   AdminSubmissionController.delete() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
 POST    /admin/zgloszenia/{id}/wiadomosc              AdminSubmissionController.message() — src/main/java/pl/szymtrener/admin/AdminSubmissionController.java
+POST    /admin/zgody-cookies/{key}/usun               AdminConsentController.delete() — src/main/java/pl/szymtrener/admin/AdminConsentController.java
 POST    /api/zgloszenia/kontakt                       PublicFormController.contact() — src/main/java/pl/szymtrener/web/PublicFormController.java
 POST    /api/zgloszenia/online                        PublicFormController.online() — src/main/java/pl/szymtrener/web/PublicFormController.java
+POST    /zgoda-cookies                                ConsentController.consent() — src/main/java/pl/szymtrener/web/ConsentController.java
 
 ## Metody (per klasa)
 
@@ -169,6 +188,21 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 ### AdminApiController  (src/main/java/pl/szymtrener/admin/AdminApiController.java)
 - [prv] describe(MediaFile file): Map<String, Object>  :62
 
+### AdminAttachmentController  (src/main/java/pl/szymtrener/admin/AdminAttachmentController.java)
+- [pub] download(@PathVariable Long id): ResponseEntity<byte[]>  :38
+- [prv] find(Long id): AttachmentService.Loaded  :60
+- [prv] respond(AttachmentService.Loaded file, ContentDisposition.Builder disposition, CacheControl cache, String etag): ResponseEntity<byte[]>  :64
+
+### AdminAttachmentControllerTest  (src/test/java/pl/szymtrener/admin/AdminAttachmentControllerTest.java)
+- [prv] file(long id, String name, String mime, boolean previewable): void  :24
+- [   ] downloadHeaders(): void  :36
+- [   ] previewOnlyImages(): void  :50
+
+### AdminConsentController  (src/main/java/pl/szymtrener/admin/AdminConsentController.java)
+- [pub] export(@PathVariable String key): ResponseEntity<byte[]>  :54
+- [pub] delete(@PathVariable String key, Principal principal, RedirectAttributes flash): String  :61
+- [prv] notFound(String key): NotFoundException  :72
+
 ### AdminController  (src/main/java/pl/szymtrener/admin/AdminController.java)
 - [pub] dashboard(Model model): String  :56
 - [prv] queue(): List<Post>  :91
@@ -181,12 +215,14 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [pub] delete(@PathVariable Long id, RedirectAttributes flash): String  :67
 
 ### AdminNav  (src/main/java/pl/szymtrener/admin/AdminNav.java)
-- [pub] publishedPosts(): long  :34
-- [pub] newSubmissions(): long  :39
-- [pub] dueReminders(): long  :48
-- [pub] currentName(): String  :58
-- [pub] currentInitials(): String  :67
-- [prv] currentLogin(): String  :76
+- [pub] publishedPosts(): long  :38
+- [pub] newSubmissions(): long  :43
+- [pub] unreadSubmissionReplies(): long  :48
+- [pub] unreadClientReplies(): long  :53
+- [pub] dueReminders(): long  :62
+- [pub] currentName(): String  :72
+- [pub] currentInitials(): String  :81
+- [prv] currentLogin(): String  :90
 
 ### AdminOfferController  (src/main/java/pl/szymtrener/admin/AdminOfferController.java)
 - [pub] overview(Model model): String  :56
@@ -226,30 +262,30 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] toForm(Post post): PostForm  :323
 
 ### AdminSettingsController  (src/main/java/pl/szymtrener/admin/AdminSettingsController.java)
-- [pub] form(Model model): String  :46
-- [pub] testMail(RedirectAttributes flash): String  :70
+- [pub] form(Model model): String  :49
+- [pub] testMail(RedirectAttributes flash): String  :76
 
 ### AdminSubmissionController  (src/main/java/pl/szymtrener/admin/AdminSubmissionController.java)
-- [pub] detail(@PathVariable Long id, Model model): String  :77
-- [pub] addNote(@PathVariable Long id, @RequestParam String body, Principal principal): String  :104
-- [pub] stage(@PathVariable Long id, @RequestParam SubmissionStatus status, RedirectAttributes flash): String  :114
-- [pub] template(@PathVariable Long id, @PathVariable String code): Map<String, String>  :161
-- [pub] remindDone(@PathVariable Long id, RedirectAttributes flash): String  :201
-- [pub] convert(@PathVariable Long id, RedirectAttributes flash): String  :209
-- [pub] export(@PathVariable Long id): ResponseEntity<byte[]>  :241
-- [pub] delete(@PathVariable Long id, Principal principal): String  :257
+- [pub] detail(@PathVariable Long id, Model model): String  :82
+- [pub] addNote(@PathVariable Long id, @RequestParam String body, Principal principal): String  :111
+- [pub] stage(@PathVariable Long id, @RequestParam SubmissionStatus status, RedirectAttributes flash): String  :121
+- [pub] template(@PathVariable Long id, @PathVariable String code): Map<String, String>  :175
+- [pub] remindDone(@PathVariable Long id, RedirectAttributes flash): String  :214
+- [pub] convert(@PathVariable Long id, RedirectAttributes flash): String  :222
+- [pub] export(@PathVariable Long id): ResponseEntity<byte[]>  :254
+- [pub] delete(@PathVariable Long id, Principal principal): String  :270
 
 ### AdminTraineeController  (src/main/java/pl/szymtrener/admin/AdminTraineeController.java)
-- [pub] week(Model model): String  :109
-- [pub] create(Model model): String  :121
-- [pub] profile(@PathVariable Long id, Model model): String  :129
-- [pub] edit(@PathVariable Long id, Model model): String  :155
-- [pub] delete(@PathVariable Long id, RedirectAttributes flash): String  :171
-- [pub] deleteSession(@PathVariable Long id, @PathVariable Long sessionId, RedirectAttributes flash): String  :221
-- [pub] sellPackage(@PathVariable Long id, @RequestParam String name, @RequestParam int totalSessions, @RequestParam String pricePerSession, RedirectAttributes flash): String  :270
-- [pub] fromSubmission(@PathVariable Long submissionId, RedirectAttributes flash): String  :341
-- [prv] form(Model model, Trainee trainee): String  :347
-- [prv] toForm(Trainee trainee): TraineeForm  :356
+- [pub] week(Model model): String  :111
+- [pub] create(Model model): String  :123
+- [pub] profile(@PathVariable Long id, Model model): String  :131
+- [pub] edit(@PathVariable Long id, Model model): String  :159
+- [pub] delete(@PathVariable Long id, RedirectAttributes flash): String  :175
+- [pub] deleteSession(@PathVariable Long id, @PathVariable Long sessionId, RedirectAttributes flash): String  :225
+- [pub] sellPackage(@PathVariable Long id, @RequestParam String name, @RequestParam int totalSessions, @RequestParam String pricePerSession, RedirectAttributes flash): String  :274
+- [pub] fromSubmission(@PathVariable Long submissionId, RedirectAttributes flash): String  :351
+- [prv] form(Model model, Trainee trainee): String  :357
+- [prv] toForm(Trainee trainee): TraineeForm  :366
 
 ### AdminUser  (src/main/java/pl/szymtrener/admin/AdminUser.java)
 - [pub] getId(): Long  :33
@@ -321,11 +357,11 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] check(Post post, String label): AiReadinessAnalyzer.Check  :177
 
 ### AnalyticsFilter  (src/main/java/pl/szymtrener/analytics/AnalyticsFilter.java)
-- [pro] shouldNotFilter(HttpServletRequest request): boolean  :51
-- [prv] record(HttpServletRequest request): void  :73
-- [prv] clientIp(HttpServletRequest request): String  :91
-- [prv] referrerHost(String referrer): String  :98
-- [prv] hash(String input): String  :107
+- [pro] shouldNotFilter(HttpServletRequest request): boolean  :55
+- [prv] record(HttpServletRequest request): void  :77
+- [prv] clientIp(HttpServletRequest request): String  :97
+- [prv] referrerHost(String referrer): String  :104
+- [prv] hash(String input): String  :113
 
 ### AnalyticsView  (src/main/java/pl/szymtrener/analytics/AnalyticsView.java)
 - [pub] bars(Instant since, int range): List<Bar>  :52
@@ -335,6 +371,7 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### AppProperties  (src/main/java/pl/szymtrener/config/AppProperties.java)
 - [pub] absolute(String path): String  :23
+- [pub] siteHost(): String  :29
 
 ### AppSetting  (src/main/java/pl/szymtrener/settings/AppSetting.java)
 - [pub] getKey(): String  :28
@@ -347,6 +384,49 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] migrationsApplied(): void  :30
 - [   ] fullTextSearchIsWired(): void  :42
 - [   ] seedDataLoaded(): void  :56
+
+### AttachmentFile  (src/main/java/pl/szymtrener/crm/AttachmentFile.java)
+- [pub] toString(): String  :10
+
+### AttachmentIT  (src/test/java/pl/szymtrener/crm/AttachmentIT.java)
+- [   ] replyFormWithFiles(): void  :41
+- [   ] attachmentLifecycle(): void  :69
+
+### AttachmentLimits  (src/main/java/pl/szymtrener/crm/AttachmentLimits.java)
+- [pub] maxFiles(): int  :13
+- [pub] maxTotalBytes(): long  :15
+- [pub] maxFileBytes(): long  :17
+
+### AttachmentPolicy  (src/main/java/pl/szymtrener/crm/AttachmentPolicy.java)
+- [pub] ok(): boolean  :59
+- [pub] forReply(String way, List<MultipartFile> uploads): Outgoing  :63
+- [pub] outgoing(List<MultipartFile> uploads): Outgoing  :72
+- [   ] rejectBeforeReading(String rawName, int acceptedSoFar, List<String> notes): boolean  :107
+- [   ] decoration(boolean inlineWithContentId, boolean image, int size): boolean  :121
+- [   ] incoming(String rawName, byte[] data, boolean truncated, int acceptedSoFar, long bytesSoFar, List<String> notes): AttachmentFile  :131
+- [   ] detect(byte[] d, String name): String  :151
+- [   ] dangerous(byte[] d, String name): boolean  :178
+- [   ] safeName(String raw): String  :203
+- [prv] trimDotsAndSpaces(String name): String  :222
+- [prv] extension(String name): String  :226
+- [prv] plainText(byte[] d): boolean  :232
+- [prv] startsWith(byte[] d, String prefix): boolean  :239
+- [prv] startsWith(byte[] d, int... prefix): boolean  :243
+- [prv] ascii(byte[] d, int from, int length): String  :251
+
+### AttachmentPolicyTest  (src/test/java/pl/szymtrener/crm/AttachmentPolicyTest.java)
+- [prv] upload(String name, byte[] data): MultipartFile  :24
+- [   ] detectsByContent(): void  :30
+- [   ] outgoingAccepts(): void  :41
+- [   ] outgoingRejects(): void  :50
+- [   ] incoming(): void  :62
+- [   ] safeName(): void  :81
+
+### AttachmentService  (src/main/java/pl/szymtrener/crm/AttachmentService.java)
+- [pub] store(Long messageId, List<AttachmentFile> files): void  :34
+- [pub] forMessages(Collection<Long> messageIds): Map<Long, List<MessageAttachment>>  :44
+- [pub] describe(Long id): Optional<MessageAttachment>  :52
+- [pub] load(Long id): Optional<Loaded>  :57
 
 ### Author  (src/main/java/pl/szymtrener/content/Author.java)
 - [pub] getId(): Long  :30
@@ -374,6 +454,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [pub] post(@PathVariable String slug, Model model): ModelAndView  :144
 - [prv] redirectFromOldSlug(String slug): RedirectView  :158
 
+### Bytes  (src/main/java/pl/szymtrener/common/Bytes.java)
+- [pub] human(long bytes): String  :16
+- [pub] sha256(byte[] data): String  :22
+
 ### Category  (src/main/java/pl/szymtrener/content/Category.java)
 - [pub] getId(): Long  :18
 - [pub] getSlug(): String  :19
@@ -390,7 +474,8 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findAllByOrderBySortOrderAsc(): List<Category>  :9
 
 ### CleanupScheduler  (src/main/java/pl/szymtrener/scheduler/CleanupScheduler.java)
-- [pub] purgeOldPageViews(): void  :32
+- [pub] purgeOldPageViews(): void  :38
+- [pub] purgeOldConsents(): void  :47
 
 ### ClientInsightService  (src/main/java/pl/szymtrener/crm/ClientInsightService.java)
 - [pub] signedDelta(): String  :57
@@ -412,8 +497,107 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] trim(BigDecimal value): String  :242
 - [pub] rows(List<Trainee> source, int staleDays): List<ClientRow>  :250
 
+### ConsentController  (src/main/java/pl/szymtrener/web/ConsentController.java)
+- [pub] settings(Model model): String  :56
+- [pub] myData(HttpServletRequest request): ResponseEntity<byte[]>  :96
+- [   ] safeRedirect(String path): String  :103
+- [prv] unsafeInRedirect(int c): boolean  :116
+
+### ConsentControllerIT  (src/test/java/pl/szymtrener/web/ConsentControllerIT.java)
+- [   ] clean(): void  :49
+- [   ] pagesRenderWithoutDecision(): void  :56
+- [   ] rejectsWithoutCsrf(): void  :68
+- [   ] acceptStoresConsentAndCookie(): void  :75
+- [   ] changeKeepsKey(): void  :94
+- [   ] safeRedirect(): void  :108
+- [   ] myDataOnlyForOwnCookie(): void  :119
+- [   ] analyticsLinksConsent(): void  :140
+- [   ] countsReturningAcrossDays(): void  :157
+- [   ] secureCookieUsesHostPrefix(): void  :172
+- [   ] viewIsBufferedBeforeCommit(@Autowired org.thymeleaf.spring6.view.ThymeleafViewResolver resolver): void  :187
+- [   ] limitsNewConsentsPerClient(): void  :193
+- [   ] adminRequiresLogin(): void  :208
+- [   ] adminSearchExportDelete(): void  :222
+- [   ] statsRender(): void  :248
+- [prv] fetchConsent(): MockHttpServletRequestBuilder  :254
+- [prv] cookie(UUID key): Cookie  :258
+
+### ConsentCookie  (src/main/java/pl/szymtrener/consent/ConsentCookie.java)
+- [   ] read(HttpServletRequest request): Optional<UUID>  :32
+- [pub] write(UUID key, HttpServletRequest request, HttpServletResponse response): void  :46
+- [prv] name(HttpServletRequest request): String  :57
+
+### ConsentService  (src/main/java/pl/szymtrener/consent/ConsentService.java)
+- [pub] current(HttpServletRequest request): Optional<Status>  :58
+- [pub] record(UUID existingKey, boolean statistics, ConsentSource source): UUID  :75
+- [pub] export(UUID key): Optional<Map<String, Object>>  :92
+- [pub] delete(UUID key): boolean  :121
+- [pub] search(String query, int page): Page<Row>  :131
+- [pub] purgeNotChangedSince(Instant cutoff): int  :145
+- [pub] parseKey(String raw): Optional<UUID>  :150
+
+### ConsentServiceIT  (src/test/java/pl/szymtrener/consent/ConsentServiceIT.java)
+- [   ] clean(): void  :26
+- [   ] recordsHistory(): void  :33
+- [   ] unknownKeyStartsNewConsent(): void  :46
+- [   ] exportsOwnData(): void  :58
+- [   ] deletesEverythingLinked(): void  :76
+- [   ] purgesStaleConsents(): void  :94
+- [   ] searchesByPrefix(): void  :111
+- [prv] idOf(UUID key): Long  :123
+- [prv] pageView(String path, Long consentId): void  :127
+
+### ConsentSource  (src/main/java/pl/szymtrener/consent/ConsentSource.java)
+- [pub] parse(String raw): ConsentSource  :7
+
+### ConsentView  (src/main/java/pl/szymtrener/consent/ConsentView.java)
+- [pub] current(): ConsentService.Status  :23
+- [pub] returnPath(): String  :32
+- [prv] request(): HttpServletRequest  :37
+
+### ConsentedPageViews  (src/main/java/pl/szymtrener/analytics/ConsentedPageViews.java)
+- [pub] find(long consentId): List<View>  :19
+
+### ConsentedViews  (src/main/java/pl/szymtrener/consent/ConsentedViews.java)
+- [   ] find(long consentId): List<View>  :15
+
+### Content  (src/main/java/pl/szymtrener/crm/InboundMail.java)
+- [   ] parse(MimeMessage message, Instant now): InboundMail  :45
+- [prv] replyTo(MimeMessage message): List<String>  :65
+- [prv] ids(String header): List<String>  :77
+- [prv] firstId(String header): String  :85
+- [prv] sender(MimeMessage message): String  :90
+- [prv] automatic(MimeMessage message): boolean  :102
+- [prv] collect(Part part, Content content, int depth): void  :111
+- [prv] text(Part part): String  :138
+- [prv] read(Part part): Object  :153
+- [prv] attachment(Part part, Content content): void  :162
+- [prv] rethrowConnectionError(IOException e): void  :192
+- [prv] fileName(Part part): String  :196
+- [pub] toString(): String  :215
+
 ### ContentMetrics  (src/main/java/pl/szymtrener/content/ContentMetrics.java)
 - [pub] analyse(String contentHtml, String lead): Result  :15
+
+### CookieConsent  (src/main/java/pl/szymtrener/consent/CookieConsent.java)
+- [   ] change(boolean statistics): void  :28
+- [pub] getId(): Long  :33
+- [pub] getConsentKey(): UUID  :34
+- [pub] isStatistics(): boolean  :35
+- [pub] getCreatedAt(): Instant  :36
+- [pub] getUpdatedAt(): Instant  :37
+
+### CookieConsentChange  (src/main/java/pl/szymtrener/consent/CookieConsentChange.java)
+- [pub] isStatistics(): boolean  :31
+- [pub] getSource(): ConsentSource  :32
+- [pub] getPolicyVersion(): String  :33
+- [pub] getChangedAt(): Instant  :34
+
+### CookieConsentChangeRepository  (src/main/java/pl/szymtrener/consent/CookieConsentChangeRepository.java)
+- [   ] findByConsentIdOrderByChangedAtDesc(Long consentId): List<CookieConsentChange>  :9
+
+### CookieConsentRepository  (src/main/java/pl/szymtrener/consent/CookieConsentRepository.java)
+- [   ] findByConsentKey(UUID consentKey): Optional<CookieConsent>  :16
 
 ### CrmModelTest  (src/test/java/pl/szymtrener/crm/CrmModelTest.java)
 - [   ] cancelledDoesNotConsume(): void  :22
@@ -497,6 +681,9 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] convert(org.apache.poi.xwpf.usermodel.XWPFDocument doc): String  :144
 - [prv] count(String haystack, String needle): int  :148
 
+### Downloads  (src/main/java/pl/szymtrener/common/Downloads.java)
+- [pub] json(byte[] body, String filename): ResponseEntity<byte[]>  :15
+
 ### EditorBlotSanitizationTest  (src/test/java/pl/szymtrener/content/EditorBlotSanitizationTest.java)
 - [   ] video(): void  :49
 - [   ] pdf(): void  :58
@@ -537,6 +724,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] videoThumbnailIsExempt(): void  :193
 - [   ] completeAltsPass(): void  :199
 
+### FakeMailbox  (src/test/java/pl/szymtrener/crm/FakeMailbox.java)
+- [   ] mail(long uid, String from): MimeMessage  :23
+- [pro] updateMessageID(): void  :26
+
 ### GanwilkArchitectureTest  (src/test/java/pl/szymtrener/arch/GanwilkArchitectureTest.java)
 - [   ] importClasses(): void  :35
 - [   ] brak_cykli_miedzy_pakietami(): void  :43
@@ -545,8 +736,9 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] serwisy_nie_zaleza_od_warstwy_web(): void  :74
 
 ### GlobalExceptionHandler  (src/main/java/pl/szymtrener/common/GlobalExceptionHandler.java)
-- [pub] handle(Exception exception, HttpServletRequest request): Object  :39
-- [prv] wantsJson(HttpServletRequest request): boolean  :63
+- [pub] tooLarge(MaxUploadSizeExceededException exception, HttpServletRequest request, HttpServletResponse response): Object  :50
+- [pub] handle(Exception exception, HttpServletRequest request): Object  :72
+- [prv] wantsJson(HttpServletRequest request): boolean  :96
 
 ### GlobalExceptionHandlerTest  (src/test/java/pl/szymtrener/common/GlobalExceptionHandlerTest.java)
 - [   ] rethrowsMissingStaticResource(): void  :25
@@ -565,6 +757,81 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] zachowujeTabeleZNaglowkami(): void  :22
 - [   ] zachowujeBlokFilmuZEdytora(): void  :31
 - [   ] dodajeLazyLoadingObrazkom(): void  :39
+
+### ImapMailbox  (src/main/java/pl/szymtrener/crm/ImapMailbox.java)
+- [pub] open(String host, int port, String user, String password): ImapMailbox  :36
+- [pub] uidValidity(): long  :61
+- [pub] highestUid(): long  :66
+- [pub] fetchAfter(long uid, int limit): List<Fetched>  :72
+- [pub] close(): void  :86
+- [prv] closeQuietly(Store store): void  :95
+
+### InboundMailIT  (src/test/java/pl/szymtrener/crm/InboundMailIT.java)
+- [   ] repliesLandInThread(): void  :33
+- [   ] uniqueMessageId(): void  :81
+- [prv] inboundMessage(Long submissionId, String id): Message  :95
+
+### InboundMailScheduler  (src/main/java/pl/szymtrener/scheduler/InboundMailScheduler.java)
+- [pub] poll(): void  :45
+- [prv] status(String text): void  :63
+
+### InboundMailService  (src/main/java/pl/szymtrener/crm/InboundMailService.java)
+- [pub] poll(Mailbox mailbox, String ownAddress): Result  :52
+- [prv] attempt(long uid): int  :98
+- [prv] record(Mailbox.Fetched fetched, long validity, String ownAddress): boolean  :106
+
+### InboundMailServiceTest  (src/test/java/pl/szymtrener/crm/InboundMailServiceTest.java)
+- [   ] setUp(): void  :41
+- [   ] firstRunStartsAtEnd(): void  :60
+- [   ] recordsNewAndAdvances(): void  :73
+- [   ] skipsWhatIsNotAReply(): void  :89
+- [   ] brokenMessageDoesNotBlock(): void  :111
+- [   ] closedFolderKeepsProgress(): void  :127
+- [   ] transientErrorRetriedThenSkipped(): void  :141
+- [   ] qpBombDoesNotBlockInbox(): void  :161
+- [   ] uidValidityChange(): void  :193
+- [prv] mail(long uid, String from): MimeMessage  :203
+
+### InboundMailTest  (src/test/java/pl/szymtrener/crm/InboundMailTest.java)
+- [prv] message(): MimeMessage  :26
+- [   ] gmailPolishQuote(): void  :38
+- [   ] otherClients(): void  :55
+- [   ] plainOdIsNotAQuote(): void  :66
+- [   ] inlineAndOnlyQuote(): void  :73
+- [   ] limitsLength(): void  :80
+- [   ] htmlToText(): void  :88
+- [   ] plainReply(): void  :107
+- [   ] multipartWithAttachment(): void  :128
+- [   ] rejectsDangerousAndDecorations(): void  :154
+- [   ] connectionDropWhileReadingAttachment(): void  :182
+- [pub] getInputStream(): java.io.InputStream  :185
+- [pub] read(): int  :188
+- [   ] attachmentOnly(): void  :209
+- [   ] htmlOnly(): void  :226
+- [   ] automaticAndFutureDate(): void  :236
+- [   ] toStringHidesContent(): void  :260
+
+### InboundMailText  (src/main/java/pl/szymtrener/crm/InboundMailText.java)
+- [   ] clean(String raw): String  :48
+- [   ] htmlToText(String html): String  :59
+- [pub] head(Node node, int depth): void  :65
+- [pub] tail(Node node, int depth): void  :75
+- [prv] newline(StringBuilder out): void  :82
+- [prv] withoutQuote(String text): String  :86
+- [prv] quoteStart(List<String> lines): int  :94
+- [prv] normalize(String text): String  :113
+
+### InboundMatcher  (src/main/java/pl/szymtrener/crm/InboundMatcher.java)
+- [pub] match(InboundMail mail): Optional<Target>  :30
+- [prv] byReply(InboundMail mail): Optional<Target>  :34
+- [prv] byTrainee(InboundMail mail): Optional<Target>  :40
+- [prv] bySubmission(InboundMail mail): Optional<Target>  :46
+- [prv] traineeOf(Long traineeId, Long submissionId): Long  :56
+
+### InboundMatcherTest  (src/test/java/pl/szymtrener/crm/InboundMatcherTest.java)
+- [prv] mail(List<String> replyTo, String from): InboundMail  :23
+- [   ] replyToSubmissionMessageAfterConversion(): void  :29
+- [   ] addressFallback(): void  :43
 
 ### IndexNowService  (src/main/java/pl/szymtrener/seo/IndexNowService.java)
 - [pub] submit(List<String> paths): void  :33
@@ -589,14 +856,14 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 
 ### MailConfig  (src/main/java/pl/szymtrener/config/MailConfig.java)
 - [   ] reportConfiguration(): void  :46
-- [prv] mask(String address): String  :81
+- [pub] mask(String address): String  :81
 
 ### MailService  (src/main/java/pl/szymtrener/submission/MailService.java)
 - [pub] sendNotifications(Submission s): void  :44
 - [prv] enabled(): boolean  :73
 - [prv] trainerNotification(Submission s): MimeMessage  :84
 - [prv] autoReply(Submission s): MimeMessage  :102
-- [prv] plainAutoReply(Submission s): String  :117
+- [   ] plainAutoReply(Submission s): String  :117
 - [prv] plainTrainerNotification(Submission s): String  :132
 - [prv] line(StringBuilder sb, String label, String value): void  :149
 
@@ -609,7 +876,16 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] showsOfferContext(): void  :95
 - [   ] skipsOfferContextWhenAbsent(): void  :109
 - [   ] clientConfirmationRenders(): void  :117
-- [   ] bothTemplatesSurviveMinimalSubmission(): void  :128
+- [   ] firstNameIsCapitalized(): void  :130
+- [   ] plainConfirmationGreetsByFirstName(): void  :140
+- [   ] greetingWithoutName(): void  :158
+- [   ] bothTemplatesSurviveMinimalSubmission(): void  :168
+
+### Mailbox  (src/main/java/pl/szymtrener/crm/Mailbox.java)
+- [   ] uidValidity(): long  :16
+- [   ] highestUid(): long  :19
+- [   ] fetchAfter(long uid, int limit): List<Fetched>  :22
+- [   ] close(): void  :27
 
 ### Measurement  (src/main/java/pl/szymtrener/crm/Measurement.java)
 - [pub] getId(): Long  :27
@@ -676,62 +952,103 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] totalBytes(): long  :19
 
 ### MediaService  (src/main/java/pl/szymtrener/media/MediaService.java)
-- [pub] upload(MultipartFile file, String altText): MediaFile  :39
-- [pub] store(byte[] bytes, String originalName, String mime, String altText): MediaFile  :98
-- [pub] bytes(Long mediaId): Optional<byte[]>  :132
-- [pub] byStorageKey(String key): Optional<MediaFile>  :137
-- [pub] byId(Long id): Optional<MediaFile>  :142
-- [pub] countDownload(Long id): void  :147
-- [pub] delete(Long id): void  :156
-- [pub] publicUrl(Long mediaId): String  :163
-- [prv] extensionFor(String mime): String  :169
-- [prv] safeName(String name): String  :179
-- [prv] sha256(byte[] data): String  :184
+- [pub] upload(MultipartFile file, String altText): MediaFile  :38
+- [pub] store(byte[] bytes, String originalName, String mime, String altText): MediaFile  :97
+- [pub] bytes(Long mediaId): Optional<byte[]>  :131
+- [pub] byStorageKey(String key): Optional<MediaFile>  :136
+- [pub] byId(Long id): Optional<MediaFile>  :141
+- [pub] countDownload(Long id): void  :146
+- [pub] delete(Long id): void  :155
+- [pub] publicUrl(Long mediaId): String  :162
+- [prv] extensionFor(String mime): String  :168
+- [prv] safeName(String name): String  :178
 
 ### Message  (src/main/java/pl/szymtrener/crm/Message.java)
-- [pub] system(): boolean  :42
-- [pub] outgoing(): boolean  :47
-- [pub] failed(): boolean  :53
-- [pub] sentLabel(): String  :58
-- [pub] getId(): Long  :63
-- [pub] getSubmissionId(): Long  :64
-- [pub] setSubmissionId(Long submissionId): void  :65
-- [pub] getTraineeId(): Long  :66
-- [pub] setTraineeId(Long traineeId): void  :67
-- [pub] getDirection(): MessageDirection  :68
-- [pub] setDirection(MessageDirection direction): void  :69
-- [pub] getChannel(): MessageChannel  :70
-- [pub] setChannel(MessageChannel channel): void  :71
-- [pub] getBody(): String  :72
-- [pub] setBody(String body): void  :73
-- [pub] getAttachmentId(): Long  :74
-- [pub] setAttachmentId(Long attachmentId): void  :75
-- [pub] getSentAt(): Instant  :76
-- [pub] setSentAt(Instant sentAt): void  :77
-- [pub] getMailStatus(): String  :78
-- [pub] setMailStatus(String mailStatus): void  :79
+- [pub] system(): boolean  :51
+- [pub] outgoing(): boolean  :56
+- [pub] failed(): boolean  :62
+- [pub] matchedByAddress(): boolean  :68
+- [pub] sentLabel(): String  :73
+- [pub] getId(): Long  :78
+- [pub] getSubmissionId(): Long  :79
+- [pub] setSubmissionId(Long submissionId): void  :80
+- [pub] getTraineeId(): Long  :81
+- [pub] setTraineeId(Long traineeId): void  :82
+- [pub] getDirection(): MessageDirection  :83
+- [pub] setDirection(MessageDirection direction): void  :84
+- [pub] getChannel(): MessageChannel  :85
+- [pub] setChannel(MessageChannel channel): void  :86
+- [pub] getBody(): String  :87
+- [pub] setBody(String body): void  :88
+- [pub] getAttachmentId(): Long  :89
+- [pub] setAttachmentId(Long attachmentId): void  :90
+- [pub] getSentAt(): Instant  :91
+- [pub] setSentAt(Instant sentAt): void  :92
+- [pub] getMailStatus(): String  :93
+- [pub] setMailStatus(String mailStatus): void  :94
+- [pub] getMailMessageId(): String  :95
+- [pub] setMailMessageId(String mailMessageId): void  :96
+- [pub] isUnread(): boolean  :97
+- [pub] setUnread(boolean unread): void  :98
+- [pub] getMatchedBy(): MatchedBy  :99
+- [pub] setMatchedBy(MatchedBy matchedBy): void  :100
+
+### MessageAttachment  (src/main/java/pl/szymtrener/crm/MessageAttachment.java)
+- [pub] previewable(): boolean  :34
+- [pub] sizeLabel(): String  :39
+- [pub] getId(): Long  :43
+- [pub] getMessageId(): Long  :44
+- [pub] getOriginalName(): String  :45
+- [pub] getMimeType(): String  :46
+- [pub] getSha256(): String  :47
+
+### MessageAttachmentBlob  (src/main/java/pl/szymtrener/crm/MessageAttachmentBlob.java)
+- [pub] getData(): byte[]  :29
+- [pub] getId(): Long  :32
+- [pub] isNew(): boolean  :36
+
+### MessageAttachmentRepository  (src/main/java/pl/szymtrener/crm/MessageAttachmentRepository.java)
+- [   ] findByMessageIdInOrderByIdAsc(Collection<Long> messageIds): List<MessageAttachment>  :11
 
 ### MessageChannel  (src/main/java/pl/szymtrener/crm/MessageChannel.java)
 - [pub] label(): String  :16
 - [pub] css(): String  :19
 
 ### MessageRepository  (src/main/java/pl/szymtrener/crm/MessageRepository.java)
-- [   ] findBySubmissionIdOrderBySentAtAsc(Long submissionId): List<Message>  :8
-- [   ] findByTraineeIdOrderBySentAtAsc(Long traineeId): List<Message>  :9
-- [   ] countBySubmissionId(Long submissionId): long  :10
+- [   ] findBySubmissionIdOrderBySentAtAsc(Long submissionId): List<Message>  :13
+- [   ] findByTraineeIdOrderBySentAtAsc(Long traineeId): List<Message>  :14
+- [   ] countBySubmissionId(Long submissionId): long  :15
+- [   ] existsByMailMessageId(String mailMessageId): boolean  :17
+- [   ] findFirstByDirectionAndMailMessageIdIn(MessageDirection direction, Collection<String> ids): Optional<Message>  :29
+- [   ] countSubmissionsWithUnread(): long  :44
+- [   ] countTraineesWithUnread(): long  :47
 
 ### MessageService  (src/main/java/pl/szymtrener/crm/MessageService.java)
-- [pub] thread(Long submissionId): List<Message>  :51
-- [pub] traineeThread(Long traineeId): List<Message>  :56
-- [pub] replyTemplates(): List<ReplyTemplate>  :61
-- [pub] recordSubmission(Long submissionId, String body): void  :70
-- [pub] sendEmail(Long submissionId, Long traineeId, String to, String name, String body, Long attachmentId): SendResult  :85
-- [pub] logPhoneCall(Long submissionId, Long traineeId, String body): Message  :125
-- [pub] system(Long submissionId, Long traineeId, String body, boolean failure): void  :137
-- [pub] fill(String code, String firstName, String context): String  :155
-- [prv] trimEnding(String text): String  :166
-- [pub] attachToTrainee(Long submissionId, Long traineeId): void  :177
-- [prv] mailEnabled(): boolean  :184
+- [pub] thread(Long submissionId): List<Message>  :70
+- [pub] traineeThread(Long traineeId): List<Message>  :75
+- [pub] replyTemplates(): List<ReplyTemplate>  :80
+- [pub] recordSubmission(Long submissionId, String body): void  :89
+- [pub] sendEmail(Long submissionId, Long traineeId, String to, String name, String body, List<AttachmentFile> attachmentFiles): SendResult  :107
+- [prv] saveWithFiles(Message m, List<AttachmentFile> files): void  :157
+- [prv] replyHtml(String body): String  :162
+- [   ] paragraphs(String body): List<List<String>>  :171
+- [pub] recordInbound(InboundMatcher.Target target, InboundMail mail, String mailMessageId): Message  :182
+- [pub] attachmentsOf(List<Message> thread): Map<Long, List<MessageAttachment>>  :206
+- [pub] alreadyRecorded(String mailMessageId): boolean  :211
+- [pub] openSubmissionThread(Long submissionId): List<Message>  :220
+- [pub] openTraineeThread(Long traineeId): List<Message>  :227
+- [pub] submissionsWithUnread(Collection<Long> ids): Set<Long>  :235
+- [pub] traineesWithUnread(Collection<Long> ids): Set<Long>  :240
+- [pub] logPhoneCall(Long submissionId, Long traineeId, String body): Message  :246
+- [pub] system(Long submissionId, Long traineeId, String body, boolean failure): void  :258
+- [pub] fill(String code, String firstName, String context): String  :276
+- [   ] fillBody(String body, String firstName, String context): String  :283
+- [prv] dropContextSentences(String body): String  :300
+- [prv] withoutSentenceAt(String line, int at): String  :313
+- [prv] isSentenceEnd(char c): boolean  :328
+- [prv] trimEnding(String text): String  :332
+- [pub] attachToTrainee(Long submissionId, Long traineeId): void  :343
+- [prv] mailEnabled(): boolean  :350
 
 ### Money  (src/main/java/pl/szymtrener/offer/Money.java)
 - [pub] format(int grosze): String  :17
@@ -823,20 +1140,25 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findAllByOrderBySortOrderAsc(): List<OnlinePackage>  :9
 
 ### PageView  (src/main/java/pl/szymtrener/analytics/PageView.java)
-- [pub] getId(): Long  :23
-- [pub] getPath(): String  :24
-- [pub] setPath(String path): void  :25
-- [pub] getReferrer(): String  :26
-- [pub] setReferrer(String referrer): void  :27
-- [pub] getSessionHash(): String  :28
-- [pub] setSessionHash(String sessionHash): void  :29
-- [pub] getDevice(): String  :30
-- [pub] setDevice(String device): void  :31
-- [pub] isBot(): boolean  :32
-- [pub] setBot(boolean bot): void  :33
-- [pub] getBotName(): String  :34
-- [pub] setBotName(String botName): void  :35
-- [pub] getViewedAt(): Instant  :36
+- [pub] getId(): Long  :26
+- [pub] getPath(): String  :27
+- [pub] setPath(String path): void  :28
+- [pub] getReferrer(): String  :29
+- [pub] setReferrer(String referrer): void  :30
+- [pub] getSessionHash(): String  :31
+- [pub] setSessionHash(String sessionHash): void  :32
+- [pub] getConsentId(): Long  :33
+- [pub] setConsentId(Long consentId): void  :34
+- [pub] getDevice(): String  :35
+- [pub] setDevice(String device): void  :36
+- [pub] isBot(): boolean  :37
+- [pub] setBot(boolean bot): void  :38
+- [pub] getBotName(): String  :39
+- [pub] setBotName(String botName): void  :40
+- [pub] getViewedAt(): Instant  :41
+
+### PageViewRepository  (src/main/java/pl/szymtrener/analytics/PageViewRepository.java)
+- [   ] findByConsentIdOrderByViewedAt(Long consentId): List<PageView>  :67
 
 ### PasswordForm  (src/main/java/pl/szymtrener/admin/PasswordForm.java)
 - [pub] getCurrent(): String  :8
@@ -1058,30 +1380,44 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [prv] ip(HttpServletRequest request): String  :63
 
 ### PublicFormControllerTest  (src/test/java/pl/szymtrener/web/PublicFormControllerTest.java)
-- [   ] allowByDefault(): void  :60
-- [prv] validContact(): Map<String, Object>  :64
-- [prv] validOnline(): Map<String, Object>  :76
-- [   ] acceptsValidContactForm(): void  :93
-- [   ] acceptsValidOnlineForm(): void  :105
-- [   ] rejectsRequestWithoutCsrfToken(): void  :117
-- [   ] honeypotSilentlyDropsBotSubmissions(): void  :128
-- [   ] honeypotWinsOverValidation(): void  :144
-- [   ] rejectsWhenRateLimited(): void  :160
-- [   ] requiresConsent(): void  :175
-- [   ] reportsFieldValidationErrors(): void  :191
-- [   ] onlineFormRequiresItsOwnFields(): void  :208
-- [   ] rateLimitIsCheckedBeforeValidation(): void  :225
+- [   ] allowByDefault(): void  :62
+- [prv] validContact(): Map<String, Object>  :66
+- [prv] validOnline(): Map<String, Object>  :78
+- [   ] acceptsValidContactForm(): void  :95
+- [   ] acceptsValidOnlineForm(): void  :107
+- [   ] rejectsRequestWithoutCsrfToken(): void  :119
+- [   ] honeypotSilentlyDropsBotSubmissions(): void  :130
+- [   ] honeypotWinsOverValidation(): void  :146
+- [   ] rejectsWhenRateLimited(): void  :162
+- [   ] requiresConsent(): void  :177
+- [   ] reportsFieldValidationErrors(): void  :193
+- [   ] onlineFormRequiresItsOwnFields(): void  :210
+- [   ] rateLimitIsCheckedBeforeValidation(): void  :227
 
 ### PublishScheduler  (src/main/java/pl/szymtrener/scheduler/PublishScheduler.java)
 - [pub] publishDue(): void  :32
 
 ### RateLimiter  (src/main/java/pl/szymtrener/submission/RateLimiter.java)
-- [pub] allow(String key): boolean  :24
+- [pub] allow(String key): boolean  :37
 
 ### ReminderScheduler  (src/main/java/pl/szymtrener/submission/ReminderScheduler.java)
 - [pub] sendDueReminders(): void  :45
 - [pub] due(): List<Submission>  :71
 - [prv] body(List<Submission> due): String  :75
+
+### ReplyMailTest  (src/test/java/pl/szymtrener/crm/ReplyMailTest.java)
+- [   ] fillsContext(): void  :35
+- [   ] dropsLineWithEmptyContext(): void  :44
+- [   ] dropsOnlyContextSentence(): void  :60
+- [   ] noNameAndManualPlaceholders(): void  :74
+- [   ] splitsParagraphs(): void  :83
+- [   ] rendersEscapedReply(): void  :90
+
+### ReplySendTest  (src/test/java/pl/szymtrener/crm/ReplySendTest.java)
+- [   ] sendsMultipartReply(): void  :36
+- [prv] isType(Part part, String type): boolean  :79
+- [prv] collect(Part part, List<Part> leaves): void  :87
+- [prv] engine(): SpringTemplateEngine  :95
 
 ### ReplyTemplate  (src/main/java/pl/szymtrener/crm/ReplyTemplate.java)
 - [pub] getId(): Long  :21
@@ -1093,6 +1429,10 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [pub] setBody(String body): void  :27
 - [pub] getSortOrder(): int  :28
 - [pub] setSortOrder(int sortOrder): void  :29
+
+### ReplyTemplateMigrationIT  (src/test/java/pl/szymtrener/crm/ReplyTemplateMigrationIT.java)
+- [   ] allSeededTemplatesUpdated(): void  :28
+- [   ] keepsTrainerEdits(): void  :41
 
 ### ReplyTemplateRepository  (src/main/java/pl/szymtrener/crm/ReplyTemplateRepository.java)
 - [   ] findAllByOrderBySortOrderAsc(): List<ReplyTemplate>  :9
@@ -1127,12 +1467,13 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [pub] badge(): String  :16
 
 ### SettingsService  (src/main/java/pl/szymtrener/settings/SettingsService.java)
-- [pub] get(String key, String fallback): String  :55
-- [pub] getInt(String key, int fallback): int  :61
-- [pub] getBoolean(String key, boolean fallback): boolean  :72
-- [pub] set(String key, String value): void  :78
-- [pub] all(): Map<String, String>  :88
-- [prv] ensureLoaded(): void  :93
+- [pub] get(String key, String fallback): String  :65
+- [pub] getInt(String key, int fallback): int  :71
+- [pub] getLong(String key, long fallback): long  :82
+- [pub] getBoolean(String key, boolean fallback): boolean  :93
+- [pub] set(String key, String value): void  :99
+- [pub] all(): Map<String, String>  :109
+- [prv] ensureLoaded(): void  :114
 
 ### SlugUtil  (src/main/java/pl/szymtrener/common/SlugUtil.java)
 - [pub] slugify(String input): String  :10
@@ -1253,7 +1594,9 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [pub] stageDate(String stage): String  :134
 - [pub] callAtLocal(): String  :151
 - [pub] initials(): String  :159
-- [pub] getCreatedLabel(): String  :170
+- [pub] firstName(): String  :170
+- [pub] greeting(): String  :178
+- [pub] getCreatedLabel(): String  :185
 
 ### SubmissionNote  (src/main/java/pl/szymtrener/submission/SubmissionNote.java)
 - [pub] getId(): Long  :30
@@ -1341,6 +1684,9 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findByVisibleTrueOrderBySortOrderAsc(): List<Testimonial>  :8
 - [   ] findAllByOrderBySortOrderAsc(): List<Testimonial>  :9
 
+### ThreadPagesRenderIT  (src/test/java/pl/szymtrener/admin/ThreadPagesRenderIT.java)
+- [   ] threadPagesRenderCompletely(): void  :35
+
 ### Trainee  (src/main/java/pl/szymtrener/crm/Trainee.java)
 - [pub] getId(): Long  :60
 - [pub] getSubmissionId(): Long  :61
@@ -1419,7 +1765,8 @@ POST    /api/zgloszenia/online                        PublicFormController.onlin
 - [   ] findAllOrdered(Pageable pageable): Page<Trainee>  :18
 - [   ] countByStatus(TraineeStatus status): long  :23
 - [   ] findBySubmissionId(Long submissionId): Optional<Trainee>  :25
-- [   ] countByMode(TraineeMode mode): long  :27
+- [   ] findFirstByEmailIgnoreCaseOrderByIdDesc(String email): Optional<Trainee>  :28
+- [   ] countByMode(TraineeMode mode): long  :30
 
 ### TraineeService  (src/main/java/pl/szymtrener/crm/TraineeService.java)
 - [pub] fromSubmission(Long submissionId): Trainee  :36
