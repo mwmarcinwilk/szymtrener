@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ustawienia cookies | Szymon Domagała – Trener Longevity</title>
+<meta name="description" content="Wybór zgody na ciasteczka statystyczne na stronie szymtrener.pl, identyfikator zgody i pobranie swoich danych.">
+<link rel="canonical" th:href="${canonical}" href="https://szymtrener.pl/ustawienia-cookies">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#0E1A26">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+
+<nav class="legal-nav">
+  <div class="container nav-inner">
+    <a href="/" class="nav-logo">Szymon <span>Domagała</span></a>
+    <a href="/" class="legal-back">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Powrót do strony
+    </a>
+  </div>
+</nav>
+
+<main class="legal-wrap" th:with="c=${@cookieConsent.current()}">
+  <h1>Ustawienia cookies</h1>
+  <p class="legal-updated" th:if="${c == null}">Ustawienia nie są jeszcze wybrane. Zdecyduj poniżej.</p>
+  <p class="legal-updated" th:if="${c != null}" role="status"
+     th:text="${param.zapisano != null} ? 'Zapisano. Możesz zmienić wybór w każdej chwili.' : 'Wybór jest zapisany. Możesz go zmienić poniżej.'">
+    Wybór jest zapisany.</p>
+
+  <section class="consent-record" th:if="${c != null}" aria-labelledby="consent-record-title">
+    <h2 id="consent-record-title" class="consent-heading">Twoja zgoda</h2>
+    <dl class="consent-record-list">
+      <div><dt>Identyfikator</dt><dd><code th:text="${c.key()}">3f1c9a2e-0000-4000-8000-000000000000</code></dd></div>
+      <div><dt>Statystyka</dt><dd th:text="${c.statistics()} ? 'Włączona' : 'Wyłączona'">Wyłączona</dd></div>
+    </dl>
+    <p class="consent-option-desc">Podaj ten identyfikator, gdy piszesz w sprawie swoich danych na
+      <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>. Tylko po nim da się odnaleźć Twoją zgodę.</p>
+    <a class="btn btn-outline consent-btn" href="/ustawienia-cookies/moje-dane" download>Pobierz moje dane</a>
+  </section>
+
+  <form th:replace="~{fragments/cookie-consent :: panel('page', ${c}, '/ustawienia-cookies?zapisano')}"></form>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div>
+      <div class="footer-logo">Szymon <span>Domagała</span></div>
+      <div class="footer-tagline">Trener Longevity · Łódź &amp; Online</div>
+    </div>
+    <div class="footer-copy">
+      <p>© <span th:text="${year}">2026</span> Szymon Domagała. Wszelkie prawa zastrzeżone.</p>
+      <p class="footer-links"><a href="/polityka-prywatnosci">Polityka prywatności</a> · <a href="/">Strona główna</a></p>
+    </div>
+  </div>
+</footer>
+
+<script th:src="@{/js/consent.js}" src="/js/consent.js" defer></script>
+</body>
+</html>

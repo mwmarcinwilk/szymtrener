@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: head(${title})}"></head>
+<body>
+<div th:replace="~{fragments/admin-icons :: icons}"></div>
+<div class="app">
+  <div th:replace="~{fragments/admin-layout :: sidebar('consents')}"></div>
+  <div class="main">
+    <div th:replace="~{fragments/admin-layout :: topbar(${title})}"></div>
+    <div class="content">
+      <div th:if="${info}" role="status"
+           style="background:var(--mint-pale);color:var(--mint-2);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${info}">Gotowe.</div>
+      <div th:if="${error}" role="alert"
+           style="background:var(--red-pale);color:var(--red);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700;margin-bottom:14px"
+           th:text="${error}">Błąd.</div>
+
+      <div class="page-h">
+        <div>
+          <h2>Zgody cookies</h2>
+          <p>Decyzje z panelu cookies na stronie. Osoba widzi swój identyfikator w ustawieniach cookies.</p>
+        </div>
+      </div>
+
+      <div class="note-bar">
+        <svg><use href="#i-info"/></svg>
+        <div><b>Prośba o dane albo o usunięcie?</b> Poproś o identyfikator ze strony
+          <a href="/ustawienia-cookies" target="_blank" rel="noopener">Ustawienia cookies</a> i wyszukaj go poniżej.
+          Usunięcie kasuje zgodę, jej historię i odsłony zapisane za zgodą.</div>
+      </div>
+
+      <form class="filters consent-search" method="get" action="/admin/zgody-cookies" role="search">
+        <label for="consent-q">Identyfikator zgody</label>
+        <input id="consent-q" type="search" name="q" th:value="${consentQuery}" maxlength="36"
+               placeholder="np. 3f1c9a2e" autocomplete="off" spellcheck="false">
+        <button class="btn btn-p" type="submit"><svg><use href="#i-search"/></svg>Szukaj</button>
+        <a class="f-btn" th:if="${!#strings.isEmpty(consentQuery)}" href="/admin/zgody-cookies">Wyczyść</a>
+      </form>
+
+      <div class="card">
+        <div class="tbl-scroll">
+          <table class="tbl">
+            <thead><tr><th>Identyfikator</th><th>Statystyka</th><th>Udzielona</th><th>Ostatnia zmiana</th><th class="act">Akcje</th></tr></thead>
+            <tbody>
+              <tr th:each="r : ${items.content}">
+                <td><code class="consent-key" th:text="${r.key()}">3f1c9a2e-0000-4000-8000-000000000000</code></td>
+                <td><span class="bg" th:classappend="${r.statistics()} ? 'pub' : 'arch'"
+                          th:text="${r.statistics()} ? 'Zgoda' : 'Brak zgody'">Zgoda</span></td>
+                <td><div class="t-sub" th:text="${#temporals.format(r.createdAt(), 'd.MM.yyyy HH:mm', 'Europe/Warsaw')}">1.09.2026 10:00</div></td>
+                <td><div class="t-sub" th:text="${#temporals.format(r.updatedAt(), 'd.MM.yyyy HH:mm', 'Europe/Warsaw')}">1.09.2026 10:00</div></td>
+                <td class="act">
+                  <div class="row-acts">
+                    <a class="mini" th:href="@{/admin/zgody-cookies/{key}/dane(key=${r.key()})}" title="Pobierz dane (JSON)"
+                       aria-label="Pobierz dane (JSON)"><svg><use href="#i-down"/></svg></a>
+                    <form method="post" th:action="@{/admin/zgody-cookies/{key}/usun(key=${r.key()})}"
+                          data-confirm-title="Usunąć zgodę?"
+                          th:data-confirm="'Zgoda ' + ${r.key()} + ' zniknie razem z historią i odsłonami zapisanymi za zgodą. Tego nie da się cofnąć.'"
+                          data-confirm-ok="Usuń zgodę">
+                      <button class="mini del" type="submit" title="Usuń zgodę" aria-label="Usuń zgodę"><svg><use href="#i-trash"/></svg></button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              <tr th:if="${items.isEmpty()}">
+                <td colspan="5" th:text="${#strings.isEmpty(consentQuery)} ? 'Nikt jeszcze nie zapisał wyboru w panelu cookies.' : 'Nie ma zgody o takim identyfikatorze. Sprawdź, czy nie ma w nim literówki.'">
+                  Brak zgód.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div th:replace="~{fragments/admin-layout :: pager(${items}, ${baseUrl})}"></div>
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/admin.js}" src="/js/admin.js" defer></script>
+</body>
+</html>

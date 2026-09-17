@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--/*
+  Zgoda na ciasteczka. Wzorzec z ddd: zwykły formularz POST działa bez JS,
+  a consent.js wysyła go w tle i otwiera ustawienia w oknie zamiast na osobnej stronie.
+  Stopka dołącza pasek i okno; strona /ustawienia-cookies rysuje sam panel w trybie 'page'.
+*/-->
+<th:block th:fragment="consent" th:with="c=${@cookieConsent.current()}, back=${@cookieConsent.returnPath()}">
+  <th:block th:if="${c == null}"><form th:replace="~{fragments/cookie-consent :: bar(${back})}"></form></th:block>
+  <dialog class="consent-dialog" aria-labelledby="consent-dialog-title">
+    <form th:replace="~{fragments/cookie-consent :: panel('dialog', ${c}, ${back})}"></form>
+  </dialog>
+  <script th:src="@{/js/consent.js}" src="/js/consent.js" defer></script>
+</th:block>
+
+<!--/* Pasek pierwszej wizyty. Obie decyzje mają tę samą wagę wizualną. */-->
+<form th:fragment="bar(back)" class="consent-bar" th:action="@{/zgoda-cookies}" method="post"
+      role="region" aria-labelledby="consent-bar-title">
+  <input type="hidden" name="powrot" th:value="${back}">
+  <input type="hidden" name="zrodlo" value="BAR">
+  <div class="consent-bar-text">
+    <p id="consent-bar-title" class="consent-bar-title">Ciasteczka do statystyk</p>
+    <p>Odwiedziny liczę na własnym serwerze, bez Google i bez reklam. Za zgodą zapamiętam
+      przeglądarkę, żeby wiedzieć, ile osób wraca. <a href="/polityka-prywatnosci">Polityka prywatności</a></p>
+  </div>
+  <div class="consent-bar-actions">
+    <button class="btn btn-outline consent-btn" type="submit" name="wybor" value="nie">Tylko niezbędne</button>
+    <button class="btn btn-outline consent-btn" type="submit" name="wybor" value="tak">Akceptuję</button>
+    <a class="consent-link" href="/ustawienia-cookies" data-consent-open>Ustawienia</a>
+  </div>
+</form>
+
+<!--/*
+  Ustawienia: w oknie (mode 'dialog') albo na stronie (mode 'page').
+  Bez JS zakładki są ukryte, a sekcje stoją jedna pod drugą.
+*/-->
+<form th:fragment="panel(mode, c, back)" th:class="|consent-panel consent-panel-${mode}|"
+      th:action="@{/zgoda-cookies}" method="post" th:with="p=${'consent-' + mode}">
+  <input type="hidden" name="powrot" th:value="${back}">
+  <input type="hidden" name="zrodlo" th:value="${mode == 'dialog' ? 'DIALOG' : 'PAGE'}">
+  <div th:if="${mode == 'dialog'}" class="consent-panel-head">
+    <p id="consent-dialog-title" class="consent-panel-title">Ustawienia cookies</p>
+    <button class="consent-close" type="button" data-consent-close aria-label="Zamknij bez zapisywania">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="consent-tabs" role="tablist" aria-label="Sekcje ustawień cookies" hidden>
+    <button th:each="tab, it : ${ {'Zgoda', 'Szczegóły', 'O plikach cookies'} }" class="consent-tab" type="button"
+            role="tab" th:id="${p + '-tab-' + it.index}" th:attr="aria-controls=${p + '-panel-' + it.index}"
+            th:text="${tab}">Zgoda</button>
+  </div>
+
+  <div class="consent-panel-body">
+    <section th:id="${p + '-panel-0'}" class="consent-section" role="tabpanel" th:attr="aria-labelledby=${p + '-tab-0'}">
+      <h2 class="consent-heading">Na co się zgadzasz</h2>
+      <p>Niezbędne ciasteczka działają zawsze, bo bez nich nie wyślesz formularza. Statystykę możesz włączyć
+        i w każdej chwili wyłączyć. Więcej w <a href="/polityka-prywatnosci">polityce prywatności</a>.</p>
+      <div class="consent-option">
+        <div>
+          <p class="consent-option-name" th:id="${p + '-necessary'}">Niezbędne</p>
+          <p class="consent-option-desc">Pamiętają Twój wybór i chronią formularze przed podszyciem. Nie da się ich wyłączyć.</p>
+        </div>
+        <span class="consent-switch">
+          <input type="checkbox" checked disabled th:attr="aria-labelledby=${p + '-necessary'}">
+          <span class="consent-switch-track" aria-hidden="true"></span>
+        </span>
+      </div>
+      <div class="consent-option">
+        <div>
+          <label class="consent-option-name" th:for="${p + '-statistics'}">Statystyka</label>
+          <p class="consent-option-desc">Stały, losowy identyfikator pozwala mi policzyć, ile osób wraca na stronę.
+            Bez zgody liczę tylko anonimowe odsłony z jednego dnia.</p>
+        </div>
+        <span class="consent-switch">
+          <input type="checkbox" name="statystyka" value="on" th:id="${p + '-statistics'}"
+                 th:checked="${c != null and c.statistics()}">
+          <span class="consent-switch-track" aria-hidden="true"></span>
+        </span>
+      </div>
+    </section>
+
+    <section th:id="${p + '-panel-1'}" class="consent-section" role="tabpanel" th:attr="aria-labelledby=${p + '-tab-1'}">
+      <h2 class="consent-heading">Ciasteczka na tej stronie</h2>
+      <div class="consent-table">
+        <table>
+          <thead><tr><th scope="col">Nazwa</th><th scope="col">Rodzaj</th><th scope="col">Po co</th><th scope="col">Ważność</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Nazwa"><code>__Host-st_zgoda</code></td><td data-label="Rodzaj">Niezbędne</td>
+              <td data-label="Po co">Losowy identyfikator Twojej decyzji z tego panelu</td><td data-label="Ważność">6 miesięcy</td></tr>
+            <tr><td data-label="Nazwa"><code>JSESSIONID</code></td><td data-label="Rodzaj">Niezbędne</td>
+              <td data-label="Po co">Chroni formularze przed podszyciem</td><td data-label="Ważność">Do zamknięcia przeglądarki</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="consent-option-desc">Oba ciasteczka zakłada ta strona. Statystyka ze zgodą korzysta z identyfikatora
+        w <code>__Host-st_zgoda</code> i nie zakłada kolejnego. Film z YouTube ładuje się dopiero po kliknięciu, w trybie bez ciasteczek.</p>
+    </section>
+
+    <section th:id="${p + '-panel-2'}" class="consent-section" role="tabpanel" th:attr="aria-labelledby=${p + '-tab-2'}">
+      <h2 class="consent-heading">Czym są ciasteczka</h2>
+      <p>To małe pliki tekstowe, które strona zapisuje w przeglądarce. Dzięki nim pamięta na przykład, że ustawienia
+        są już wybrane.</p>
+      <p>Bez pytania wolno zapisywać tylko ciasteczka niezbędne do działania strony. Na każde inne potrzebuję Twojej zgody.</p>
+      <p>Twoja decyzja trafia do bazy razem z datą. Na stronie <a href="/ustawienia-cookies">Ustawienia cookies</a> zobaczysz
+        jej identyfikator, pobierzesz swoje dane albo zmienisz zdanie.</p>
+    </section>
+  </div>
+
+  <div class="consent-panel-actions">
+    <button class="btn btn-outline consent-btn" type="submit" name="wybor" value="nie">Tylko niezbędne</button>
+    <button class="btn btn-outline consent-btn" type="submit" name="wybor" value="zapisz">Zapisz wybór</button>
+    <button class="btn btn-outline consent-btn" type="submit" name="wybor" value="tak">Akceptuję wszystkie</button>
+  </div>
+</form>
+
+</body>
+</html>
