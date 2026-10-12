@@ -3,9 +3,11 @@ package pl.szymtrener.offer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import pl.szymtrener.common.Plural;
 import pl.szymtrener.settings.SettingsService;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Oferta online w postaci gotowej do wyswietlenia.
@@ -19,8 +21,12 @@ public class OnlineOfferService {
 
     /** Cena Sciezki 1 z briefu, gdy nikt jej jeszcze nie zmienil w panelu. */
     public static final int DEFAULT_CONSULT_PRICE_GR = 34900;
-    /** Cena jadlospisu ze strony sprzed przeniesienia jej do panelu. */
-    public static final int DEFAULT_DIET_PRICE_GR = 12900;
+    /** Cena jadlospisu z cennika z pazdziernika 2026, gdy nikt jej nie zmienil w panelu. */
+    public static final int DEFAULT_DIET_PRICE_GR = 29900;
+    /** Plan treningowy + jadlospis, jeden wspolny wywiad. */
+    public static final int DEFAULT_COMBO_PRICE_GR = 54900;
+    /** Aktualizacja planu albo jadlospisu po 3 miesiacach. */
+    public static final int DEFAULT_UPDATE_PRICE_GR = 17900;
 
     private final OnlinePackageRepository packages;
     private final TestimonialRepository testimonials;
@@ -68,6 +74,51 @@ public class OnlineOfferService {
         return settings.getInt(SettingsService.OFFER_DIET_PRICE_GR, DEFAULT_DIET_PRICE_GR);
     }
 
+    public int comboPriceGr() {
+        return settings.getInt(SettingsService.OFFER_COMBO_PRICE_GR, DEFAULT_COMBO_PRICE_GR);
+    }
+
+    public int updatePriceGr() {
+        return settings.getInt(SettingsService.OFFER_UPDATE_PRICE_GR, DEFAULT_UPDATE_PRICE_GR);
+    }
+
+    /** Pozycja mini cennika produktow jednorazowych: „Plan treningowy - 349 zł · co zawiera”. */
+    public record OneOffView(String name, String price, String contents) {}
+
+    /** Pozycja mini cennika przed sformatowaniem, zeby „od X” liczyc z tych samych pozycji. */
+    private record OneOff(String name, int priceGr, String contents) {}
+
+    /**
+     * Produkty jednorazowe w kolejnosci z cennika. Plan treningowy to dotychczasowa
+     * „konsultacja + plan” (ta sama cena z panelu), jadlospis to ta sama kwota co
+     * na karcie w sekcji „Zdalnie”. Jedno zrodlo kazdej ceny. Ukrycie planu albo
+     * jadlospisu w panelu zdejmuje je tez stad, razem z zestawem, ktory z nich sie sklada.
+     */
+    private List<OneOff> visibleOneOff() {
+        boolean plan = consultation().visible();
+        boolean diet = diet().visible();
+        List<OneOff> out = new ArrayList<>();
+        if (plan) out.add(new OneOff("Plan treningowy", consultPriceGr(),
+                "rozmowa 30 min przed startem, plan w PDF, 14 dni kontaktu mailowo lub przez WhatsApp"));
+        if (diet) out.add(new OneOff("Jadłospis", dietPriceGr(),
+                "wywiad, jadłospis, lista zakupów, 14 dni kontaktu"));
+        if (plan && diet) out.add(new OneOff("Plan treningowy + jadłospis", comboPriceGr(),
+                "jedno i drugie, jeden wspólny wywiad"));
+        if (plan || diet) out.add(new OneOff("Aktualizacja po 3 miesiącach", updatePriceGr(),
+                "przegląd postępów i nowa wersja planu albo jadłospisu"));
+        return out;
+    }
+
+    public List<OneOffView> oneOff() {
+        return visibleOneOff().stream().map(o -> new OneOffView(o.name(), money(o.priceGr()), o.contents())).toList();
+    }
+
+    /** Najnizsza cena widocznego produktu jednorazowego — „od 179 zł” pod mini cennikiem. Null, gdy brak. */
+    public String oneOffFrom() {
+        return visibleOneOff().stream().mapToInt(OneOff::priceGr).min().stream()
+                .mapToObj(OnlineOfferService::money).findFirst().orElse(null);
+    }
+
     /**
      * Pakiet gotowy do wyrenderowania.
      *
@@ -96,11 +147,9 @@ public class OnlineOfferService {
         String targetLine = starting
                 ? "Cena docelowa: " + money(p.getTargetTotalGr()) + " (" + money(p.getTargetMonthlyGr()) + "/mies.)"
                 : null;
-        String seatsLine = starting && p.seatsLeft() > 0
-                ? "Zostało " + p.seatsLeft() + " z " + p.getSeatsTotal() + " miejsc w cenie startowej"
-                : null;
+        String seatsLine = starting && p.seatsLeft() > 0 ? seatsLine(p.seatsLeft(), p.getSeatsTotal()) : null;
         String conditionLine = starting
-                ? "Cena startowa w zamian za opinię po zakończeniu współpracy."
+                ? "Cenę startową dostajesz w zamian za opinię po zakończeniu współpracy."
                 : null;
         // Plakietka promocyjna znika razem z cena startowa — po zamknieciu naboru
         // zostaje sama kwota, bez oznaczen (brief 2.4).
@@ -111,6 +160,12 @@ public class OnlineOfferService {
                 money(total), money(monthly) + "/mies.",
                 targetLine, seatsLine, conditionLine,
                 badge, p.isHighlighted(), starting);
+    }
+
+    /** „Zostały 3 z 5 miejsc w cenie startowej.” / „Zostało 1 z 5…” — czasownik idzie za liczbą. */
+    static String seatsLine(int left, int total) {
+        String verb = Plural.form(left, "Zostało", "Zostały", "Zostało");
+        return verb + " " + left + " z " + total + " miejsc w cenie startowej.";
     }
 
     /** Grosze → „1 074 zł". Reguła jest wspólna dla całej oferty, patrz {@link Money}. */

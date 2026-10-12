@@ -2,6 +2,8 @@ package pl.szymtrener.admin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,8 @@ import java.util.Map;
 public class AdminOfferController {
 
     private static final Logger log = LoggerFactory.getLogger(AdminOfferController.class);
+    /** Najdluzsza umowa w Opiece, jaka ma sens; wieksza liczba to literowka, nie oferta. */
+    static final int MAX_TERM_MONTHS = 60;
 
     private final OnlinePackageRepository packages;
     private final TestimonialRepository testimonials;
@@ -63,6 +67,8 @@ public class AdminOfferController {
         model.addAttribute("dietPrice", zlote(offer.dietPriceGr()));
         model.addAttribute("dietVisible",
                 settings.getBoolean(SettingsService.OFFER_DIET_VISIBLE, true));
+        model.addAttribute("comboPrice", zlote(offer.comboPriceGr()));
+        model.addAttribute("updatePrice", zlote(offer.updatePriceGr()));
         model.addAttribute("title", "Oferta online");
         return "admin/offer";
     }
@@ -91,12 +97,30 @@ public class AdminOfferController {
                            RedirectAttributes flash) {
         Integer gr = grosze(price);
         if (gr == null) {
-            flash.addFlashAttribute("error", "Cena jadłospisu musi być liczbą, np. 129.");
+            flash.addFlashAttribute("error", "Cena jadłospisu musi być liczbą, np. 299.");
             return "redirect:/admin/oferta";
         }
         settings.set(SettingsService.OFFER_DIET_PRICE_GR, String.valueOf(gr));
         settings.set(SettingsService.OFFER_DIET_VISIBLE, String.valueOf(visible));
         flash.addFlashAttribute("info", "Zapisano jadłospis dietetyczny.");
+        return "redirect:/admin/oferta";
+    }
+
+    /** Plan + jadlospis i aktualizacja po 3 miesiacach: dwie kwoty, bez osobnej widocznosci. */
+    @Operation(summary = "Ceny produktów jednorazowych",
+            description = "Zapisuje ceny „Plan treningowy + jadłospis” i „Aktualizacja po 3 miesiącach” (w złotych).")
+    @ApiResponse(responseCode = "302", description = "Powrót na /admin/oferta z komunikatem o zapisie albo błędzie")
+    @PostMapping("/jednorazowe")
+    public String saveOneOff(@RequestParam String combo, @RequestParam String update,
+                             RedirectAttributes flash) {
+        Integer comboGr = grosze(combo), updateGr = grosze(update);
+        if (comboGr == null || updateGr == null) {
+            flash.addFlashAttribute("error", "Obie ceny muszą być liczbami, np. 549 i 179.");
+            return "redirect:/admin/oferta";
+        }
+        settings.set(SettingsService.OFFER_COMBO_PRICE_GR, String.valueOf(comboGr));
+        settings.set(SettingsService.OFFER_UPDATE_PRICE_GR, String.valueOf(updateGr));
+        flash.addFlashAttribute("info", "Zapisano ceny produktów jednorazowych.");
         return "redirect:/admin/oferta";
     }
 
@@ -330,6 +354,7 @@ public class AdminOfferController {
         model.addAttribute("ruleCancel", settings.get(StationaryOfferService.RULE_CANCEL, ""));
         model.addAttribute("ruleLate", settings.get(StationaryOfferService.RULE_LATE, ""));
         model.addAttribute("rulePause", settings.get(StationaryOfferService.RULE_PAUSE, ""));
+        model.addAttribute("ruleFreeze", settings.get(StationaryOfferService.RULE_FREEZE, ""));
         model.addAttribute("prices", pricesInZloty(all));
         model.addAttribute("title", "Cennik stacjonarny");
         return "admin/offer-stationary";
@@ -351,6 +376,9 @@ public class AdminOfferController {
                                  @RequestParam(defaultValue = "false") boolean featured,
                                  @RequestParam(defaultValue = "0") int sortOrder,
                                  @RequestParam(defaultValue = "false") boolean visible,
+                                 @RequestParam(required = false) String termMonths,
+                                 @RequestParam(required = false) String badgeText,
+                                 @RequestParam(required = false) String description,
                                  RedirectAttributes flash) {
 
         StationaryPackage p = stationary.findById(id)
@@ -365,14 +393,29 @@ public class AdminOfferController {
             flash.addFlashAttribute("error", "Pakiet musi mieć co najmniej jeden trening.");
             return "redirect:/admin/oferta/stacjonarnie";
         }
-        Integer weeks = weeks(validityWeeks);
+        Integer weeks = optionalInt(validityWeeks);
         if (weeks != null && weeks <= 0) {
             flash.addFlashAttribute("error", "Ważność podaj w tygodniach albo zostaw puste dla wejścia bez terminu.");
             return "redirect:/admin/oferta/stacjonarnie";
         }
 
+        // Wypelniona dlugosc umowy = pozycja rozliczana co miesiac (Opieka Longevity).
+        Integer term = optionalInt(termMonths);
+        if (term != null && (term <= 0 || term > MAX_TERM_MONTHS)) {
+            flash.addFlashAttribute("error", "Długość umowy podaj w miesiącach (1-" + MAX_TERM_MONTHS
+                    + "), np. 12, albo zostaw puste dla zwykłego pakietu.");
+            return "redirect:/admin/oferta/stacjonarnie";
+        }
+        if (text(badgeText).length() > 60 || text(description).length() > 400) {
+            flash.addFlashAttribute("error", "Plakietka może mieć do 60 znaków, opis do 400.");
+            return "redirect:/admin/oferta/stacjonarnie";
+        }
+
         p.setName(name.trim());
         p.setSessions(sessions);
+        p.setTermMonths(term);
+        p.setBadgeText(blankToNull(badgeText));
+        p.setDescription(blankToNull(description));
         p.setPricePerSessionGr(price);
         p.setValidityWeeks(weeks);
         p.setFeatured(featured);
@@ -424,10 +467,12 @@ public class AdminOfferController {
     public String saveRules(@RequestParam(required = false) String cancel,
                             @RequestParam(required = false) String late,
                             @RequestParam(required = false) String pause,
+                            @RequestParam(required = false) String freeze,
                             RedirectAttributes flash) {
         settings.set(StationaryOfferService.RULE_CANCEL, text(cancel));
         settings.set(StationaryOfferService.RULE_LATE, text(late));
         settings.set(StationaryOfferService.RULE_PAUSE, text(pause));
+        settings.set(StationaryOfferService.RULE_FREEZE, text(freeze));
         flash.addFlashAttribute("info", "Zapisano zasady odwołań.");
         return "redirect:/admin/oferta/stacjonarnie";
     }
@@ -436,8 +481,8 @@ public class AdminOfferController {
         return v == null ? "" : v.trim();
     }
 
-    /** Puste pole = wejscie bez terminu, nie zero tygodni. */
-    static Integer weeks(String input) {
+    /** Liczba z pola opcjonalnego (tygodnie waznosci, miesiace umowy). Puste = null, smieci = 0. */
+    static Integer optionalInt(String input) {
         if (input == null || input.isBlank()) return null;
         try {
             return Integer.valueOf(input.trim());

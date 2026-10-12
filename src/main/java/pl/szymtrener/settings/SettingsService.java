@@ -40,6 +40,9 @@ public class SettingsService {
     /** Jadlospis dietetyczny: jedna kwota, tak samo jak konsultacja. W GROSZACH. */
     public static final String OFFER_DIET_PRICE_GR = "offer.diet.price.gr";
     public static final String OFFER_DIET_VISIBLE = "offer.diet.visible";
+    /** Produkty jednorazowe dopisane w cenniku z pazdziernika 2026. W GROSZACH. */
+    public static final String OFFER_COMBO_PRICE_GR = "offer.combo.price.gr";
+    public static final String OFFER_UPDATE_PRICE_GR = "offer.update.price.gr";
     /**
      * Stan odbioru odpowiedzi ze skrzynki (InboundMailService). Nie sa to ustawienia do edycji,
      * tylko pamiec postepu: ktory UID juz przeczytalismy i w jakiej numeracji skrzynki.

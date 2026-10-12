@@ -16,6 +16,12 @@ import java.util.Locale;
 public class HomeController {
 
     private static final ZoneId ZONE = ZoneId.of("Europe/Warsaw");
+    /**
+     * Dzien publikacji ostatniej zmiany tekstow strony. Stopka pokazuje „Aktualizacja:”
+     * jako pozniejsza z tej daty i ostatniego wpisu na blogu. Przy kolejnej zmianie
+     * tekstow przesun te date.
+     */
+    static final LocalDate COPY_UPDATED = LocalDate.of(2026, 10, 12);
     private static final DateTimeFormatter PL = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.forLanguageTag("pl-PL"));
 
     private final PostRepository posts;
@@ -36,8 +42,9 @@ public class HomeController {
         // dateModified strony glownej: data ostatniej zmiany tresci w serwisie
         LocalDate modified = posts.findSlugsForSitemap().stream()
                 .map(row -> ((Instant) row[1]).atZone(ZONE).toLocalDate())
+                .filter(COPY_UPDATED::isBefore)
                 .max(LocalDate::compareTo)
-                .orElse(LocalDate.now(ZONE));
+                .orElse(COPY_UPDATED);
 
         model.addAttribute("lastModified", modified.toString());
         model.addAttribute("lastModifiedLabel", PL.format(modified));
@@ -49,6 +56,8 @@ public class HomeController {
         model.addAttribute("packages", offer.packages());
         model.addAttribute("consult", offer.consultation());
         model.addAttribute("diet", offer.diet());
+        model.addAttribute("oneOff", offer.oneOff());
+        model.addAttribute("oneOffFrom", offer.oneOffFrom());
         model.addAttribute("testimonials", offer.testimonials());
         model.addAttribute("onlineFaq", offer.faq());
         // Cena w danych strukturalnych musi zgadzac sie z ta na stronie — rozbieznosc
@@ -57,12 +66,11 @@ public class HomeController {
 
         // Cennik stacjonarny: te same liczby zasilaja karty w sekcji oferty
         // i odpowiedz w FAQ (brief stacjonarny 5.3, jedno zrodlo cennika).
-        model.addAttribute("individualPackages", stationary.individual());
-        model.addAttribute("pairPackages", stationary.pairs());
-        model.addAttribute("stationaryRules", stationary.rules());
-        model.addAttribute("stationaryPrices", stationary.priceSentence());
-        model.addAttribute("longestValidity", stationary.longestValidity());
-        model.addAttribute("pairPrice", stationary.cheapestPair());
+        StationaryOfferService.Page page = stationary.page();
+        model.addAttribute("stationary", page);
+        HomeFaq faq = HomeFaq.of(page, offer.lowestMonthly(), offer.consultation(), offer.diet());
+        model.addAttribute("faq", faq);
+        model.addAttribute("faqJson", faq.json());
         return "index";
     }
 

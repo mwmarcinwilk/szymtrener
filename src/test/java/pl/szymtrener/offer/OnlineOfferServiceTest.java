@@ -99,8 +99,18 @@ class OnlineOfferServiceTest {
         assertThat(v.price()).isEqualTo("1\u00A0788\u00A0zł");
         assertThat(v.badge()).isEqualTo("CENA STARTOWA");
         assertThat(v.targetLine()).isEqualTo("Cena docelowa: 2\u00A0388\u00A0zł (199\u00A0zł/mies.)");
-        assertThat(v.seatsLine()).isEqualTo("Zostało 3 z 5 miejsc w cenie startowej");
-        assertThat(v.conditionLine()).isNotNull();
+        assertThat(v.seatsLine()).isEqualTo("Zostały 3 z 5 miejsc w cenie startowej.");
+        assertThat(v.conditionLine()).isEqualTo("Cenę startową dostajesz w zamian za opinię po zakończeniu współpracy.");
+    }
+
+    @Test
+    @DisplayName("czasownik w liczniku miejsc idzie za liczbą: zostało 1, zostały 2-4, zostało 5")
+    void seatsLineIsInflected() {
+        assertThat(OnlineOfferService.seatsLine(1, 5)).isEqualTo("Zostało 1 z 5 miejsc w cenie startowej.");
+        assertThat(OnlineOfferService.seatsLine(2, 5)).isEqualTo("Zostały 2 z 5 miejsc w cenie startowej.");
+        assertThat(OnlineOfferService.seatsLine(4, 5)).isEqualTo("Zostały 4 z 5 miejsc w cenie startowej.");
+        assertThat(OnlineOfferService.seatsLine(5, 10)).isEqualTo("Zostało 5 z 10 miejsc w cenie startowej.");
+        assertThat(OnlineOfferService.seatsLine(12, 20)).isEqualTo("Zostało 12 z 20 miejsc w cenie startowej.");
     }
 
     @Test
@@ -128,5 +138,30 @@ class OnlineOfferServiceTest {
 
         q.setAnswer("Dla osób 35–55 lat.");
         assertThat(q.answered()).isTrue();
+    }
+
+    @Test
+    @DisplayName("ukryty jadłospis znika z mini cennika razem z zestawem, a „od” liczy się z widocznych")
+    void hiddenDietLeavesOneOffList() {
+        pl.szymtrener.settings.SettingsService settings = org.mockito.Mockito.mock(pl.szymtrener.settings.SettingsService.class);
+        org.mockito.Mockito.when(settings.getBoolean(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyBoolean()))
+                .thenAnswer(inv -> !pl.szymtrener.settings.SettingsService.OFFER_DIET_VISIBLE.equals(inv.getArgument(0)));
+        org.mockito.Mockito.when(settings.getInt(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyInt()))
+                .thenAnswer(inv -> inv.getArgument(1));
+        OnlineOfferService service = new OnlineOfferService(null, null, null, settings);
+
+        assertThat(service.oneOff()).extracting(OnlineOfferService.OneOffView::name)
+                .containsExactly("Plan treningowy", "Aktualizacja po 3 miesiącach");
+        assertThat(service.oneOffFrom()).isEqualTo("179\u00A0zł");
+    }
+
+    @Test
+    @DisplayName("opinia powyżej 500 znaków jest długa i dostaje kartę na dwa rzędy")
+    void longTestimonial() {
+        Testimonial t = new Testimonial();
+        t.setBody("a".repeat(Testimonial.LONG_BODY_CHARS));
+        assertThat(t.isLong()).isFalse();
+        t.setBody("a".repeat(Testimonial.LONG_BODY_CHARS + 1));
+        assertThat(t.isLong()).isTrue();
     }
 }

@@ -1,1 +1,2 @@
 - [Pełny zestaw (verify + IT, z Dockerem i bez), sondy](reference_it_bez_dockera.md) — clean test pomija IT; api.version=1.43; sondy MIME, nazwy plików, ścieżki springdoc (.yaml)
+- [Thymeleaf [[...]] w JSON-LD](reference_thymeleaf_jsonld_escaping.md) — HTML-escape, nie JSON: \ i newline łamią blok; sonda SpringTemplateEngine

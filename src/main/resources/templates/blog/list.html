@@ -39,7 +39,7 @@
       <h1 th:if="${activeCategory == null}">Trening, który ma sens<br><em>przez kolejne dekady</em></h1>
       <h1 th:if="${activeCategory != null}" th:text="${activeCategory.name}">Longevity</h1>
       <p class="lead" th:text="${activeCategory != null and activeCategory.description != null} ? ${activeCategory.description} : ${blogLead}">
-        Piszę o tym, co realnie działa: treningu siłowym po 40-tce, zatrzymywaniu utraty mięśni, regeneracji i długowieczności. Bez mitów, bez skrótów.</p>
+        Piszę o tym, co działa w praktyce: o treningu siłowym po czterdziestce, o tym, jak nie tracić mięśni z wiekiem, o regeneracji i długowieczności. Bez „magicznych” skrótów.</p>
       <div class="cats">
         <a class="cat" th:classappend="${activeCategory == null and searchQuery == null} ? ' on'" href="/blog">Wszystkie</a>
         <a class="cat" th:each="c : ${categories}"
@@ -89,7 +89,7 @@
         Nic nie pasuje do frazy <strong th:text="${searchQuery}">fraza</strong>.
         Spróbuj krótszego słowa albo <a href="/blog">przejrzyj wszystkie wpisy</a>.
       </p>
-      <p th:if="${posts.isEmpty() and searchQuery == null}" class="lead">Nie ma jeszcze wpisów w tej kategorii.</p>
+      <p th:if="${posts.isEmpty() and searchQuery == null}" class="lead">W tej kategorii jeszcze nic nie ma. Pracuję nad tym.</p>
       <div class="posts">
         <article class="post" data-reveal th:each="p : ${posts}">
           <div class="post-img">
@@ -124,9 +124,9 @@
     <div class="action-band-overlay" aria-hidden="true"></div>
     <div class="container action-inner">
       <div data-reveal>
-        <div class="eyebrow">Zacznij dziś</div>
+        <div class="eyebrow">Rozmowa wstępna</div>
         <h2 class="action-title">Czytanie to dobry start. <em>Trening jest lepszy.</em></h2>
-        <p class="action-sub">Jeden telefon dzieli Cię od pierwszego treningu. Bezpłatna rozmowa wstępna, bez zobowiązań.</p>
+        <p class="action-sub">Zadzwoń albo napisz. Na rozmowie wstępnej (15-20 minut, nic nie kosztuje) sprawdzimy, czy możemy razem pracować.</p>
         <div class="hero-ctas">
           <a href="/#kontakt" class="btn btn-primary">Umów rozmowę wstępną</a>
           <a href="tel:+48502338373" class="btn btn-outline">502 338 373</a>

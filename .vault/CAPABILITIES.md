@@ -106,6 +106,19 @@
 - `InboundMail` — załączniki czytane z limitem `readNBytes(limit+1)`; małe obrazki inline z Content-ID (logo stopki) pomijane; przekazana wiadomość (`message/rfc822`) tylko jako dopisek.
 
 
+## Opieka Longevity i produkty jednorazowe (cennik 10/2026, V14)
+- `StationaryPackage.termMonths` (+ `badgeText`, `description`) — offer/ — wypełnione = pozycja rozliczana co miesiąc (`isMonthly()`): `sessions` to treningi w miesiącu, kwota „razem” miesięczna. Edycja w wierszu na `/admin/oferta/stacjonarnie` (pole „Umowa (mies.)”).
+- `StationaryOfferService.page()` — offer/ — wszystko dla strony głównej z JEDNEGO odczytu tabeli (`Page`: karty, zasady, zdania FAQ, rachunki roczne, `priceRange`, `hasCare()`). Nowe dane cennika na stronę dokładaj tutaj, nie jako osobną metodę z własnym zapytaniem.
+- `Page.careCompare()` / `pairCareCompare()` — rok w Opiece kontra rok w największym pakiecie (`YearCompare`: kwoty i „prawie 10 treningów”), liczone z cen; używaj zamiast wpisywać kwoty do szablonu.
+- `fragments/price-card :: card(p, cta, extra)` i `:: priceTable(list, caption)` — jedna karta i jedna tabela cennika dla indywidualnych i par. `th:replace` wykonuje się przed `th:each`/`th:if`, więc pętla i warunek idą na `th:block`.
+- Zdania FAQ z kwotami (`faqPrices`, `faqValidity`, `faqPairs`, `faqOnline`) liczone raz w `th:with` na `<html>` w `index.html` i użyte i w JSON-LD, i w widocznym FAQ.
+- `RULE_FREEZE` (`stationary.rules.freeze`) — czwarta zasada (zamrożenie w Opiece), w `rules()` i w panelu.
+- `OnlineOfferService.oneOff()` / `oneOffFrom()` — offer/ — mini cennik 4 produktów jednorazowych (plan = cena konsultacji, jadłospis = cena diety, `OFFER_COMBO_PRICE_GR`, `OFFER_UPDATE_PRICE_GR`); formularz `POST /admin/oferta/jednorazowe`.
+- `OnlineOfferService.seatsLine(left, total)` — odmiana „Zostało 1 / Zostały 3 / Zostało 5 z N miejsc”.
+- `common.Plural` — common/ — polska odmiana liczebników (`sessions`, `months`, `weeks`, `form`), wspólna dla crm i offer; przeniesiona z crm, bo crm zależy od offer i import z crm zamknąłby cykl.
+- `fragments/icons :: sprite` — sprite SVG strony publicznej (`<svg><use href="#i-phone"/></svg>`) zamiast emoji; rozmiar z `font-size` kontenera `.ic`.
+- `HomeController.COPY_UPDATED` — data ostatniej zmiany tekstów strony; stopka „Aktualizacja” = późniejsza z niej i ostatniego wpisu. Przesuń przy kolejnej zmianie tekstów.
+
 ## Zgoda na ciasteczka (V13)
 - `ConsentService.current(request)` — consent/ — zgoda tej przeglądarki (`Status(key, statistics)`) z ciasteczka `st_zgoda` sprawdzonego w bazie; zapamiętana w atrybucie żądania. Rekord usunięty w panelu = brak decyzji, pasek wraca.
 - `ConsentService.record(existingKey, statistics, source)` — consent/ — jedyne wejście zapisu decyzji: aktualizuje `cookie_consent` i dopisuje `cookie_consent_change` z `POLICY_VERSION` (zmień stałą przy zmianie treści panelu).

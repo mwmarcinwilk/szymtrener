@@ -51,7 +51,7 @@
         <div class="tx">
           <b th:text="${pack.left()} == 0 ? 'Pakiet wykorzystany w całości.'
                 : (${pack.left()} == 1 ? 'Został 1 trening z pakietu.'
-                   : 'Zostały ' + ${T(pl.szymtrener.crm.Plural).sessions(pack.left())} + ' z pakietu.')">
+                   : 'Zostały ' + ${T(pl.szymtrener.common.Plural).sessions(pack.left())} + ' z pakietu.')">
             Został 1 trening z pakietu.</b>
           <span th:if="${attendance > 0}" th:text="'Frekwencja ' + ${attendance} + '% — dobry moment na rozmowę o kontynuacji.'">
             Frekwencja 94%</span>
@@ -70,7 +70,7 @@
           <div class="kpi-ic b"><svg><use href="#i-check"/></svg></div>
           <div class="kpi-v" th:text="${attendance} + '%'">94%</div>
           <div class="kpi-l">Frekwencja</div>
-          <div class="kpi-t fl" th:text="${T(pl.szymtrener.crm.Plural).cancelled(cancelled)}">2 odwołane</div>
+          <div class="kpi-t fl" th:text="${T(pl.szymtrener.common.Plural).cancelled(cancelled)}">2 odwołane</div>
         </div>
         <div class="kpi">
           <div class="kpi-ic a"><svg><use href="#i-scale"/></svg></div>
@@ -84,7 +84,7 @@
           <div class="kpi-ic n"><svg><use href="#i-money"/></svg></div>
           <div class="kpi-v" th:text="${lifetime}">4 200 zł</div>
           <div class="kpi-l">Wartość współpracy</div>
-          <div class="kpi-t fl" th:text="${T(pl.szymtrener.crm.Plural).packages(#lists.size(packages))}">3 pakiety</div>
+          <div class="kpi-t fl" th:text="${T(pl.szymtrener.common.Plural).packages(#lists.size(packages))}">3 pakiety</div>
         </div>
       </div>
 

@@ -33,6 +33,16 @@ public class StationaryPackage {
     @Column(name = "sort_order", nullable = false) private int sortOrder;
     @Column(nullable = false) private boolean visible = true;
 
+    /**
+     * Dlugosc umowy w miesiacach. Wypelniona = pozycja rozliczana co miesiac
+     * (Opieka Longevity): {@code sessions} to treningi w MIESIACU, a kwota razem
+     * jest miesieczna. Waznosc w tygodniach takiej pozycji nie dotyczy.
+     */
+    @Column(name = "term_months") private Integer termMonths;
+    /** Plakietka nad karta, np. „Najlepszy wybór”. Pusta = brak plakietki. */
+    @Column(name = "badge_text") private String badgeText;
+    @Column private String description;
+
     @Transient
     public int totalGr() {
         return pricePerSessionGr * sessions;
@@ -71,4 +81,12 @@ public class StationaryPackage {
     public void setSortOrder(int sortOrder) { this.sortOrder = sortOrder; }
     public boolean isVisible() { return visible; }
     public void setVisible(boolean visible) { this.visible = visible; }
+    @Transient
+    public boolean isMonthly() { return termMonths != null && termMonths > 0; }
+    public Integer getTermMonths() { return termMonths; }
+    public void setTermMonths(Integer termMonths) { this.termMonths = termMonths; }
+    public String getBadgeText() { return badgeText; }
+    public void setBadgeText(String badgeText) { this.badgeText = badgeText; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }

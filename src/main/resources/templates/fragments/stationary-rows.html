@@ -31,6 +31,24 @@
         <input type="number" th:id="'o' + ${p.id}" name="sortOrder" th:value="${p.sortOrder}" min="0">
       </div>
     </div>
+    <!--/* Wypełniona „Umowa (mies.)” = rozliczenie co miesiąc (Opieka Longevity):
+           „Treningów” to wtedy treningi w miesiącu, a ważność w tygodniach odpada. */-->
+    <div class="f-row" style="align-items:flex-start;margin-top:9px">
+      <div class="fld" style="width:120px;margin:0">
+        <label th:for="'m' + ${p.id}">Umowa (mies.)</label>
+        <input type="number" th:id="'m' + ${p.id}" name="termMonths" th:value="${p.termMonths}" min="1" max="60"
+               placeholder="tylko miesięczne">
+      </div>
+      <div class="fld" style="width:170px;margin:0">
+        <label th:for="'b' + ${p.id}">Plakietka</label>
+        <input type="text" th:id="'b' + ${p.id}" name="badgeText" th:value="${p.badgeText}" maxlength="60"
+               placeholder="np. Najlepszy wybór">
+      </div>
+      <div class="fld" style="flex:1;min-width:220px;margin:0">
+        <label th:for="'d' + ${p.id}">Opis pod ceną</label>
+        <input type="text" th:id="'d' + ${p.id}" name="description" th:value="${p.description}" maxlength="400">
+      </div>
+    </div>
     <div class="f-row" style="align-items:center;margin-top:9px">
       <label style="display:flex;gap:8px;align-items:center;cursor:pointer;font-size:13px">
         <input type="checkbox" name="visible" value="true" th:checked="${p.visible}" style="width:auto">
@@ -40,11 +58,12 @@
         <input type="checkbox" name="featured" value="true" th:checked="${p.featured}" style="width:auto">
         Wyróżniony
       </label>
+
       <!--/* Kwota „razem" i rabat są tylko podglądem: liczy je strona z ceny za trening. */-->
       <span class="t-sub" style="font-size:11.5px;color:var(--ink-3)"
-            th:text="${p.sessions} > 1
-                ? 'Razem ' + ${T(pl.szymtrener.offer.Money).format(p.totalGr())}
-                : 'wejście bez terminu'">Razem 1 800 zł</span>
+            th:with="total=${T(pl.szymtrener.offer.Money).format(p.totalGr())}"
+            th:text="${p.monthly} ? 'Razem ' + ${total} + ' / miesiąc'
+                : (${p.sessions} > 1 ? 'Razem ' + ${total} : 'wejście bez terminu')">Razem 1 800 zł</span>
       <div style="flex:1"></div>
       <button class="mini del" type="submit" title="Usuń pakiet"
               th:formaction="@{/admin/oferta/stacjonarnie/{id}/usun(id=${p.id})}"

@@ -36,6 +36,18 @@ public class Testimonial {
         return hasDuration ? durationLabel : null;
     }
 
+    /** Od tylu znakow opinia dostaje na stronie szeroka karte na dwa rzedy. */
+    static final int LONG_BODY_CHARS = 500;
+
+    /**
+     * Dluga opinia w siatce rowniej z krotkimi rozciagala caly rzad i zostawiala
+     * puste miejsce w kartach obok. Dluga zajmuje dwa rzedy, krotkie staja obok.
+     */
+    @Transient
+    public boolean isLong() {
+        return body != null && body.length() > LONG_BODY_CHARS;
+    }
+
     @Transient
     public String initial() {
         return name == null || name.isBlank() ? "?" : name.substring(0, 1).toUpperCase(java.util.Locale.ROOT);

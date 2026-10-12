@@ -1,5 +1,5 @@
 # INVENTORY — szymtrener
-> AUTO-GENEROWANY 2026-09-17 przez tools/index_project.py — NIE edytuj ręcznie.
+> AUTO-GENEROWANY 2026-09-21 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
 > Beany: 62 · Endpointy: 98 · Metody: 1307 · Front: 0
 
@@ -199,9 +199,7 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] previewOnlyImages(): void  :50
 
 ### AdminConsentController  (src/main/java/pl/szymtrener/admin/AdminConsentController.java)
-- [pub] export(@PathVariable String key): ResponseEntity<byte[]>  :54
-- [pub] delete(@PathVariable String key, Principal principal, RedirectAttributes flash): String  :61
-- [prv] notFound(String key): NotFoundException  :72
+- [prv] notFound(String key): NotFoundException  :90
 
 ### AdminController  (src/main/java/pl/szymtrener/admin/AdminController.java)
 - [pub] dashboard(Model model): String  :56
@@ -498,10 +496,10 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [pub] rows(List<Trainee> source, int staleDays): List<ClientRow>  :250
 
 ### ConsentController  (src/main/java/pl/szymtrener/web/ConsentController.java)
-- [pub] settings(Model model): String  :56
-- [pub] myData(HttpServletRequest request): ResponseEntity<byte[]>  :96
-- [   ] safeRedirect(String path): String  :103
-- [prv] unsafeInRedirect(int c): boolean  :116
+- [pub] settings(Model model): String  :64
+- [pub] myData(HttpServletRequest request): ResponseEntity<byte[]>  :126
+- [   ] safeRedirect(String path): String  :133
+- [prv] unsafeInRedirect(int c): boolean  :146
 
 ### ConsentControllerIT  (src/test/java/pl/szymtrener/web/ConsentControllerIT.java)
 - [   ] clean(): void  :49
@@ -509,18 +507,18 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] rejectsWithoutCsrf(): void  :68
 - [   ] acceptStoresConsentAndCookie(): void  :75
 - [   ] changeKeepsKey(): void  :94
-- [   ] safeRedirect(): void  :108
-- [   ] myDataOnlyForOwnCookie(): void  :119
-- [   ] analyticsLinksConsent(): void  :140
-- [   ] countsReturningAcrossDays(): void  :157
-- [   ] secureCookieUsesHostPrefix(): void  :172
-- [   ] viewIsBufferedBeforeCommit(@Autowired org.thymeleaf.spring6.view.ThymeleafViewResolver resolver): void  :187
-- [   ] limitsNewConsentsPerClient(): void  :193
-- [   ] adminRequiresLogin(): void  :208
-- [   ] adminSearchExportDelete(): void  :222
-- [   ] statsRender(): void  :248
-- [prv] fetchConsent(): MockHttpServletRequestBuilder  :254
-- [prv] cookie(UUID key): Cookie  :258
+- [   ] safeRedirect(): void  :115
+- [   ] myDataOnlyForOwnCookie(): void  :126
+- [   ] analyticsLinksConsent(): void  :147
+- [   ] countsReturningAcrossDays(): void  :164
+- [   ] secureCookieUsesHostPrefix(): void  :179
+- [   ] viewIsBufferedBeforeCommit(@Autowired org.thymeleaf.spring6.view.ThymeleafViewResolver resolver): void  :194
+- [   ] limitsNewConsentsPerClient(): void  :200
+- [   ] adminRequiresLogin(): void  :215
+- [   ] adminSearchExportDelete(): void  :229
+- [   ] statsRender(): void  :255
+- [prv] fetchConsent(): MockHttpServletRequestBuilder  :261
+- [prv] cookie(UUID key): Cookie  :265
 
 ### ConsentCookie  (src/main/java/pl/szymtrener/consent/ConsentCookie.java)
 - [   ] read(HttpServletRequest request): Optional<UUID>  :32
@@ -1139,6 +1137,10 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] findByVisibleTrueOrderBySortOrderAsc(): List<OnlinePackage>  :8
 - [   ] findAllByOrderBySortOrderAsc(): List<OnlinePackage>  :9
 
+### OpenApiDocsIT  (src/test/java/pl/szymtrener/config/OpenApiDocsIT.java)
+- [   ] docsHiddenFromAnonymous(): void  :35
+- [   ] adminSeesConsentEndpoints(): void  :46
+
 ### PageView  (src/main/java/pl/szymtrener/analytics/PageView.java)
 - [pub] getId(): Long  :26
 - [pub] getPath(): String  :27
@@ -1440,7 +1442,7 @@ POST    /zgoda-cookies                                ConsentController.consent(
 
 ### SecurityConfig  (src/main/java/pl/szymtrener/config/SecurityConfig.java)
 - [   ] filterChain(HttpSecurity http): SecurityFilterChain  :16
-- [   ] passwordEncoder(): PasswordEncoder  :53
+- [   ] passwordEncoder(): PasswordEncoder  :57
 
 ### SeoController  (src/main/java/pl/szymtrener/seo/SeoController.java)
 - [pub] robots(): String  :44

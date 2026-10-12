@@ -179,10 +179,10 @@ public class SeoController {
     public String llms() {
         List<Object[]> rows = posts.findSlugsForSitemap();
         StringBuilder sb = new StringBuilder("""
-                # Szymon Domagała – Trener Longevity, Łódź
+                # Szymon Domagała - Trener Longevity, Łódź
 
                 > Trener personalny prowadzący treningi stacjonarne w Łodzi (Armii Krajowej 32a)
-                > oraz online w całej Polsce. Specjalizacja: osoby 35–55 lat, trening siłowy
+                > oraz online w całej Polsce. Najczęściej osoby 35-55 lat, trening siłowy
                 > i długowieczność. Kontakt: +48 502 338 373, szymtrener@gmail.com
 
                 ## Strony

@@ -72,9 +72,9 @@
         <div class="card-b">
           <form method="post" action="/admin/oferta/dieta" class="f-row">
             <div class="fld" style="max-width:200px">
-              <label for="dietPrice">Cena od</label>
+              <label for="dietPrice">Cena</label>
               <input type="text" id="dietPrice" name="price" th:value="${dietPrice}" inputmode="decimal">
-              <div class="hint"><span>w złotych, np. 129</span></div>
+              <div class="hint"><span>w złotych, np. 299</span></div>
             </div>
             <div class="fld">
               <label style="display:flex;gap:9px;align-items:center;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px">
@@ -82,6 +82,31 @@
                 Pokazuj jadłospis na stronie
               </label>
               <div class="hint"><span>Karta w sekcji „Nie mieszkasz w Łodzi?” i kwota w odpowiedzi FAQ o cenach</span></div>
+            </div>
+            <button class="btn btn-p" type="submit"><svg><use href="#i-check"/></svg>Zapisz</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ══ PRODUKTY JEDNORAZOWE ══════════════════════════════════════════ -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-h">
+          <h2>Plan + jadłospis i aktualizacja</h2>
+        </div>
+        <div class="card-b">
+          <form method="post" action="/admin/oferta/jednorazowe" class="f-row">
+            <div class="fld" style="max-width:200px">
+              <label for="comboPrice">Plan treningowy + jadłospis</label>
+              <input type="text" id="comboPrice" name="combo" th:value="${comboPrice}" inputmode="decimal" required>
+              <div class="hint"><span>w złotych, np. 549</span></div>
+            </div>
+            <div class="fld" style="max-width:200px">
+              <label for="updatePrice">Aktualizacja po 3 miesiącach</label>
+              <input type="text" id="updatePrice" name="update" th:value="${updatePrice}" inputmode="decimal" required>
+              <div class="hint"><span>w złotych, np. 179</span></div>
+            </div>
+            <div class="fld">
+              <div class="hint"><span>Mini cennik w ścieżce „Plan na start” i tabela w FAQ. Plan treningowy i jadłospis mają ceny w kartach wyżej.</span></div>
             </div>
             <button class="btn btn-p" type="submit"><svg><use href="#i-check"/></svg>Zapisz</button>
           </form>

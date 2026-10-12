@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Szymon Domagała – Trener Longevity Łódź | sprawni za 20 lat</title>
-<meta name="description" content="Szymon Domagała – trener personalny i Trener Longevity w Łodzi. Treningi personalne stacjonarne na Retkini oraz online w całej Polsce dla osób 35–55 lat. Umów rozmowę wstępną.">
+<title>Szymon Domagała - Trener Longevity | trener personalny Łódź</title>
+<meta name="description" content="Trening siłowy dla osób 35-55 lat, które chcą być sprawne za 20 lat. Studio na Retkini w Łodzi i prowadzenie online w całej Polsce. Umów rozmowę wstępną.">
 <link rel="canonical" href="https://szymtrener.pl/">
 <meta name="author" content="Szymon Domagała">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -14,14 +14,14 @@
 <link rel="preconnect" href="https://www.youtube-nocookie.com">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pl_PL">
-<meta property="og:site_name" content="Szymon Domagała – Trener Longevity">
+<meta property="og:site_name" content="Szymon Domagała - Trener Longevity">
 <meta property="og:url" content="https://szymtrener.pl/">
-<meta property="og:title" content="Szymon Domagała – Trener Longevity Łódź | sprawni za 20 lat">
-<meta property="og:description" content="Trener personalny i Trener Longevity w Łodzi. Treningi stacjonarne i online dla osób 35–55 lat. Trenuję ludzi, którzy chcą być sprawni za 20 lat.">
+<meta property="og:title" content="Szymon Domagała - Trener Longevity | trener personalny Łódź">
+<meta property="og:description" content="Trening siłowy dla osób 35-55 lat, które chcą być sprawne za 20 lat. Studio na Retkini w Łodzi i prowadzenie online w całej Polsce.">
 <meta property="og:image" content="https://szymtrener.pl/images/szymon-hero.jpeg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Szymon Domagała – Trener Longevity Łódź">
-<meta name="twitter:description" content="Treningi personalne stacjonarne i online dla osób 35–55 lat. Sprawni za 20 lat.">
+<meta name="twitter:title" content="Szymon Domagała - Trener Longevity | trener personalny Łódź">
+<meta name="twitter:description" content="Trening siłowy dla osób 35-55 lat, które chcą być sprawne za 20 lat. Studio na Retkini w Łodzi i online w całej Polsce.">
 <meta name="twitter:image" content="https://szymtrener.pl/images/szymon-hero.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,16 +40,16 @@
     {
       "@type": ["LocalBusiness", "HealthClub", "Organization"],
       "@id": "https://szymtrener.pl/#organizacja",
-      "name": "Fit and Health Studio Treningów Personalnych – Szymon Domagała",
+      "name": "Szymon Domagała - Trener Longevity",
       "alternateName": "Szymtrener",
       "url": "https://szymtrener.pl/",
       "logo": "https://szymtrener.pl/images/szymon-hero.jpeg",
       "image": "https://szymtrener.pl/images/studio-1.jpeg",
-      "description": "Studio treningów personalnych w Łodzi (Retkinia). Treningi stacjonarne i online dla osób 35–55 lat, ukierunkowane na siłę, sprawność i długowieczność (longevity).",
+      "description": "Studio treningowe na Retkini w Łodzi. Trening siłowy stacjonarnie i online dla osób 35-55 lat, ukierunkowany na siłę, sprawność i długowieczność (longevity).",
       "foundingDate": "2015",
       "telephone": "+48502338373",
       "email": "szymtrener@gmail.com",
-      "priceRange": "150–240 PLN",
+      [# th:if="${stationary.priceRange() != null}"]"priceRange": "[[${stationary.priceRange()}]]",[/]
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Armii Krajowej 32a",
@@ -84,7 +84,7 @@
       "jobTitle": "Trener personalny, Trener Longevity",
       "image": "https://szymtrener.pl/images/szymon-portret.jpeg",
       "url": "https://szymtrener.pl/",
-      "description": "Instruktor Sportu z tytułem Polskiej Akademii Sportu, w branży fitness od 2007 roku. Specjalizuje się w treningu osób 35–55 lat oraz tematyce długowieczności (longevity).",
+      "description": "Instruktor Sportu z tytułem Polskiej Akademii Sportu, w branży fitness od 2007 roku. Najczęściej trenuje osoby w wieku 35-55 lat, z myślą o długowieczności (longevity).",
       "worksFor": { "@id": "https://szymtrener.pl/#organizacja" },
       "alumniOf": { "@type": "EducationalOrganization", "name": "Polska Akademia Sportu" },
       "knowsAbout": ["trening personalny", "trening funkcjonalny", "longevity", "sarkopenia", "trening siłowy", "dietetyka", "TRX", "kettlebell"],
@@ -98,7 +98,7 @@
       "@type": "WebSite",
       "@id": "https://szymtrener.pl/#website",
       "url": "https://szymtrener.pl/",
-      "name": "Szymon Domagała – Trener Longevity",
+      "name": "Szymon Domagała - Trener Longevity",
       "inLanguage": "pl-PL",
       "publisher": { "@id": "https://szymtrener.pl/#organizacja" }
     },
@@ -106,7 +106,7 @@
       "@type": "WebPage",
       "@id": "https://szymtrener.pl/#strona",
       "url": "https://szymtrener.pl/",
-      "name": "Szymon Domagała – Trener Longevity Łódź",
+      "name": "Szymon Domagała - Trener Longevity | trener personalny Łódź",
       "isPartOf": { "@id": "https://szymtrener.pl/#website" },
       "about": { "@id": "https://szymtrener.pl/#szymon" },
       "inLanguage": "pl-PL",
@@ -131,7 +131,7 @@
           "name": "Dla kogo są treningi personalne u Szymona Domagały?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Przede wszystkim dla osób w wieku 35–55 lat, które chcą zachować siłę i sprawność na kolejne dekady. Trenuję zarówno osoby początkujące i wracające do aktywności po przerwie, jak i te, które ćwiczą od lat, a szukają mądrego, bezpiecznego prowadzenia ukierunkowanego na zdrowie i długowieczność."
+            "text": "Najczęściej trenuję osoby w wieku 35-55 lat, które chcą zachować siłę i sprawność na kolejne dekady. Część z nich zaczyna od zera albo wraca po kilku latach przerwy (bo praca, bo dzieci, bo kolano). Inni ćwiczą od lat, ale chcą, żeby ktoś w końcu poukładał to z głową i z myślą o zdrowiu."
           }
         },
         {
@@ -139,7 +139,7 @@
           "name": "Ile kosztuje trening personalny w Łodzi?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "[[${stationaryPrices} ?: 'Pojedynczy trening stacjonarny kosztuje 210 zł.']] Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie[[${diet.visible() ? ', a indywidualny jadłospis dietetyczny od ' + diet.price() : ''}]]."
+            "text": [(${faqJson.prices()})]
           }
         },
         {
@@ -147,7 +147,7 @@
           "name": "Jak długo ważny jest pakiet i co jeśli zachoruję?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Ważność rośnie razem z wielkością pakietu: cztery treningi masz do wykorzystania przez 6 tygodni, a największy pakiet przez [[${longestValidity} ?: '16 tygodni']]. Odwołanie do 24 godzin przed treningiem nie ma żadnych konsekwencji, ustalamy nowy termin. Raz na pakiet możesz też zgłosić z góry pauzę do 3 tygodni na chorobę lub wyjazd, która zatrzymuje bieg ważności."
+            "text": [(${faqJson.validity()})]
           }
         },
         {
@@ -155,7 +155,7 @@
           "name": "Czy mogę trenować razem z partnerem lub partnerką?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Tak. Trenujecie w jednym terminie, jedziecie jednym samochodem i nikt nie musi zostawać w domu z dziećmi, żeby to drugie mogło poćwiczyć. Każde z Was pracuje na własnym poziomie. Ceny treningów dla par są łączne za dwie osoby i zaczynają się od [[${pairPrice} ?: '200 zł']] za trening."
+            "text": [(${faqJson.pairs()})]
           }
         },
         {
@@ -163,7 +163,7 @@
           "name": "Gdzie odbywają się treningi stacjonarne?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Treningi prowadzę w moim własnym studiu Fit and Health przy ulicy Armii Krajowej 32a na Retkini w Łodzi. Studio jest wyposażone w sprzęt funkcjonalny i siłowy, ma klimatyzację, szatnie z prysznicami oraz bezpłatny parking. Trenujesz bez tłumów i kolejek, z moją pełną uwagą."
+            "text": "W moim studiu przy ulicy Armii Krajowej 32a na Retkini w Łodzi. Jest tam sprzęt do treningu siłowego i funkcjonalnego, klimatyzacja, szatnie z prysznicami i bezpłatny parking. Na sali nie ma tłumu, więc masz moją pełną uwagę."
           }
         },
         {
@@ -171,7 +171,7 @@
           "name": "Czy prowadzisz treningi online w całej Polsce?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Tak. Treningi online prowadzę dla klientów z dowolnego miejsca w Polsce, już od [[${lowestMonthly} ?: '149 zł']] miesięcznie. Otrzymujesz ode mnie spersonalizowany plan treningowy, stały kontakt oraz regularną analizę postępów, dzięki czemu trenujesz skutecznie w domu lub na dowolnej siłowni."
+            "text": [(${faqJson.online()})]
           }
         },
         {
@@ -179,7 +179,7 @@
           "name": "Czym jest trening longevity (długowieczność)?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "To trening nastawiony na zdrowie i sprawność za 10, 20 i 30 lat, a nie na szybką metamorfozę. Według badań nad sarkopenią po 30. roku życia tracimy od 3 do 8% masy mięśniowej na dekadę, dlatego buduję z Tobą siłę i masę mięśniową, które działają jak polisa na samodzielne, aktywne życie."
+            "text": "To trening, który ma Ci dać zdrowie i sprawność za 10, 20 i 30 lat. Szybka metamorfoza nie jest tu celem. Po 30. roku życia zaczynamy tracić mięśnie - w badaniach nad sarkopenią podaje się zwykle 3-8% masy mięśniowej na dekadę, a po sześćdziesiątce to tempo rośnie. Dlatego buduję z Tobą siłę i masę mięśniową. Mięśnie mają wpływ na: metabolizm i gospodarkę cukrową, równowagę i ryzyko upadków, samodzielność w starszym wieku. Cały mój sposób pracy opieram na pięciu filarach zdrowego starzenia: trening siłowy, kondycja (VO₂max), odżywianie, sen, regeneracja i stres."
           }
         },
         {
@@ -187,9 +187,17 @@
           "name": "Jak zacząć współpracę z trenerem?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Najlepiej zacząć od umówienia się na konsultację. Zadzwoń pod numer 502 338 373, napisz na szymtrener@gmail.com lub wypełnij formularz na stronie. Porozmawiamy o Twoim wieku, celu i poziomie aktywności, a następnie dobiorę dla Ciebie odpowiednią formę treningu – stacjonarnie w Łodzi lub online."
+            "text": "Od rozmowy wstępnej. Zadzwoń pod 502 338 373, napisz na szymtrener@gmail.com albo wypełnij formularz. Porozmawiamy o Twoim celu, o tym, ile się teraz ruszasz i ile masz czasu. Potem zaproponuję formę współpracy: stacjonarnie w Łodzi albo online."
           }
-        }
+        }[[${stationary.hasCare() ? ',' : ''}]]
+        [# th:if="${stationary.hasCare()}"]{
+          "@type": "Question",
+          "name": "Czym Opieka Longevity różni się od pakietu?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pakiet to określona liczba treningów do wykorzystania w kilka tygodni. Opieka Longevity to umowa na 12 miesięcy: 2 treningi w tygodniu w stałych terminach, test sprawności co pół roku, plan na wyjazdy i ta sama cena przez cały rok. Płacisz co miesiąc, nie za cały rok z góry."
+          }
+        }[/]
       ]
     }
   ]
@@ -197,6 +205,7 @@
 </script>
 </head>
 <body>
+<svg th:replace="~{fragments/icons :: sprite}"></svg>
 
 <div th:replace="~{fragments/nav :: nav('')}"></div>
 
@@ -204,22 +213,21 @@
 <section id="hero" class="hero">
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero-photo" aria-hidden="true">
-    <img src="/images/szymon-hero.jpeg" alt="Szymon Domagała – Trener Longevity" fetchpriority="high" decoding="async" width="783" height="1100">
+    <img src="/images/szymon-hero.jpeg" alt="Szymon Domagała - Trener Longevity" fetchpriority="high" decoding="async" width="783" height="1100">
   </div>
 
   <div class="container">
     <div class="hero-content">
-      <div class="hero-badge">Trener Longevity · Łódź &amp; Online</div>
+      <div class="hero-badge">Trener Longevity · Łódź i online</div>
       <h1 class="hero-title">
         <span class="line">Trenuję ludzi,</span>
         <span class="line">którzy chcą być</span>
         <span class="line accent-line">sprawni za 20 lat</span>
       </h1>
       <p class="hero-sub">
-        Szymon Domagała – trener personalny i Trener Longevity z Łodzi. Prowadzę treningi
-        personalne stacjonarne na Retkini oraz online w całej Polsce dla osób 35–55 lat,
-        które chcą być sprawne za 10, 20 i 30 lat. Nie sprzedaję metamorfoz na 12 tygodni –
-        buduję zdrowie i siłę na dekady.
+        Trener personalny z Łodzi, w branży od 2007 roku. Pracuję głównie z osobami w wieku
+        35-55 lat - stacjonarnie na Retkini i online w całej Polsce. Metamorfoz na 12 tygodni
+        nie sprzedaję. Pracujemy na formę, która ma wytrzymać kolejne 20-30 lat.
       </p>
       <div class="hero-ctas">
         <a href="#kontakt" class="btn btn-primary">
@@ -231,17 +239,17 @@
 
       <!-- zdjęcie pokazywane na telefonie -->
       <figure class="hero-photo-card">
-        <img src="/images/szymon-hero.jpeg" alt="Szymon Domagała – trener personalny w łódzkim studiu" decoding="async" width="783" height="1100">
+        <img src="/images/szymon-hero.jpeg" alt="Szymon Domagała, trener personalny w łódzkim studiu" decoding="async" width="783" height="1100">
       </figure>
 
       <div class="hero-stats">
         <div>
-          <div class="hero-stat-num"><span data-count="18" data-suffix="+">18+</span></div>
-          <div class="hero-stat-label">Lat doświadczenia</div>
+          <div class="hero-stat-num">2007</div>
+          <div class="hero-stat-label">W branży od</div>
         </div>
         <div>
-          <div class="hero-stat-num">35–55</div>
-          <div class="hero-stat-label">Specjalizacja wiekowa</div>
+          <div class="hero-stat-num">35-55</div>
+          <div class="hero-stat-label">Tyle lat mają najczęściej moi klienci</div>
         </div>
         <div>
           <div class="hero-stat-num">2015</div>
@@ -249,14 +257,14 @@
         </div>
         <div>
           <div class="hero-stat-num">1:1</div>
-          <div class="hero-stat-label">Pełna uwaga trenera</div>
+          <div class="hero-stat-label">Bez tłumu na sali</div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="scroll-cue" aria-hidden="true">
-    <span>Scroll</span>
+    <span>Przewiń</span>
     <span class="line"></span>
   </div>
 </section>
@@ -266,21 +274,21 @@
   <div class="marquee-track">
     <span class="marquee-item">Longevity</span>
     <span class="marquee-item">Healthspan</span>
-    <span class="marquee-item">Sprawność funkcjonalna</span>
+    <span class="marquee-item">Sprawność na lata</span>
     <span class="marquee-item">Mięśnie to polisa na życie</span>
     <span class="marquee-item">Trening siłowy</span>
     <span class="marquee-item">Kettlebell</span>
     <span class="marquee-item">TRX</span>
-    <span class="marquee-item">Na szczycie piramidy jest zdrowie</span>
+    <span class="marquee-item">Na szczycie piramidy jest zdrowie, nie sylwetka</span>
     <span class="marquee-item">Łódź · Online</span>
     <span class="marquee-item">Longevity</span>
     <span class="marquee-item">Healthspan</span>
-    <span class="marquee-item">Sprawność funkcjonalna</span>
+    <span class="marquee-item">Sprawność na lata</span>
     <span class="marquee-item">Mięśnie to polisa na życie</span>
     <span class="marquee-item">Trening siłowy</span>
     <span class="marquee-item">Kettlebell</span>
     <span class="marquee-item">TRX</span>
-    <span class="marquee-item">Na szczycie piramidy jest zdrowie</span>
+    <span class="marquee-item">Na szczycie piramidy jest zdrowie, nie sylwetka</span>
     <span class="marquee-item">Łódź · Online</span>
   </div>
 </div>
@@ -290,37 +298,43 @@
   <div class="container">
     <div class="about-grid">
       <div class="about-photo" data-reveal="img">
-        <div class="frame"><img src="/images/szymon-portret.jpeg" alt="Szymon Domagała – trener personalny" loading="lazy" decoding="async" width="1067" height="1600"></div>
+        <div class="frame"><img src="/images/szymon-portret.jpeg" alt="Szymon Domagała, trener personalny" loading="lazy" decoding="async" width="1067" height="1600"></div>
         <div class="badge-float">
-          <div class="n">18+</div>
-          <div class="t">lat z ludźmi,<br>którzy myślą długofalowo</div>
+          <div class="n">Prawie 20</div>
+          <div class="t">lat na sali<br>treningowej</div>
         </div>
       </div>
 
       <div data-reveal>
         <div class="eyebrow">O mnie</div>
-        <h2 class="headline">Szymon Domagała –<br><em>Trener Longevity</em></h2>
-        <blockquote class="about-quote">„Na szczycie piramidy jest zdrowie, nie sylwetka."</blockquote>
+        <h2 class="headline">Szymon Domagała -<br><em>Trener Longevity</em></h2>
+        <blockquote class="about-quote">„Na szczycie piramidy jest zdrowie, nie sylwetka.”</blockquote>
         <p class="about-text">
-          W branży fitness działam od 2007 roku – prawie dwie dekady pracy z ludźmi,
-          którzy traktują swoje ciało poważnie. Od 2015 roku prowadzę własne
-          <strong>Fit and Health Studio Treningów Personalnych</strong> w Łodzi.
+          W branży fitness pracuję od 2007 roku. Od 2015 mam własne studio treningowe na łódzkiej
+          Retkini, a klientów spoza Łodzi prowadzę online.
         </p>
         <p class="about-text">
-          Jestem Instruktorem Sportu z tytułem nadanym przez Polską Akademię Sportu.
-          Specjalizuję się w treningu dla osób w wieku 35–55 lat – czyli tych,
-          dla których sprawność za 10, 20 i 30 lat jest równie ważna jak dzisiejsze samopoczucie.
+          Jestem Instruktorem Sportu z tytułem nadanym przez Polską Akademię Sportu. Najczęściej
+          trenuję osoby w wieku 35-55 lat. Czyli takie, które mają pracę, dzieci, mało czasu
+          i coraz częściej łapią się na tym, że po wejściu na trzecie piętro brakuje im trochę tchu.
         </p>
         <p class="about-text">
-          Moje podejście opiera się na jednej zasadzie: <strong>mięśnie to polisa na życie</strong>.
-          Każdy trening to inwestycja w Twoją przyszłą mobilność, energię i niezależność.
+          Moje podejście do treningu nie wzięło się z książki, tylko z obserwacji. Widzę wokół siebie
+          sporo starszych ludzi, dla których wejście po schodach albo wstanie z krzesła to już wysiłek.
+          Nie chcę tego dla siebie i nie chcę tego dla ludzi, z którymi pracuję. Dlatego powtarzam
+          do znudzenia: <strong>mięśnie to polisa na życie</strong>.
+        </p>
+        <p class="about-text">
+          Sam jestem ojcem. Chcę biegać z córką, jeździć z nią na rowerze i wisieć obok niej na drążku
+          jeszcze przez długie lata. Trenuję dla sprawności, która pozwoli mi być aktywnym tatą, a może
+          kiedyś dziadkiem. Tego samego chcę dla moich klientów.
         </p>
 
         <div class="podcast-mention">
-          <div class="ic">🎙️</div>
+          <div class="ic"><svg><use href="#i-mic"/></svg></div>
           <div class="tx">
-            <strong>Ekspert podcastu „Dzień Dobry Długowieczność"</strong>
-            Gościłem jako specjalista od treningu i longevity
+            <strong>Ekspert podcastu „Dzień Dobry Długowieczność”</strong>
+            Rozmawiam tam o treningu siłowym i longevity.
           </div>
         </div>
 
@@ -344,18 +358,18 @@
     <div class="phil-grid stagger">
       <div class="phil-item">
         <div class="phil-num">01</div>
-        <div class="phil-title">Długoterminowe myślenie</div>
-        <div class="phil-desc">Nie trenuję Cię pod wesele za miesiąc. Buduję sprawność, która ma Ci służyć przez kolejne dekady.</div>
+        <div class="phil-title">Plan na dekady</div>
+        <div class="phil-desc">Nie przygotuję Cię na wesele za miesiąc (no dobra, jak bardzo trzeba, to coś wymyślimy). Pracujemy na sprawność, która ma Ci zostać na kolejne 20-30 lat.</div>
       </div>
       <div class="phil-item">
         <div class="phil-num">02</div>
-        <div class="phil-title">Mięśnie jako fundament zdrowia</div>
-        <div class="phil-desc">Tkanka mięśniowa to nie tylko estetyka. To metabolizm, odporność na kontuzje, hormony i jakość życia w starości.</div>
+        <div class="phil-title">Mięśnie to polisa na życie</div>
+        <div class="phil-desc">Od mięśni zależy, jak Twój organizm radzi sobie z cukrem, czy łatwo się przewracasz i czy na starość wstaniesz z fotela bez pomocy. Ładny biceps to tylko efekt uboczny.</div>
       </div>
       <div class="phil-item">
         <div class="phil-num">03</div>
         <div class="phil-title">Zdrowie ponad sylwetkę</div>
-        <div class="phil-desc">Na szczycie piramidy jest zdrowie. Sylwetka jest miłym efektem ubocznym – nigdy celem samym w sobie.</div>
+        <div class="phil-desc">Na szczycie piramidy jest zdrowie. Sylwetka też się poprawi, to pewne. Traktuję ją jednak jako miły dodatek, który przychodzi przy okazji.</div>
       </div>
     </div>
   </div>
@@ -366,46 +380,56 @@
   <div class="container">
     <div data-reveal>
       <div class="eyebrow">Oferta</div>
-      <h2 class="headline">Wybierz formę <em>współpracy</em></h2>
-      <p class="lead">Pracuję stacjonarnie w Łodzi oraz zdalnie w całej Polsce. Każda forma jest dostosowana do Twojego stylu życia.</p>
+      <h2 class="headline">Jak możemy <em>pracować</em></h2>
+      <p class="lead">Trenuję stacjonarnie w Łodzi i zdalnie z ludźmi z całej Polski. Możesz przyjść na jeden trening i zobaczyć, jak pracuję, wziąć pakiet albo umówić się ze mną na cały rok.</p>
     </div>
 
     <!--/* Cennik pochodzi z panelu. To samo źródło zasila odpowiedź w FAQ niżej —
            brief stacjonarny 5.3: obie instancje cennika muszą czerpać z jednego
            miejsca, żeby nie rozjechały się przy kolejnej zmianie ceny. */-->
-    <div class="price-block" data-reveal th:if="${!individualPackages.isEmpty()}">
+    <div class="price-block" data-reveal th:if="${!stationary.individual().isEmpty()}">
       <h3 class="price-h">Treningi indywidualne</h3>
       <div class="price-grid">
-        <div class="price-card" th:each="p : ${individualPackages}" th:classappend="${p.featured()} ? ' featured'">
-          <div class="price-qty" th:text="${p.name()}">Pakiet 8 treningów</div>
-          <div class="price-main"><span th:text="${p.perSession()}">160 zł</span> <span>/ trening</span></div>
-          <div class="price-total" th:if="${p.totalLine()} != null">
-            <strong th:text="${p.totalLine()}">Razem: 1 280 zł</strong>
-          </div>
-          <div class="price-total" th:unless="${p.totalLine()} != null">Elastycznie, bez zobowiązań</div>
-          <!--/* Ważność i rabat przy każdym pakiecie: brief 5.1 wskazuje, że dziś
-                 tej informacji nie ma nigdzie na stronie. */-->
-          <div class="price-meta">
-            <span class="price-save" th:if="${p.discount()} != null" th:text="${p.discount()}">Taniej o 29%</span>
-            <span class="price-valid" th:if="${p.validity()} != null" th:text="${p.validity()}">Ważny 16 tygodni</span>
-          </div>
-          <a href="#kontakt" class="btn" th:classappend="${p.featured()} ? 'btn-primary' : 'btn-outline'">Umów konsultację</a>
-        </div>
+        <th:block th:each="p : ${stationary.individual()}">
+          <div th:replace="~{fragments/price-card :: card(${p}, 'Umów rozmowę wstępną', null)}"></div>
+        </th:block>
       </div>
+    </div>
+
+    <!--/* Opieka Longevity: roczne zobowiązanie musi pokazać, co daje poza niższą
+           ceną, inaczej jest tylko rabatem za lojalność (cennik 10/2026, punkt 3).
+           Kwoty w rachunku liczy serwis z tych samych cen co karty. */-->
+    <!--/* Opieka i zasady odwołań obok siebie, w jednym rzędzie i jednym stylu:
+           trzy różne ramki jedna pod drugą czytały się jak przypadkowe doklejki. */-->
+    <div class="offer-details" data-reveal>
+    <div class="care" id="opieka-longevity" th:if="${stationary.hasCare()}">
+      <h3>Opieka Longevity, czyli rok wspólnej pracy</h3>
+      <p>Sprawności na 20 lat nie zbuduje się w 16 tygodni, a tyle trwa najdłuższy pakiet. Dlatego jest Opieka Longevity: umawiamy się na rok, trenujemy dwa razy w tygodniu, a Ty płacisz co miesiąc.</p>
+      <ul>
+        <li>2 treningi w tygodniu w stałych terminach, zarezerwowanych w grafiku dla Ciebie</li>
+        <li>Test sprawności na starcie i co 6 miesięcy, żebyś czarno na białym widział, co się zmieniło</li>
+        <li>Plan na wyjazdy i urlopy do zrobienia samodzielnie (hotelowa siłownia też się nada)</li>
+        <li>Pierwszeństwo przy ustalaniu i przekładaniu terminów</li>
+        <li>Możliwość zamrożenia współpracy do 4 tygodni w roku, zgłoszona wcześniej</li>
+        <li>Stała cena przez cały okres umowy, nawet jeśli w tym czasie zmieni się cennik</li>
+      </ul>
+      <p class="care-calc" th:if="${stationary.careCompare()} != null" th:inline="text">Dla porównania: rok treningów 2 razy w tygodniu w pakietach po [[${stationary.careCompare().packageSessions()}]] to ok. [[${stationary.careCompare().packagesYear()}]]. W Opiece Longevity to [[${stationary.careCompare().careYear()}]]. Różnica wynosi [[${stationary.careCompare().difference()}]], czyli [[${stationary.careCompare().freeSessions()}]] gratis.</p>
     </div>
 
     <!--/* Zasady odwołań stoją PRZY cenniku, nie w regulaminie: brief traktuje
            pauzę jako argument sprzedażowy, a nie zapis prawny. */-->
-    <div class="rules" data-reveal th:if="${!stationaryRules.isEmpty()}">
+    <div class="rules" th:if="${!stationary.rules().isEmpty()}">
       <h3>Co, jeśli życie wejdzie w drogę</h3>
       <ul>
-        <li th:each="r : ${stationaryRules}" th:text="${r}">Odwołanie do 24 godzin przed treningiem nie ma konsekwencji.</li>
+        <li th:each="r : ${stationary.rules()}" th:text="${r}">Odwołanie do 24 godzin przed treningiem nie ma konsekwencji.</li>
       </ul>
     </div>
 
+    </div>
+
     <div class="offer-note" data-reveal>
-      <p>💬 <strong>Nie wiesz, od czego zacząć?</strong><br>
-        Zacznij od bezpłatnej konsultacji – porozmawiamy o Twoich potrzebach i dobierzemy odpowiedni plan.</p>
+      <p><strong>Nie wiesz, od czego zacząć?</strong><br>
+        Od rozmowy wstępnej. Opowiesz mi, jak wygląda Twój tydzień i co chcesz zmienić, a ja podpowiem, która forma ma sens. Rozmowa nic nie kosztuje.</p>
       <a href="#kontakt" class="btn btn-primary">Umów rozmowę wstępną</a>
     </div>
   </div>
@@ -421,35 +445,26 @@
     <div class="pairs-head" data-reveal>
       <div class="online-badge">We dwoje</div>
       <h2>Trenujcie razem, w jednym terminie</h2>
-      <p>Najczęstszy powód, dla którego trening nie dochodzi do skutku w domu z dziećmi, jest prozaiczny: ktoś musi zostać z dzieciakami. Wspólny trening znosi ten problem. Jeden termin, jeden dojazd, nikt nie zostaje w domu i nikt nikomu nie tłumaczy, dlaczego znowu nie wyszło.</p>
+      <p>Kiedy w domu są dzieci, trening jednego z rodziców często rozbija się o bardzo prozaiczną rzecz: ktoś musi z nimi zostać (kto ma dzieci, ten wie). Wspólny trening rozwiązuje ten problem. Jeden termin, jeden dojazd i nikt nikomu nie tłumaczy, dlaczego znowu nie wyszło.</p>
     </div>
 
     <div class="pairs-body">
       <ul class="pairs-list" data-reveal>
-        <li>Wspólny termin, więc nie trzeba się zmieniać przy dzieciach</li>
-        <li>Jeden dojazd zamiast dwóch i jedna godzina wyjęta z tygodnia, nie dwie</li>
-        <li>Każde z Was ćwiczy według własnego poziomu, w tym samym czasie</li>
-        <li>Łatwiej utrzymać regularność, kiedy druga osoba idzie razem z Wami</li>
+        <li>Nie musicie się wymieniać przy dzieciach</li>
+        <li>Jeden dojazd i jedna godzina wyjęta z tygodnia zamiast dwóch</li>
+        <li>Każde z Was ćwiczy na swoim poziomie, w tym samym czasie</li>
+        <li>Trudniej odpuścić, kiedy druga osoba stoi już w drzwiach w butach do biegania</li>
       </ul>
 
-      <div class="price-grid pairs-grid" data-reveal th:if="${!pairPackages.isEmpty()}">
-        <div class="price-card" th:each="p : ${pairPackages}" th:classappend="${p.featured()} ? ' featured'">
-          <div class="price-qty" th:text="${p.name()}">Pakiet 8 treningów</div>
-          <div class="price-main"><span th:text="${p.perSession()}">210 zł</span> <span>/ trening</span></div>
-          <div class="price-total" th:if="${p.totalLine()} != null">
-            <strong th:text="${p.totalLine()}">Razem: 1 680 zł</strong>
-          </div>
-          <div class="price-total" th:unless="${p.totalLine()} != null">Elastycznie, bez zobowiązań</div>
-          <div class="price-meta">
-            <span class="price-save" th:if="${p.discount()} != null" th:text="${p.discount()}">Taniej o 17%</span>
-            <span class="price-valid" th:if="${p.validity()} != null" th:text="${p.validity()}">Ważny 16 tygodni</span>
-          </div>
-          <a href="#kontakt" class="btn" th:classappend="${p.featured()} ? 'btn-primary' : 'btn-outline'">Umów trening we dwoje</a>
-        </div>
+      <div class="price-grid pairs-grid" data-reveal th:if="${!stationary.pairs().isEmpty()}">
+        <th:block th:each="p : ${stationary.pairs()}" th:with="compare=${stationary.pairCareCompare()}">
+          <div th:replace="~{fragments/price-card :: card(${p}, 'Umów trening we dwoje',
+              ${compare != null ? 'Rok w pakietach po ' + compare.packageSessions() + ' to ok. ' + compare.packagesYear() + ', tutaj ' + compare.careYear() + '.' : null})}"></div>
+        </th:block>
       </div>
     </div>
 
-    <p class="pairs-note" data-reveal th:if="${!pairPackages.isEmpty()}">Podane kwoty są łączne za dwie osoby, nie za osobę.</p>
+    <p class="pairs-note" data-reveal th:if="${!stationary.pairs().isEmpty()}">Wszystkie kwoty są łączne za dwie osoby, nie za osobę.<th:block th:if="${stationary.pairPerPerson()} != null" th:text="' ' + ${stationary.pairPerPerson()}"> W pakiecie 12 treningów każde z Was płaci więc 100 zł za trening.</th:block></p>
   </div>
 </section>
 
@@ -459,23 +474,24 @@
     <div data-reveal>
       <div class="eyebrow">Zdalnie</div>
       <h2 class="headline">Nie mieszkasz w <em>Łodzi</em>?</h2>
-      <p class="lead">Prowadzę klientów z całej Polski. Plan, aplikacja na telefon i stały kontakt zamiast dojazdu.</p>
+      <p class="lead">Prowadzę klientów z całej Polski. Zamiast dojazdu do studia masz plan w aplikacji na telefonie i stały kontakt ze mną.</p>
     </div>
     <div class="offer-online" data-reveal>
       <div class="online-card">
-        <div class="ic">💻</div>
+        <div class="ic"><svg><use href="#i-laptop"/></svg></div>
         <h3>Prowadzenie online</h3>
         <!--/* Kwota z panelu, nie z HTML — brief 2.5 zakazuje kopii ceny w kilku miejscach. */-->
         <div class="online-price" th:if="${lowestMonthly} != null">od <span th:text="${lowestMonthly}">149 zł</span> <span>/ miesiąc</span></div>
-        <p>Spersonalizowany plan treningowy, dostęp do aplikacji treningowej na telefon, stały kontakt i analiza postępów. Pracujesz z dowolnego miejsca w Polsce.</p>
-        <a href="#online" class="btn btn-outline">Poznaj szczegóły online</a>
+        <p>Plan ułożony pod Ciebie, aplikacja treningowa na telefonie, stały kontakt i regularne sprawdzanie postępów. Trenujesz na siłowni, w domu albo w hotelu na delegacji.</p>
+        <a href="#online" class="btn btn-outline">Poznaj szczegóły</a>
       </div>
       <div class="online-card" th:if="${diet.visible()}">
-        <div class="ic">🥗</div>
-        <h3>Jadłospis dietetyczny</h3>
+        <div class="ic"><svg><use href="#i-leaf"/></svg></div>
+        <h3>Jadłospis</h3>
         <!--/* Kwota z panelu, jak wszystkie pozostałe ceny na stronie. */-->
-        <div class="online-price">od <span th:text="${diet.price()}">129 zł</span> <span>/ rozpiska</span></div>
-        <p>Indywidualnie opracowany jadłospis dostosowany do Twoich potrzeb, celów zdrowotnych i stylu życia.</p>
+        <div class="online-price"><span th:text="${diet.price()}">299 zł</span></div>
+        <p>Zaczynamy od dokładnego wywiadu: co lubisz, czego nie znosisz, jakie masz wyniki badań, przebyte kontuzje i ile czasu naprawdę masz na gotowanie. Dostajesz jadłospis, listę zakupów i 14 dni kontaktu na pytania.</p>
+        <p class="online-fine">Jadłospis nie zastępuje konsultacji lekarskiej ani dietetyka klinicznego, jeśli masz schorzenie wymagające leczenia.</p>
         <a href="#kontakt" class="btn btn-outline">Zamów jadłospis</a>
       </div>
     </div>
@@ -487,8 +503,8 @@
   <div class="container">
     <div class="online-head" data-reveal>
       <div class="online-badge">Cała Polska</div>
-      <h2>Trening ze mną — bez znaczenia gdzie jesteś</h2>
-      <p>Nie musisz mieszkać w Łodzi. Pracuję zdalnie z klientami z całej Polski. Wybierz ścieżkę, która pasuje do tego, czego teraz potrzebujesz.</p>
+      <h2>Trening ze mną, nieważne, gdzie mieszkasz</h2>
+      <p>Nie musisz mieszkać w Łodzi. Pracuję zdalnie z ludźmi z całej Polski i masz do wyboru dwie drogi: jednorazowy plan albo stałe prowadzenie. Wybierz tę, która pasuje do tego, czego teraz potrzebujesz.</p>
     </div>
 
     <!--/* Dwie ścieżki (brief 2.1 i 2.2). Ścieżka 2 jest produktem głównym, więc ma
@@ -496,32 +512,37 @@
     <div class="paths" data-reveal>
       <article class="path path-1" th:if="${consult.visible()}">
         <div class="path-badge">Jednorazowo</div>
-        <h3>Konsultacja + Plan treningowy</h3>
-        <p class="path-sub">Dla kogoś, kto chce konkretny plan i ruszy samodzielnie.</p>
-        <ul class="path-list">
-          <li>30-minutowa rozmowa przed startem</li>
-          <li>Spersonalizowany plan treningowy w PDF</li>
-          <li>14 dni kontaktu mailowego lub przez WhatsApp</li>
+        <h3>Plan na start</h3>
+        <p class="path-sub">Dla kogoś, kto chce dostać konkretny plan i dalej działać samodzielnie.</p>
+        <!--/* Mini cennik produktów jednorazowych (cennik 10/2026, punkt 4.2). Ceny
+               z panelu: plan = dawna „konsultacja + plan”, jadłospis = karta wyżej. */-->
+        <ul class="path-prices">
+          <li th:each="o : ${oneOff}">
+            <span class="pp-name" th:text="${o.name()}">Plan treningowy</span>
+            <span class="pp-val" th:text="${o.price()}">349 zł</span>
+            <span class="pp-desc" th:text="${o.contents()}">rozmowa 30 min przed startem, plan w PDF</span>
+          </li>
         </ul>
-        <div class="path-price">
-          <span class="pp-amount" th:text="${consult.price()}">349 zł</span>
-          <span class="pp-unit">jednorazowo</span>
+        <div class="path-price" th:if="${oneOffFrom} != null">
+          <span class="pp-unit">od</span>
+          <span class="pp-amount" th:text="${oneOffFrom}">179 zł</span>
         </div>
-        <p class="path-hook">„Plan powstaje po rozmowie z Tobą, nie z samej ankiety."</p>
-        <a href="#online-form" class="btn btn-online path-cta" data-path="KONSULTACJA">Zamów konsultację</a>
+        <p class="path-note">Plan nie jest dokumentem na całe życie. To wersja na najbliższe trzy miesiące. Potem siadamy jeszcze raz, sprawdzamy, co zadziałało, i układamy kolejną.</p>
+        <p class="path-hook">„Plan powstaje po rozmowie z Tobą, nie z samej ankiety.”</p>
+        <a href="#online-form" class="btn btn-online path-cta" data-path="KONSULTACJA">Zamów plan</a>
       </article>
 
       <article class="path path-2">
-        <div class="path-badge alt">Produkt główny</div>
+        <div class="path-badge alt">Stała współpraca</div>
         <h3>Prowadzenie online 1:1</h3>
-        <p class="path-sub">Dla kogoś, kto chce stałą opiekę i kogoś, kto pilnuje postępów.</p>
+        <p class="path-sub">Dla kogoś, kto chce mieć stałą opiekę i kogoś, kto pilnuje postępów (i czasem przypomni, że w tym tygodniu był tylko jeden trening).</p>
         <ul class="path-list">
           <li>Bezpłatna rozmowa wstępna przed startem</li>
-          <li>Spersonalizowany plan treningowy</li>
-          <li>Dostęp do aplikacji treningowej na telefon</li>
-          <li>Stały kontakt i możliwość zadawania pytań na bieżąco</li>
-          <li>Regularna analiza postępów</li>
-          <li>Korekta planu, gdy zajdzie potrzeba</li>
+          <li>Plan ułożony pod Ciebie</li>
+          <li>Aplikacja treningowa na telefonie</li>
+          <li>Stały kontakt i pytania na bieżąco</li>
+          <li>Regularne sprawdzanie postępów</li>
+          <li>Zmiany w planie, kiedy jest taka potrzeba</li>
         </ul>
         <a href="#pakiety" class="btn btn-online path-cta">Zobacz pakiety</a>
       </article>
@@ -546,13 +567,13 @@
           <div class="pack-cond" th:if="${p.conditionLine()} != null" th:text="${p.conditionLine()}">Cena startowa w zamian za opinię.</div>
           <a href="#online-form" class="btn btn-online pack-cta"
              data-path="PROWADZENIE" th:attr="data-package=${p.name()}"
-             th:aria-label="'Wybieram pakiet ' + ${p.name()}">Wybieram ten pakiet</a>
+             th:text="'Wybieram ' + ${p.name()}">Wybieram Start</a>
         </article>
       </div>
 
       <div class="packs-cta" data-reveal>
-        <a href="#online-form" class="btn btn-online" data-path="PROWADZENIE">Umów bezpłatną rozmowę wstępną</a>
-        <p>Rozmowa nic nie kosztuje i do niczego nie zobowiązuje. Sprawdzamy, czy mogę Ci realnie pomóc.</p>
+        <a href="#online-form" class="btn btn-online" data-path="PROWADZENIE">Umów rozmowę wstępną</a>
+        <p>Rozmowa nic nie kosztuje i do niczego nie zobowiązuje. Sprawdzamy, czy naprawdę mogę Ci pomóc.</p>
       </div>
     </div>
 
@@ -562,28 +583,28 @@
           <div class="step-num">01</div>
           <div>
             <h3>Rozmowa wstępna <span class="free">(bezpłatna)</span></h3>
-            <p>Rozmawiamy 15-20 minut. Pytam o Twój cel, poziom aktywności i sprzęt. Sprawdzam czy mogę Ci realnie pomóc.</p>
+            <p>Rozmawiamy 15-20 minut. Pytam o cel, o to, ile się teraz ruszasz i jaki masz sprzęt. Na tej podstawie sprawdzam, czy naprawdę mogę Ci pomóc.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">02</div>
           <div>
-            <h3>Twój spersonalizowany plan</h3>
-            <p>Przygotowuję plan dostosowany do Twojego sprzętu, czasu i celu. Nie szablon — plan dla Ciebie.</p>
+            <h3>Plan pod Ciebie</h3>
+            <p>Układam plan pod Twój sprzęt, czas i cel. Jeśli masz w domu hantle i 40 minut trzy razy w tygodniu, to plan jest na hantle i 40 minut. Bez gotowców z szuflady.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">03</div>
           <div>
-            <h3>Trenujesz w aplikacji</h3>
-            <p>Otrzymujesz dostęp do aplikacji treningowej na telefon. Plan, instrukcje i kontakt ze mną — kiedy chcesz i gdzie chcesz.</p>
+            <h3>Trenujesz z aplikacją</h3>
+            <p>Dostajesz dostęp do aplikacji treningowej na telefon. Masz w niej plan, opisy ćwiczeń i kontakt ze mną, kiedy i gdzie chcesz.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">04</div>
           <div>
-            <h3>Analiza i korekta planu</h3>
-            <p>Regularnie sprawdzam jak idzie. Trening to proces — korygujemy plan gdy zajdzie potrzeba.</p>
+            <h3>Sprawdzamy i poprawiamy</h3>
+            <p>Regularnie sprawdzam, jak Ci idzie. Jeśli coś nie działa, bo kolano protestuje albo w pracy zaczął się gorący okres, zmieniamy plan.</p>
           </div>
         </div>
       </div>
@@ -592,9 +613,9 @@
         <div class="o-card-who">
           <h3>Dla kogo</h3>
           <ul class="o-who-list">
-            <li>Osoby 35–55 lat, które chcą trenować mądrze i długoterminowo</li>
-            <li>Brak dobrego trenera w swoim mieście albo potrzeba elastyczności</li>
-            <li>Osoby, które myślą o zdrowiu za 10, 20 i 30 lat — nie o metamorfozie na lato</li>
+            <li>Masz 35-55 lat i chcesz trenować z głową, z myślą o kolejnych latach</li>
+            <li>W Twoim mieście nie ma trenera, któremu ufasz, albo potrzebujesz elastycznych godzin</li>
+            <li>Chcesz formy na lata, a nie tylko na lato</li>
           </ul>
         </div>
       </div>
@@ -612,7 +633,7 @@
       <h2>Co mówią osoby, które ze mną trenują</h2>
     </div>
     <div class="rv-grid" data-reveal>
-      <figure class="rv" th:each="t : ${testimonials}">
+      <figure class="rv" th:each="t : ${testimonials}" th:classappend="${t.isLong()} ? ' rv-long'">
         <div class="rv-top">
           <div class="rv-ini" aria-hidden="true" th:text="${t.initial()}">K</div>
           <figcaption>
@@ -621,6 +642,7 @@
           </figcaption>
         </div>
         <blockquote class="rv-body" th:text="${t.body}">Treść opinii.</blockquote>
+        <button type="button" class="rv-more" aria-expanded="false" hidden>Czytaj całość</button>
       </figure>
     </div>
   </div>
@@ -648,8 +670,8 @@
 <section id="online-form" class="section">
   <div class="container of-wrap">
     <div class="of-head" data-reveal>
-      <h2>Zacznijmy rozmawiać</h2>
-      <p>Wypełnij formularz — odezwę się w ciągu 24 godzin i umówimy bezpłatną rozmowę wstępną.</p>
+      <h2>Porozmawiajmy</h2>
+      <p>Wypełnij formularz, a odezwę się w ciągu 24 godzin i umówimy rozmowę wstępną.</p>
     </div>
 
     <form class="of-form" data-reveal data-endpoint="/api/zgloszenia/online" onsubmit="handleFormSubmit(event)">
@@ -660,8 +682,9 @@
       <input type="hidden" name="offerPath" id="o-path" value="">
       <input type="hidden" name="offerPackage" id="o-package" value="">
       <div class="of-pick" id="of-pick" hidden>
-        <span class="of-pick-label">Twój wybór</span>
+        <span class="of-pick-label">Wybrany pakiet:</span>
         <span class="of-pick-value" id="of-pick-value"></span>
+        <span aria-hidden="true">·</span>
         <button type="button" class="of-pick-clear" id="of-pick-clear">zmień</button>
       </div>
 
@@ -682,30 +705,30 @@
         </div>
         <div class="of-group">
           <label for="o-city">Skąd jesteś? <span class="req">*</span></label>
-          <input type="text" id="o-city" name="city" placeholder="np. Warszawa, Kraków, Poznań…" required>
+          <input type="text" id="o-city" name="city" placeholder="np. Warszawa, Rzeszów, mała wieś pod Poznaniem..." required>
         </div>
       </div>
       <div class="of-group">
-        <label for="o-now">Jak wygląda Twój trening teraz? <span class="req">*</span></label>
-        <textarea id="o-now" name="currentTraining" placeholder="np. Ćwiczę sam 2x w tygodniu, biegam, nie trenuję wcale…" required></textarea>
+        <label for="o-now">Jak teraz wygląda Twój trening? <span class="req">*</span></label>
+        <textarea id="o-now" name="currentTraining" placeholder="np. dwa razy w tygodniu siłownia, w weekend rower. Albo nic od pięciu lat - to też dobra odpowiedź." required></textarea>
       </div>
       <div class="of-group">
         <label for="o-goal">Co chcesz osiągnąć? <span class="req">*</span></label>
-        <textarea id="o-goal" name="goal" placeholder="np. Chcę trenować regularnie, poprawić siłę…" required></textarea>
+        <textarea id="o-goal" name="goal" placeholder="np. wrócić do regularnego treningu, przestać budzić się z bolącymi plecami..." required></textarea>
       </div>
       <div class="of-row">
         <div class="of-group">
-          <label for="o-equip">Dostęp do sprzętu? <span class="req">*</span></label>
+          <label for="o-equip">Do jakiego sprzętu masz dostęp? <span class="req">*</span></label>
           <select id="o-equip" name="equipment" required>
             <option value="">Wybierz opcję</option>
             <option>Siłownia w pobliżu</option>
-            <option>Hantle/kettlebell w domu</option>
-            <option>Tylko mata i masa ciała</option>
-            <option>Siłownia + sprzęt w domu</option>
+            <option>Hantle albo kettlebell w domu</option>
+            <option>Tylko mata i własne ciało</option>
+            <option>Siłownia i sprzęt w domu</option>
           </select>
         </div>
         <div class="of-group">
-          <label for="o-source">Skąd trafiłeś do Szymona?</label>
+          <label for="o-source">Skąd o mnie wiesz?</label>
           <select id="o-source" name="source">
             <option value="">Wybierz opcję</option>
             <option>Instagram</option>
@@ -723,7 +746,7 @@
       </label>
       <button type="submit" class="btn btn-online">Wyślij zgłoszenie</button>
       <div class="of-success" id="of-success">Dostałem Twoje zgłoszenie. Odezwę się w ciągu 24 godzin.</div>
-      <div class="of-error" id="of-error">Coś poszło nie tak. Zadzwoń pod <a href="tel:+48502338373">502 338 373</a> lub napisz na <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>.</div>
+      <div class="of-error" id="of-error">Coś poszło nie tak. Zadzwoń pod <a href="tel:+48502338373">502 338 373</a> albo napisz na <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>.</div>
     </form>
   </div>
 </section>
@@ -732,18 +755,18 @@
 <section id="podcast" class="section">
   <div class="container">
     <div class="podcast-head" data-reveal>
-      <div class="eyebrow">Podcast · Ekspert</div>
+      <div class="eyebrow">Podcast</div>
       <h2 class="headline">Gość podcastu<br><em>„Dzień Dobry Długowieczność”</em></h2>
       <p class="lead">
-        Jako specjalista od treningu i longevity rozmawiam o tym, jak budować siłę
-        i sprawność, która zostaje z nami na dekady – niezależnie od wieku metryki.
+        W podcaście rozmawiam o tym, jak budować siłę i sprawność, które zostaną z Tobą
+        na długie lata. Bez względu na to, co mówi PESEL.
       </p>
       <div class="podcast-actions">
         <div class="podcast-credibility">
-          <div class="ic">🎙️</div>
+          <div class="ic"><svg><use href="#i-mic"/></svg></div>
           <div class="tx">
-            <strong>Wiedza oparta na praktyce</strong>
-            Trening siłowy, sarkopenia, regeneracja i mięśnie jako „polisa na życie”.
+            <strong>O czym mówię:</strong>
+            trening siłowy, sarkopenia, regeneracja i mięśnie jako polisa na życie.
           </div>
         </div>
         <a href="https://www.youtube.com/@DzienDobryDlugowiecznosc" target="_blank" rel="noopener" class="btn btn-outline">
@@ -755,18 +778,18 @@
 
     <div class="podcast-videos" data-reveal>
       <figure>
-        <div class="video-embed yt-facade" data-id="LcXpFy7s-GQ" role="button" tabindex="0" aria-label="Odtwórz film: Jak budować mięśnie po 40-tce">
-          <img class="yt-thumb" src="https://i.ytimg.com/vi/LcXpFy7s-GQ/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/LcXpFy7s-GQ/hqdefault.jpg'" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność – budowanie mięśni po 40-tce" loading="lazy">
+        <div class="video-embed yt-facade" data-id="LcXpFy7s-GQ" role="button" tabindex="0" aria-label="Odtwórz film: Jak budować mięśnie po czterdziestce">
+          <img class="yt-thumb" src="https://i.ytimg.com/vi/LcXpFy7s-GQ/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/LcXpFy7s-GQ/hqdefault.jpg'" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność, budowanie mięśni po czterdziestce" loading="lazy">
           <span class="yt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
         </div>
-        <figcaption class="video-caption">▶ Jak budować mięśnie po 40-tce: serie, powtórzenia, ciężary</figcaption>
+        <figcaption class="video-caption">Jak budować mięśnie po czterdziestce: serie, powtórzenia, ciężary</figcaption>
       </figure>
       <figure>
         <div class="video-embed yt-facade" data-id="Qq2CHz25u9I" role="button" tabindex="0" aria-label="Odtwórz film: rozmowa z Szymonem Domagałą">
-          <img class="yt-thumb" src="https://i.ytimg.com/vi/Qq2CHz25u9I/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/Qq2CHz25u9I/hqdefault.jpg'" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność – rozmowa o treningu i długowieczności" loading="lazy">
+          <img class="yt-thumb" src="https://i.ytimg.com/vi/Qq2CHz25u9I/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/Qq2CHz25u9I/hqdefault.jpg'" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność, rozmowa o treningu i długowieczności" loading="lazy">
           <span class="yt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
         </div>
-        <figcaption class="video-caption">▶ Rozmowa z Szymonem Domagałą o treningu i długowieczności</figcaption>
+        <figcaption class="video-caption">Rozmowa z Szymonem Domagałą o treningu i długowieczności</figcaption>
       </figure>
     </div>
   </div>
@@ -778,33 +801,33 @@
     <div class="studio-grid">
       <div data-reveal>
         <div class="eyebrow">Studio</div>
-        <h2 class="headline">Fit and Health<br><em>Studio Treningów</em></h2>
+        <h2 class="headline">Studio treningowe<br><em>na Retkini</em></h2>
         <p class="lead" style="margin-bottom:8px;">
-          Własne studio treningowe na Retkini – wyposażone pod trening funkcjonalny
-          i siłowy dla dorosłych. Bez tłumów, bez kolejek, z pełną uwagą trenera.
+          Moje własne studio, urządzone pod trening siłowy i funkcjonalny dla dorosłych. Nie ma tu
+          tłumów ani czekania, aż ktoś skończy na ławce. Jesteś Ty, ja i sprzęt.
         </p>
         <div class="studio-features">
-          <div class="studio-feat"><div class="ic">🏋️</div><div><strong>Sprzęt funkcjonalny</strong><span>Hantle, kettlebells, maczugi, TRX, BOSU, Gravity System</span></div></div>
-          <div class="studio-feat"><div class="ic">☕</div><div><strong>Kawa w cenie</strong><span>Bo dobry trening zaczyna się od dobrego rytuału.</span></div></div>
-          <div class="studio-feat"><div class="ic">❄️</div><div><strong>Klimatyzacja</strong><span>Komfort przez cały rok, również latem</span></div></div>
-          <div class="studio-feat"><div class="ic">🚿</div><div><strong>Szatnie z prysznicami</strong><span>Trening o 7:00, biuro o 9:00. Prysznic i szatnia czekają.</span></div></div>
-          <div class="studio-feat"><div class="ic">🅿️</div><div><strong>Bezpłatny parking</strong><span>Bez stresu z miejscem przy studio</span></div></div>
-          <div class="studio-feat"><div class="ic">📅</div><div><strong>Poniedziałek – Sobota</strong><span>Elastyczne godziny treningów</span></div></div>
+          <div class="studio-feat"><div class="ic"><svg><use href="#i-dumbbell"/></svg></div><div><strong>Sprzęt</strong><span>Hantle, kettlebelle, maczugi, TRX, BOSU, Gravity System</span></div></div>
+          <div class="studio-feat"><div class="ic"><svg><use href="#i-coffee"/></svg></div><div><strong>Kawa w cenie</strong><span>Przed treningiem na rozbudzenie albo po, na spokojnie.</span></div></div>
+          <div class="studio-feat"><div class="ic"><svg><use href="#i-snow"/></svg></div><div><strong>Klimatyzacja</strong><span>W lipcu też da się normalnie trenować.</span></div></div>
+          <div class="studio-feat"><div class="ic"><svg><use href="#i-shower"/></svg></div><div><strong>Szatnie z prysznicami</strong><span>Trening o 7:00, biuro o 9:00. Spokojnie zdążysz.</span></div></div>
+          <div class="studio-feat"><div class="ic"><svg><use href="#i-parking"/></svg></div><div><strong>Bezpłatny parking</strong><span>Nie musisz krążyć po osiedlu w poszukiwaniu miejsca.</span></div></div>
+          <div class="studio-feat"><div class="ic"><svg><use href="#i-calendar"/></svg></div><div><strong>Od poniedziałku do soboty</strong><span>Godziny treningów ustalamy indywidualnie</span></div></div>
         </div>
         <div class="studio-address">
-          <div class="ic">📍</div>
+          <div class="ic"><svg><use href="#i-pin"/></svg></div>
           <div>
             <div class="main">Armii Krajowej 32a</div>
             <div class="sub">94-046 Łódź, Retkinia</div>
-            <a href="https://maps.google.com/?q=Armii+Krajowej+32a,+Łódź" target="_blank" rel="noopener" class="btn btn-outline">Otwórz w Mapach</a>
+            <a href="https://maps.google.com/?q=Armii+Krajowej+32a,+Łódź" target="_blank" rel="noopener" class="btn btn-outline">Pokaż na mapie</a>
           </div>
         </div>
       </div>
 
       <div class="studio-gallery" data-reveal="img">
-        <div class="studio-photo"><img src="/images/studio-1.jpeg" alt="Fit and Health Studio – strefa treningowa" loading="lazy" decoding="async" width="1600" height="1200"></div>
-        <div class="studio-photo"><img src="/images/studio-2.jpeg" alt="Studio – sprzęt funkcjonalny i wolne ciężary" loading="lazy" decoding="async" width="1600" height="1200"></div>
-        <div class="studio-photo"><img src="/images/studio-3.jpeg" alt="Studio – strefa cardio i rozgrzewki" loading="lazy" decoding="async" width="1600" height="1200"></div>
+        <div class="studio-photo"><img src="/images/studio-1.jpeg" alt="Studio treningowe na Retkini, strefa treningowa" loading="lazy" decoding="async" width="1600" height="1200"></div>
+        <div class="studio-photo"><img src="/images/studio-2.jpeg" alt="Studio, sprzęt funkcjonalny i wolne ciężary" loading="lazy" decoding="async" width="1600" height="1200"></div>
+        <div class="studio-photo"><img src="/images/studio-3.jpeg" alt="Studio, strefa kardio i rozgrzewki" loading="lazy" decoding="async" width="1600" height="1200"></div>
       </div>
     </div>
   </div>
@@ -816,9 +839,9 @@
   <div class="action-band-overlay" aria-hidden="true"></div>
   <div class="container action-inner">
     <div data-reveal>
-      <div class="eyebrow">Zacznij dziś</div>
-      <h2 class="action-title">Najlepszy moment, by zadbać o sprawność, był 20 lat temu. <em>Drugi najlepszy jest dziś.</em></h2>
-      <p class="action-sub">Jeden telefon dzieli Cię od pierwszego treningu. Bezpłatna rozmowa wstępna, bez zobowiązań – sprawdź, czy to dla Ciebie.</p>
+      <div class="eyebrow">Rozmowa wstępna</div>
+      <h2 class="action-title">Za 20 lat chcesz wchodzić na trzecie piętro bez przystanku na półpiętrze? <em>Pracuje się na to teraz.</em></h2>
+      <p class="action-sub">Zadzwoń albo napisz. Na rozmowie wstępnej (15-20 minut, nic nie kosztuje) sprawdzimy, czy możemy razem pracować.</p>
       <div class="hero-ctas">
         <a href="#kontakt" class="btn btn-primary">Umów rozmowę wstępną</a>
         <a href="tel:+48502338373" class="btn btn-outline">502 338 373</a>
@@ -831,8 +854,8 @@
 <div class="social-strip">
   <div class="container social-inner">
     <div class="social-text">
-      <strong>Śledź mnie w mediach społecznościowych</strong>
-      Treningi, porady o longevity i kulisy pracy z klientami
+      <strong>Znajdziesz mnie też tutaj</strong>
+      Wrzucam treningi, wiedzę o longevity i to, jak praca z klientami wygląda od kuchni.
     </div>
     <div class="social-links">
       <a href="https://www.facebook.com/SzymTrener" target="_blank" rel="noopener" class="social-btn">
@@ -854,76 +877,86 @@
     <div data-reveal style="margin-bottom:8px;">
       <div class="eyebrow">FAQ</div>
       <h2 class="headline">Najczęściej zadawane <em>pytania</em></h2>
-      <p class="lead">Wszystko, co warto wiedzieć przed pierwszym treningiem personalnym – oferta, ceny, lokalizacja i współpraca online.</p>
+      <p class="lead">Odpowiedzi na pytania, które słyszę najczęściej przed pierwszym treningiem: o ceny, studio i współpracę online.</p>
     </div>
 
     <div class="faq-list" data-reveal>
+      <!--/* Treść odpowiedzi jest powtórzona w JSON-LD FAQPage w <head>: zmieniając
+             jedną, zmień drugą. Kwoty w obu pochodzą z tych samych atrybutów modelu. */-->
       <article class="faq-item">
         <h3 class="faq-q">Dla kogo są treningi personalne u Szymona Domagały?</h3>
-        <p class="faq-a">Przede wszystkim dla osób w wieku 35–55 lat, które chcą zachować siłę i sprawność na kolejne dekady. Trenuję zarówno osoby początkujące i wracające do aktywności po przerwie, jak i te, które ćwiczą od lat, a szukają mądrego, bezpiecznego prowadzenia ukierunkowanego na zdrowie i długowieczność.</p>
+        <p class="faq-a">Najczęściej trenuję osoby w wieku 35-55 lat, które chcą zachować siłę i sprawność na kolejne dekady. Część z nich zaczyna od zera albo wraca po kilku latach przerwy (bo praca, bo dzieci, bo kolano). Inni ćwiczą od lat, ale chcą, żeby ktoś w końcu poukładał to z głową i z myślą o zdrowiu.</p>
       </article>
 
       <article class="faq-item">
         <h3 class="faq-q">Ile kosztuje trening personalny w Łodzi?</h3>
-        <!--/* Zdanie i tabela pochodzą z tych samych danych co cennik wyżej.
+        <!--/* Zdanie i tabele pochodzą z tych samych danych co cennik wyżej.
                Brief stacjonarny 5.3: cennik jest na stronie dwa razy i obie
                instancje muszą czerpać z jednego źródła. */-->
-        <p class="faq-a" th:inline="text">[[${stationaryPrices} ?: 'Pojedynczy trening stacjonarny kosztuje 210 zł.']] Prowadzenie online zaczyna się od [[${lowestMonthly} ?: '149 zł']] miesięcznie[[${diet.visible() ? ', a indywidualny jadłospis dietetyczny od ' + diet.price() : ''}]].</p>
-        <table class="price-table" th:if="${!individualPackages.isEmpty()}">
-          <caption>Cennik treningów personalnych – 1 osoba</caption>
+        <p class="faq-a" th:text="${faq.prices()}">Pojedynczy trening w studiu kosztuje 210 zł.</p>
+        <!--/* th:replace wykonuje się przed th:if/th:each, więc warunki stoją na th:block. */-->
+        <th:block th:if="${!stationary.individual().isEmpty()}">
+          <table th:replace="~{fragments/price-card :: priceTable(${stationary.individual()}, 'Treningi personalne, 1 osoba')}"></table>
+        </th:block>
+        <th:block th:if="${!stationary.pairs().isEmpty()}">
+          <table th:replace="~{fragments/price-card :: priceTable(${stationary.pairs()}, 'Treningi we dwoje, kwoty łączne za dwie osoby')}"></table>
+        </th:block>
+        <table class="price-table" th:if="${!oneOff.isEmpty()}">
+          <caption>Produkty jednorazowe</caption>
           <thead>
-            <tr><th scope="col">Pakiet</th><th scope="col">Cena za trening</th><th scope="col">Razem</th><th scope="col">Ważność</th></tr>
+            <tr><th scope="col">Produkt</th><th scope="col">Cena</th></tr>
           </thead>
           <tbody>
-            <tr th:each="p : ${individualPackages}">
-              <td th:text="${p.name()}">Pakiet 8 treningów</td>
-              <td th:text="${p.perSession()}">160 zł</td>
-              <td th:text="${p.totalLine()} != null ? ${#strings.replace(p.totalLine(), 'Razem: ', '')} : ${p.perSession()}">1 280 zł</td>
-              <td th:text="${p.validity()} ?: '—'">Ważny 10 tygodni</td>
+            <tr th:each="o : ${oneOff}">
+              <td th:text="${o.name()}">Plan treningowy</td>
+              <td th:text="${o.price()}">349 zł</td>
             </tr>
           </tbody>
         </table>
       </article>
 
-      <!--/* Dwa pytania dopisane wprost z briefu stacjonarnego (punkt 5.2):
-             ważność pakietu i trening we dwoje to dwie rzeczy, o które klienci
-             pytają, a których strona dotąd nie tłumaczyła. */-->
       <article class="faq-item">
         <h3 class="faq-q">Jak długo ważny jest pakiet i co jeśli zachoruję?</h3>
-        <p class="faq-a" th:inline="text">Ważność rośnie razem z wielkością pakietu: cztery treningi masz do wykorzystania przez 6 tygodni, a największy pakiet przez [[${longestValidity} ?: '16 tygodni']]. To zapas policzony tak, żeby zmieściła się w nim choroba, delegacja albo tydzień, w którym po prostu nie wyszło.</p>
-        <ul th:if="${!stationaryRules.isEmpty()}">
-          <li th:each="r : ${stationaryRules}" th:text="${r}">Odwołanie do 24 godzin przed treningiem nie ma konsekwencji.</li>
+        <p class="faq-a" th:text="${faq.validity()}">Im większy pakiet, tym dłużej jest ważny.</p>
+        <ul th:if="${!stationary.rules().isEmpty()}">
+          <li th:each="r : ${stationary.rules()}" th:text="${r}">Odwołujesz trening co najmniej 24 godziny wcześniej? Nic się nie dzieje.</li>
         </ul>
       </article>
 
       <article class="faq-item">
         <h3 class="faq-q">Czy mogę trenować razem z partnerem lub partnerką?</h3>
-        <p class="faq-a" th:inline="text">Tak, i dla wielu osób to jedyna forma, która realnie wchodzi w grafik. Trenujecie w jednym terminie, jedziecie jednym samochodem i nikt nie zostaje w domu z dziećmi, żeby to drugie mogło poćwiczyć. Każde z Was pracuje przy tym na własnym poziomie. Ceny par są łączne za dwie osoby i zaczynają się od [[${pairPrice} ?: '200 zł']] za trening.</p>
+        <p class="faq-a" th:text="${faq.pairs()}">Tak. Dla wielu par to jedyna forma.</p>
       </article>
 
       <article class="faq-item">
         <h3 class="faq-q">Gdzie odbywają się treningi stacjonarne?</h3>
-        <p class="faq-a">Treningi prowadzę w moim własnym studiu Fit and Health przy ulicy Armii Krajowej 32a na Retkini w Łodzi. Studio jest wyposażone w sprzęt funkcjonalny i siłowy, ma klimatyzację, szatnie z prysznicami oraz bezpłatny parking. Trenujesz bez tłumów i kolejek, z moją pełną uwagą.</p>
+        <p class="faq-a">W moim studiu przy ulicy Armii Krajowej 32a na Retkini w Łodzi. Jest tam sprzęt do treningu siłowego i funkcjonalnego, klimatyzacja, szatnie z prysznicami i bezpłatny parking. Na sali nie ma tłumu, więc masz moją pełną uwagę.</p>
       </article>
 
       <article class="faq-item">
         <h3 class="faq-q">Czy prowadzisz treningi online w całej Polsce?</h3>
-        <p class="faq-a" th:inline="text">Tak. Treningi online prowadzę dla klientów z dowolnego miejsca w Polsce, już od [[${lowestMonthly} ?: '149 zł']] miesięcznie. Otrzymujesz ode mnie spersonalizowany plan treningowy, stały kontakt oraz regularną analizę postępów, dzięki czemu trenujesz skutecznie w domu lub na dowolnej siłowni.</p>
+        <p class="faq-a" th:text="${faq.online()}">Tak, prowadzę klientów z różnych miejsc w Polsce.</p>
       </article>
 
       <article class="faq-item">
         <h3 class="faq-q">Czym jest trening longevity (długowieczność)?</h3>
-        <p class="faq-a">To trening nastawiony na zdrowie i sprawność za 10, 20 i 30 lat, a nie na szybką metamorfozę. Według badań nad sarkopenią po 30. roku życia tracimy od 3 do 8% masy mięśniowej na dekadę, dlatego buduję z Tobą siłę i masę mięśniową, które działają jak polisa na samodzielne, aktywne życie. Mięśnie wpływają na:</p>
+        <p class="faq-a">To trening, który ma Ci dać zdrowie i sprawność za 10, 20 i 30 lat. Szybka metamorfoza nie jest tu celem. Po 30. roku życia zaczynamy tracić mięśnie - w badaniach nad sarkopenią podaje się zwykle 3-8% masy mięśniowej na dekadę, a po sześćdziesiątce to tempo rośnie. Dlatego buduję z Tobą siłę i masę mięśniową. Mięśnie mają wpływ na:</p>
         <ul>
-          <li>metabolizm i gospodarkę cukrową,</li>
-          <li>równowagę i odporność na upadki oraz kontuzje,</li>
-          <li>samodzielność i jakość życia w starszym wieku.</li>
+          <li>metabolizm i gospodarkę cukrową</li>
+          <li>równowagę i ryzyko upadków</li>
+          <li>samodzielność w starszym wieku</li>
         </ul>
+        <p class="faq-a">Cały mój sposób pracy opieram na pięciu filarach zdrowego starzenia: trening siłowy, kondycja (VO₂max), odżywianie, sen, regeneracja i stres.</p>
       </article>
 
       <article class="faq-item">
         <h3 class="faq-q">Jak zacząć współpracę z trenerem?</h3>
-        <p class="faq-a">Najlepiej zacząć od umówienia się na konsultację. Zadzwoń pod numer 502 338 373, napisz na szymtrener@gmail.com lub wypełnij formularz na stronie. Porozmawiamy o Twoim wieku, celu i poziomie aktywności, a następnie dobiorę dla Ciebie odpowiednią formę treningu – stacjonarnie w Łodzi lub online.</p>
+        <p class="faq-a">Od rozmowy wstępnej. Zadzwoń pod 502 338 373, napisz na szymtrener@gmail.com albo wypełnij formularz. Porozmawiamy o Twoim celu, o tym, ile się teraz ruszasz i ile masz czasu. Potem zaproponuję formę współpracy: stacjonarnie w Łodzi albo online.</p>
+      </article>
+
+      <article class="faq-item" th:if="${stationary.hasCare()}">
+        <h3 class="faq-q">Czym Opieka Longevity różni się od pakietu?</h3>
+        <p class="faq-a">Pakiet to określona liczba treningów do wykorzystania w kilka tygodni. Opieka Longevity to umowa na 12 miesięcy: 2 treningi w tygodniu w stałych terminach, test sprawności co pół roku, plan na wyjazdy i ta sama cena przez cały rok. Płacisz co miesiąc, nie za cały rok z góry.</p>
       </article>
     </div>
   </div>
@@ -934,30 +967,30 @@
   <div class="container">
     <div data-reveal style="margin-bottom:56px;">
       <div class="eyebrow">Kontakt</div>
-      <h2 class="headline">Zacznijmy <em>rozmawiać</em></h2>
-      <p class="lead">Zadzwoń, napisz lub wypełnij formularz. Porozmawiamy o tym, czego szukasz i sprawdzimy, czy możemy razem pracować.</p>
+      <h2 class="headline">Zadzwoń <em>albo napisz</em></h2>
+      <p class="lead">Możesz zadzwonić, wysłać maila albo wypełnić formularz poniżej. Pogadamy o tym, czego szukasz, i sprawdzimy, czy możemy razem pracować.</p>
     </div>
 
     <div class="contact-grid">
       <div data-reveal>
         <div class="contact-info-item">
-          <div class="ic">📞</div>
+          <div class="ic"><svg><use href="#i-phone"/></svg></div>
           <div><div class="ci-label">Telefon</div><div class="ci-value"><a href="tel:+48502338373">502 338 373</a></div></div>
         </div>
         <div class="contact-info-item">
-          <div class="ic">✉️</div>
+          <div class="ic"><svg><use href="#i-mail"/></svg></div>
           <div><div class="ci-label">E-mail</div><div class="ci-value"><a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a></div></div>
         </div>
         <div class="contact-info-item">
-          <div class="ic">📍</div>
-          <div><div class="ci-label">Adres studia</div><div class="ci-value">Armii Krajowej 32a<br><span style="font-size:var(--fs-sm); color:var(--text-muted);">94-046 Łódź, Retkinia</span></div></div>
+          <div class="ic"><svg><use href="#i-pin"/></svg></div>
+          <div><div class="ci-label">Adres studia</div><div class="ci-value">Armii Krajowej 32a<br><span style="font-size:var(--fs-sm); color:var(--text-muted);">94-046 Łódź (Retkinia)</span></div></div>
         </div>
         <div class="contact-info-item">
-          <div class="ic">🕐</div>
-          <div><div class="ci-label">Godziny pracy</div><div class="ci-value">Pon – Sob · elastyczne godziny</div></div>
+          <div class="ic"><svg><use href="#i-clock"/></svg></div>
+          <div><div class="ci-label">Godziny</div><div class="ci-value">pon.-sob., godziny do ustalenia</div></div>
         </div>
         <div class="offer-note" style="margin-top:28px;">
-          <p>🌐 <strong>Prowadzenie online</strong> dostępne dla klientów z całej Polski.<br>Bez znaczenia, gdzie jesteś – możemy razem pracować.</p>
+          <p><strong>Prowadzenie online</strong> jest dostępne w całej Polsce.<br>Nieważne, gdzie mieszkasz, możemy razem pracować.</p>
         </div>
       </div>
 
@@ -982,17 +1015,18 @@
             <label for="service">Co Cię interesuje?</label>
             <select id="service" name="interest">
               <option value="">Wybierz opcję</option>
-              <option>Treningi personalne stacjonarne – Łódź</option>
-              <option>Treningi dla par – stacjonarnie</option>
+              <option>Treningi personalne w studiu (Łódź)</option>
+              <option>Treningi we dwoje</option>
+              <option>Opieka Longevity</option>
               <option>Prowadzenie online</option>
-              <option>Jadłospis dietetyczny</option>
+              <option>Plan treningowy lub jadłospis</option>
               <option>Rozmowa wstępna</option>
               <option>Inne</option>
             </select>
           </div>
           <div class="form-group">
             <label for="message">Napisz kilka słów o sobie</label>
-            <textarea id="message" name="message" placeholder="Np. wiek, cel, aktualny poziom aktywności, pytania…"></textarea>
+            <textarea id="message" name="message" placeholder="np. wiek, cel, ile się teraz ruszasz, pytania..."></textarea>
           </div>
           <label class="form-consent">
             <input type="checkbox" id="consent" name="consent" required>
@@ -1002,8 +1036,8 @@
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
             Wyślij wiadomość
           </button>
-          <div class="form-success" id="form-success">✅ Wiadomość wysłana! Odezwę się najszybciej jak mogę.</div>
-          <div class="form-error" id="form-error">⚠️ Coś poszło nie tak. Zadzwoń pod <a href="tel:+48502338373">502 338 373</a> lub napisz na <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>.</div>
+          <div class="form-success" id="form-success">Wiadomość wysłana. Odezwę się najszybciej, jak mogę.</div>
+          <div class="form-error" id="form-error">Coś poszło nie tak. Zadzwoń pod <a href="tel:+48502338373">502 338 373</a> albo napisz na <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>.</div>
         </form>
       </div>
     </div>
@@ -1017,7 +1051,7 @@
        Pokazuje się dopiero, gdy klient dotarł do oferty; nie ma go, gdy nie ma
        czego oferować (brak pakietów i ukryta ścieżka 1). */-->
 <div class="sticky-cta" id="sticky-cta" th:if="${!packages.isEmpty() or consult.visible()}">
-  <a href="#online-form" class="btn" data-path="PROWADZENIE">Umów bezpłatną rozmowę wstępną</a>
+  <a href="#online-form" class="btn" data-path="PROWADZENIE">Umów rozmowę wstępną</a>
 </div>
 
 </body>

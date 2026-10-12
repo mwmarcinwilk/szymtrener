@@ -1,4 +1,4 @@
-package pl.szymtrener.crm;
+package pl.szymtrener.common;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -29,7 +29,7 @@ public class JsonLdService {
         blog.put("@type", "Blog");
         blog.put("@id", canonical + "#blog");
         blog.put("url", canonical);
-        blog.put("name", "Blog Szymona Domagały – trening i długowieczność");
+        blog.put("name", "Blog Szymona Domagały - trening i długowieczność");
         blog.put("inLanguage", "pl-PL");
         blog.put("publisher", organization());
         blog.put("blogPost", posts.stream().map(p -> {
@@ -116,7 +116,7 @@ public class JsonLdService {
         Map<String, Object> org = new LinkedHashMap<>();
         org.put("@type", "Organization");
         org.put("@id", props.absolute("/#organizacja"));
-        org.put("name", "Fit and Health Studio Treningów Personalnych – Szymon Domagała");
+        org.put("name", "Szymon Domagała - Trener Longevity");
         org.put("url", props.absolute("/"));
         org.put("logo", props.absolute("/images/szymon-portret.jpeg"));
         return org;

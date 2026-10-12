@@ -194,7 +194,7 @@
      przyszło zgłoszenie, ZANIM oddzwoni. CTA niosą to w data-*, a tutaj
      ląduje w ukrytych polach formularza. */
   const PATH_LABELS = {
-    KONSULTACJA: 'Konsultacja + Plan treningowy',
+    KONSULTACJA: 'Plan na start',
     PROWADZENIE: 'Prowadzenie online 1:1'
   };
 
@@ -210,7 +210,7 @@
     if (!pickBox || !pickValue) return;
     const label = PATH_LABELS[path] || '';
     if (!label) { pickBox.hidden = true; return; }
-    pickValue.textContent = pack ? label + ' · pakiet ' + pack : label;
+    pickValue.textContent = pack || label;
     pickBox.hidden = false;
   }
 
@@ -222,6 +222,24 @@
 
   const pickClear = $('#of-pick-clear');
   if (pickClear) pickClear.addEventListener('click', () => setOfferContext('', ''));
+
+  /* ── Opinie w karuzeli na telefonie: rozwiń / zwiń ─────────────────
+     CSS skraca tekst do 12 linii tylko w karuzeli; przycisk odsłaniamy przy
+     kartach, w których coś zostało ucięte. Tekst jest w HTML od początku. */
+  const syncMore = () => document.querySelectorAll('.rv-more').forEach(btn => {
+    const card = btn.closest('.rv');
+    const body = card.querySelector('.rv-body');
+    btn.hidden = !card.classList.contains('open') && body.scrollHeight <= body.clientHeight + 1;
+  });
+  syncMore();
+  window.addEventListener('resize', syncMore, { passive: true });
+  document.querySelectorAll('.rv-more').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const open = btn.closest('.rv').classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      btn.textContent = open ? 'Zwiń' : 'Czytaj całość';
+    });
+  });
 
   /* ── Sticky CTA na telefonie ────────────────────────────────────────
      Pokazujemy dopiero, gdy klient dotarł do oferty, i chowamy przy

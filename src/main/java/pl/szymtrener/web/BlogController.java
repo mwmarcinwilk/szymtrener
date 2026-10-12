@@ -98,7 +98,7 @@ public class BlogController {
         model.addAttribute("pageDescription", settings.get(SettingsService.SEO_DESC,
                 "Blog trenera Szymona Domagały: trening siłowy po 40-tce, sarkopenia, regeneracja i długowieczność."));
         model.addAttribute("blogLead",
-                "Piszę o tym, co realnie działa: treningu siłowym po 40-tce, zatrzymywaniu utraty mięśni, regeneracji i długowieczności. Bez mitów, bez skrótów.");
+                "Piszę o tym, co działa w praktyce: o treningu siłowym po czterdziestce, o tym, jak nie tracić mięśni z wiekiem, o regeneracji i długowieczności. Bez „magicznych” skrótów.");
         model.addAttribute("siteUrl", props.siteUrl());
         model.addAttribute("jsonLd", jsonLd.forBlogList(canonical, result.getContent()));
         model.addAttribute("year", Year.now(ZoneId.of("Europe/Warsaw")).getValue());

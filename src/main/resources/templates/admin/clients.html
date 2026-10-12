@@ -33,7 +33,7 @@
       <div class="warnbar" th:if="${!#lists.isEmpty(ending)}">
         <svg><use href="#i-alert"/></svg>
         <div class="tx">
-          <b th:text="${T(pl.szymtrener.crm.Plural).clients(#lists.size(ending))} + ' kończy się pakiet.'">
+          <b th:text="${T(pl.szymtrener.common.Plural).clients(#lists.size(ending))} + ' kończy się pakiet.'">
             3 klientom kończy się pakiet.</b>
           <span th:each="r,it : ${ending}" th:text="${r.trainee().name} + ' (' + ${r.pack().left()} + ')' + (${it.last} ? '' : ', ')">Ewa (1)</span>
           To dobry moment na rozmowę o kontynuacji.

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--/* ═══ Karta cennika stacjonarnego ═════════════════════════════════════════
+       Jedna definicja dla treningów indywidualnych i par: różnią się tylko
+       napisem na przycisku i dopiskiem pod opisem (rachunek roczny pary).
+       Klasy: featured = „Najpopularniejszy” z panelu, highlight = plakietka
+       z panelu, wide = pozycja miesięczna na cały rząd. */-->
+<div th:fragment="card(p, cta, extra)" class="price-card"
+     th:classappend="${(p.featured() ? ' featured' : '') + (p.badge() != null ? ' highlight' : '') + (p.monthly() ? ' wide' : '')}">
+  <div class="price-badge" th:if="${p.badge()} != null" th:text="${p.badge()}">Najlepszy wybór</div>
+  <div class="price-qty" th:text="${p.name()}">Pakiet 8 treningów</div>
+  <div class="price-main"><th:block th:text="${p.perSession()}">160 zł</th:block> <span>/ trening</span></div>
+  <div class="price-total" th:if="${p.totalLine()} != null">
+    <strong th:text="${p.totalLine()}">Razem: 1 280 zł</strong>
+  </div>
+  <div class="price-total" th:unless="${p.totalLine()} != null">Na spróbowanie, bez zobowiązań</div>
+  <p class="price-desc" th:if="${p.description() != null or (p.monthly() and extra != null)}">
+    <th:block th:if="${p.description()} != null" th:text="${p.description()}">2 treningi w tygodniu w stałych terminach.</th:block>
+    <th:block th:if="${p.monthly() and extra != null}" th:text="' ' + ${extra}">Rok w pakietach po 12 to ok. 19 200 zł, tutaj 17 280 zł.</th:block>
+  </p>
+  <!--/* Ważność i rabat przy każdym pakiecie: brief 5.1 wskazuje, że wcześniej
+         tej informacji nie było nigdzie na stronie. */-->
+  <div class="price-meta">
+    <span class="price-save" th:if="${p.discount()} != null" th:text="${p.discount()}">Taniej o 29%</span>
+    <span class="price-valid" th:if="${p.validity()} != null" th:text="${p.validity()}">Ważny 16 tygodni</span>
+  </div>
+  <a th:if="${p.monthly() and extra == null}" href="#opieka-longevity" class="price-more">Co zawiera Opieka Longevity</a>
+  <a href="#kontakt" class="btn" th:classappend="${p.featured() or p.badge() != null} ? 'btn-primary' : 'btn-outline'"
+     th:text="${cta}">Umów rozmowę wstępną</a>
+</div>
+
+<!--/* ═══ Tabela cennika w FAQ ═══ */-->
+<table th:fragment="priceTable(list, caption)" class="price-table">
+  <caption th:text="${caption}">Treningi personalne, 1 osoba</caption>
+  <thead>
+    <tr><th scope="col">Pakiet</th><th scope="col">Cena za trening</th><th scope="col">Razem</th><th scope="col">Ważność</th></tr>
+  </thead>
+  <tbody>
+    <tr th:each="p : ${list}">
+      <td th:text="${p.name()}">Pakiet 8 treningów</td>
+      <td th:text="${p.perSession()}">160 zł</td>
+      <td th:text="${p.monthly()} ? ${p.total()} + ' miesięcznie' : ${p.total()}">1 280 zł</td>
+      <td th:text="${p.termShort()} ?: '-'">10 tyg.</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

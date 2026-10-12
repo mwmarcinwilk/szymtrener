@@ -1,10 +1,11 @@
-package pl.szymtrener.crm;
+package pl.szymtrener.common;
 
 /**
  * Polska odmiana liczebnikow.
  *
  * Bez tego panel pisze „1 odwolanych" i „1 pakietow". Trener czyta te liczby
  * codziennie, wiec bledna odmiana rzuca sie w oczy szybciej niz cokolwiek innego.
+ * W common, bo korzystaja z niej i crm (panel), i offer (cennik na stronie).
  */
 public final class Plural {
 
@@ -29,6 +30,14 @@ public final class Plural {
 
     public static String sessions(long n) {
         return of(n, "trening", "treningi", "treningów");
+    }
+
+    public static String months(long n) {
+        return of(n, "miesiąc", "miesiące", "miesięcy");
+    }
+
+    public static String weeks(long n) {
+        return of(n, "tydzień", "tygodnie", "tygodni");
     }
 
     public static String packages(long n) {
