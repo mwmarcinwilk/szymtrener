@@ -30,8 +30,8 @@ public record HomeFaq(String prices, String validity, String pairs, String onlin
         String validity = "Im większy pakiet, tym dłużej jest ważny"
                 + (stationary.validitySentence() != null ? ": " + stationary.validitySentence() : "")
                 + ". Ten zapas jest policzony tak, żeby zmieściła się w nim choroba, delegacja albo tydzień,"
-                + " w którym po prostu nie wyszło. Do tego raz na pakiet możesz zrobić przerwę do 3 tygodni."
-                + (stationary.hasCare() ? " W Opiece Longevity możesz zamrozić współpracę do 4 tygodni w roku." : "");
+                + " w którym po prostu nie wyszło."
+                + (stationary.hasCare() ? " W Opiece Longevity możesz zamrozić współpracę łącznie do 4 tygodni, a umowa wydłuża się o czas przerwy." : "");
 
         String pairs = "Tak. Dla wielu par to jedyna forma, która w ogóle mieści się w grafiku. Trenujecie"
                 + " w jednym terminie, przyjeżdżacie jednym samochodem i nie musicie się wymieniać przy dzieciach."

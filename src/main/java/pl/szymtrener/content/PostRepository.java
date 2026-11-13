@@ -10,6 +10,15 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    /** Wpisy z miniaturami z i.ytimg.com do przepisania (YoutubeThumbnailBackfill); po przebiegu pusto. */
+    List<Post> findByContentHtmlContaining(String fragment);
+
+    /** Podmiana tresci zapytaniem: omija @PreUpdate, wiec data ostatniej zmiany wpisu zostaje bez zmian. */
+    @org.springframework.data.jpa.repository.Modifying(clearAutomatically = true, flushAutomatically = true)
+    @org.springframework.data.jpa.repository.Query("update Post p set p.contentHtml = :html where p.id = :id")
+    int updateContentHtml(@org.springframework.data.repository.query.Param("id") Long id,
+                          @org.springframework.data.repository.query.Param("html") String html);
+
     Optional<Post> findBySlug(String slug);
 
     @EntityGraph(attributePaths = {"category", "author"})

@@ -76,7 +76,7 @@
              odwołań karze za niepojawienie się, data ważności karze za chorobę. */-->
       <div class="card">
         <div class="card-h">
-          <h2>Zasady odwołań i pauzy</h2>
+          <h2>Zasady odwołań i zamrożenia</h2>
           <span class="sub">pokazują się pod cennikiem na stronie</span>
         </div>
         <div class="card-b">
@@ -84,15 +84,11 @@
             <div class="fld">
               <label for="cancel">Odwołanie z wyprzedzeniem</label>
               <textarea id="cancel" name="cancel" rows="2" th:text="${ruleCancel}"></textarea>
+              <div class="hint"><span>Musi się zgadzać z Regulaminem Studia: odwołanie najpóźniej 12 godzin przed treningiem.</span></div>
             </div>
             <div class="fld">
               <label for="late">Odwołanie na ostatnią chwilę</label>
               <textarea id="late" name="late" rows="2" th:text="${ruleLate}"></textarea>
-            </div>
-            <div class="fld">
-              <label for="pause">Pauza w pakiecie</label>
-              <textarea id="pause" name="pause" rows="3" th:text="${rulePause}"></textarea>
-              <div class="hint"><span>To argument sprzedażowy, nie zapis regulaminu. Pisz po ludzku.</span></div>
             </div>
             <div class="fld">
               <label for="freeze">Zamrożenie w Opiece Longevity</label>

@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface MediaRepository extends JpaRepository<MediaFile, Long> {
     Optional<MediaFile> findByStorageKey(String storageKey);
     Optional<MediaFile> findByChecksum(String checksum);
+    Optional<MediaFile> findFirstByOriginalName(String originalName);
     Page<MediaFile> findAllByOrderByCreatedAtDesc(Pageable pageable);
     Page<MediaFile> findByKindOrderByCreatedAtDesc(MediaKind kind, Pageable pageable);
 

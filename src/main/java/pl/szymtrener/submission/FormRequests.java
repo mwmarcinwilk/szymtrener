@@ -20,7 +20,6 @@ public final class FormRequests {
             // wiec nie ma tu walidacji poza dlugoscia.
             @Size(max = 40) String offerPath,
             @Size(max = 60) String offerPackage,
-            @AssertTrue(message = "Wymagana jest zgoda na przetwarzanie danych") boolean consent,
             Boolean botcheck
     ) {}
 
@@ -30,7 +29,6 @@ public final class FormRequests {
             @NotBlank @Email(message = "Sprawdź adres e-mail") @Size(max = 180) String email,
             @Size(max = 160) String interest,
             @Size(max = 4000) String message,
-            @AssertTrue(message = "Wymagana jest zgoda na przetwarzanie danych") boolean consent,
             Boolean botcheck
     ) {}
 }

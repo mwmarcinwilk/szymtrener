@@ -59,7 +59,6 @@ public class SubmissionService {
     }
 
     private Submission persist(Submission s, String ip, String userAgent) {
-        s.setConsentAt(Instant.now());
         s.setIpHash(hash(ip));
         s.setUserAgent(userAgent != null && userAgent.length() > 300 ? userAgent.substring(0, 300) : userAgent);
         Submission saved = repository.save(s);

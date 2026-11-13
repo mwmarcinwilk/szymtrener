@@ -10,8 +10,6 @@
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#0E1A26">
 <link rel="preload" as="image" href="/images/szymon-hero.jpeg" fetchpriority="high">
-<link rel="preconnect" href="https://i.ytimg.com">
-<link rel="preconnect" href="https://www.youtube-nocookie.com">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pl_PL">
 <meta property="og:site_name" content="Szymon Domagała - Trener Longevity">
@@ -23,9 +21,7 @@
 <meta name="twitter:title" content="Szymon Domagała - Trener Longevity | trener personalny Łódź">
 <meta name="twitter:description" content="Trening siłowy dla osób 35-55 lat, które chcą być sprawne za 20 lat. Studio na Retkini w Łodzi i online w całej Polsce.">
 <meta name="twitter:image" content="https://szymtrener.pl/images/szymon-hero.jpeg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/fonts.css}" href="/css/fonts.css">
 <meta name="_csrf" th:content="${_csrf?.token}">
 <meta name="_csrf_header" th:content="${_csrf?.headerName}">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -410,18 +406,18 @@
         <li>Test sprawności na starcie i co 6 miesięcy, żebyś czarno na białym widział, co się zmieniło</li>
         <li>Plan na wyjazdy i urlopy do zrobienia samodzielnie (hotelowa siłownia też się nada)</li>
         <li>Pierwszeństwo przy ustalaniu i przekładaniu terminów</li>
-        <li>Możliwość zamrożenia współpracy do 4 tygodni w roku, zgłoszona wcześniej</li>
+        <li>Możliwość zamrożenia współpracy łącznie do 4 tygodni, zgłoszona wcześniej</li>
         <li>Stała cena przez cały okres umowy, nawet jeśli w tym czasie zmieni się cennik</li>
       </ul>
       <p class="care-calc" th:if="${stationary.careCompare()} != null" th:inline="text">Dla porównania: rok treningów 2 razy w tygodniu w pakietach po [[${stationary.careCompare().packageSessions()}]] to ok. [[${stationary.careCompare().packagesYear()}]]. W Opiece Longevity to [[${stationary.careCompare().careYear()}]]. Różnica wynosi [[${stationary.careCompare().difference()}]], czyli [[${stationary.careCompare().freeSessions()}]] gratis.</p>
     </div>
 
-    <!--/* Zasady odwołań stoją PRZY cenniku, nie w regulaminie: brief traktuje
-           pauzę jako argument sprzedażowy, a nie zapis prawny. */-->
+    <!--/* Zasady odwołań stoją PRZY cenniku. Treść z panelu musi się zgadzać
+           z Regulaminem Studia (odwołanie 12 h, bez przerwy w pakiecie). */-->
     <div class="rules" th:if="${!stationary.rules().isEmpty()}">
       <h3>Co, jeśli życie wejdzie w drogę</h3>
       <ul>
-        <li th:each="r : ${stationary.rules()}" th:text="${r}">Odwołanie do 24 godzin przed treningiem nie ma konsekwencji.</li>
+        <li th:each="r : ${stationary.rules()}" th:text="${r}">Odwołujesz trening co najmniej 12 godzin wcześniej? Nic się nie dzieje.</li>
       </ul>
     </div>
 
@@ -740,10 +736,7 @@
           </select>
         </div>
       </div>
-      <label class="of-consent">
-        <input type="checkbox" id="o-consent" name="consent" required>
-        <span>Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w formularzu w celu udzielenia odpowiedzi na zapytanie, zgodnie z <a href="/polityka-prywatnosci">Polityką prywatności</a>.</span>
-      </label>
+      <p class="of-consent">Administratorem Twoich danych jestem ja, Szymon Domagała. Użyję ich, żeby odpowiedzieć na zgłoszenie i umówić rozmowę. Szczegóły w <a href="/polityka-prywatnosci">Polityce prywatności</a>.</p>
       <button type="submit" class="btn btn-online">Wyślij zgłoszenie</button>
       <div class="of-success" id="of-success">Dostałem Twoje zgłoszenie. Odezwę się w ciągu 24 godzin.</div>
       <div class="of-error" id="of-error">Coś poszło nie tak. Zadzwoń pod <a href="tel:+48502338373">502 338 373</a> albo napisz na <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>.</div>
@@ -779,14 +772,14 @@
     <div class="podcast-videos" data-reveal>
       <figure>
         <div class="video-embed yt-facade" data-id="LcXpFy7s-GQ" role="button" tabindex="0" aria-label="Odtwórz film: Jak budować mięśnie po czterdziestce">
-          <img class="yt-thumb" src="https://i.ytimg.com/vi/LcXpFy7s-GQ/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/LcXpFy7s-GQ/hqdefault.jpg'" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność, budowanie mięśni po czterdziestce" loading="lazy">
+          <img class="yt-thumb" th:src="@{/images/yt-LcXpFy7s-GQ.jpg}" src="/images/yt-LcXpFy7s-GQ.jpg" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność, budowanie mięśni po czterdziestce" loading="lazy">
           <span class="yt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
         </div>
         <figcaption class="video-caption">Jak budować mięśnie po czterdziestce: serie, powtórzenia, ciężary</figcaption>
       </figure>
       <figure>
         <div class="video-embed yt-facade" data-id="Qq2CHz25u9I" role="button" tabindex="0" aria-label="Odtwórz film: rozmowa z Szymonem Domagałą">
-          <img class="yt-thumb" src="https://i.ytimg.com/vi/Qq2CHz25u9I/maxresdefault.jpg" onerror="this.src='https://i.ytimg.com/vi/Qq2CHz25u9I/hqdefault.jpg'" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność, rozmowa o treningu i długowieczności" loading="lazy">
+          <img class="yt-thumb" th:src="@{/images/yt-Qq2CHz25u9I.jpg}" src="/images/yt-Qq2CHz25u9I.jpg" alt="Szymon Domagała w podcaście Dzień Dobry Długowieczność, rozmowa o treningu i długowieczności" loading="lazy">
           <span class="yt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
         </div>
         <figcaption class="video-caption">Rozmowa z Szymonem Domagałą o treningu i długowieczności</figcaption>
@@ -919,7 +912,7 @@
         <h3 class="faq-q">Jak długo ważny jest pakiet i co jeśli zachoruję?</h3>
         <p class="faq-a" th:text="${faq.validity()}">Im większy pakiet, tym dłużej jest ważny.</p>
         <ul th:if="${!stationary.rules().isEmpty()}">
-          <li th:each="r : ${stationary.rules()}" th:text="${r}">Odwołujesz trening co najmniej 24 godziny wcześniej? Nic się nie dzieje.</li>
+          <li th:each="r : ${stationary.rules()}" th:text="${r}">Odwołujesz trening co najmniej 12 godzin wcześniej? Nic się nie dzieje.</li>
         </ul>
       </article>
 
@@ -1028,10 +1021,7 @@
             <label for="message">Napisz kilka słów o sobie</label>
             <textarea id="message" name="message" placeholder="np. wiek, cel, ile się teraz ruszasz, pytania..."></textarea>
           </div>
-          <label class="form-consent">
-            <input type="checkbox" id="consent" name="consent" required>
-            <span class="consent-text">Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w formularzu w celu udzielenia odpowiedzi na zapytanie, zgodnie z <a href="/polityka-prywatnosci">Polityką prywatności</a>.</span>
-          </label>
+          <p class="form-consent consent-text">Administratorem Twoich danych jestem ja, Szymon Domagała. Użyję ich, żeby odpowiedzieć na zgłoszenie i umówić rozmowę. Szczegóły w <a href="/polityka-prywatnosci">Polityce prywatności</a>.</p>
           <button type="submit" class="btn btn-primary">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
             Wyślij wiadomość

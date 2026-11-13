@@ -231,8 +231,9 @@
                 <span class="v"><a th:href="'mailto:' + ${item.email}" th:text="${item.email}">adres</a></span></div>
               <div class="mini-row" th:if="${item.phone != null}"><span class="k">Telefon</span>
                 <span class="v"><a th:href="'tel:' + ${item.phone}" th:text="${item.phone}">telefon</a></span></div>
-              <div class="mini-row"><span class="k">Zgoda RODO</span>
-                <span class="v" style="color:var(--mint-2)" th:text="${item.createdLabel}">—</span></div>
+              <!--/* Tylko zgloszenia ze starego formularza (przed 11.2026) maja zapisana zgode. */-->
+              <div class="mini-row" th:if="${item.consentLabel != null}"><span class="k">Zgoda RODO</span>
+                <span class="v" style="color:var(--mint-2)" th:text="${item.consentLabel}">—</span></div>
               <div class="contact-row">
                 <a th:href="'tel:' + ${item.phone}" th:if="${item.phone != null}"><svg><use href="#i-phone"/></svg>Zadzwoń</a>
                 <a th:href="@{/admin/zgloszenia/{id}/dane(id=${item.id})}"><svg><use href="#i-pdf"/></svg>Dane (RODO)</a>

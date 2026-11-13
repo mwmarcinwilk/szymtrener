@@ -75,6 +75,26 @@ class MailTemplatesTest {
     }
 
     @Test
+    @DisplayName("mail do trenera nie twierdzi, że klient wyraził zgodę RODO (formularz od 11.2026 jej nie zbiera)")
+    void trainerNotificationDoesNotClaimConsent() {
+        String html = engine.process("mail/notify-trainer", context(submission()));
+
+        assertThat(html).doesNotContain("Zgoda RODO");
+    }
+
+    @Test
+    @DisplayName("data zgody jest tylko przy zgłoszeniu ze starego formularza")
+    void consentLabelOnlyForLegacySubmissions() {
+        java.time.Instant at = java.time.Instant.parse("2026-10-01T10:15:00Z");
+        Submission legacy = submission();
+        org.springframework.test.util.ReflectionTestUtils.setField(legacy, "createdAt", at);
+        org.springframework.test.util.ReflectionTestUtils.setField(legacy, "consentAt", at);
+
+        assertThat(submission().getConsentLabel()).isNull();
+        assertThat(legacy.getConsentLabel()).isEqualTo(legacy.getCreatedLabel()).contains("2026");
+    }
+
+    @Test
     @DisplayName("puste pola są pomijane, nie pokazują się jako rząd myślników")
     void skipsEmptyFields() {
         Submission bare = new Submission();

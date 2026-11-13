@@ -95,6 +95,7 @@ public class SeoController {
         url(xml, props.absolute("/"), Instant.now(), "1.0");
         url(xml, props.absolute("/blog"), Instant.now(), "0.8");
         url(xml, props.absolute("/polityka-prywatnosci"), null, "0.2");
+        url(xml, props.absolute("/regulamin"), null, "0.2");
         for (Object[] row : posts.findSlugsForSitemap()) {
             url(xml, props.absolute("/blog/" + row[0]), (Instant) row[1], "0.7");
         }

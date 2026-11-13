@@ -1,7 +1,7 @@
 # INVENTORY — szymtrener
-> AUTO-GENEROWANY 2026-09-21 przez tools/index_project.py — NIE edytuj ręcznie.
+> AUTO-GENEROWANY 2026-11-13 przez tools/index_project.py — NIE edytuj ręcznie.
 > To spis tego, co JUŻ ISTNIEJE. Grepuj go zanim zbudujesz coś nowego.
-> Beany: 62 · Endpointy: 98 · Metody: 1307 · Front: 0
+> Beany: 65 · Endpointy: 100 · Metody: 1406 · Front: 0
 
 ## Beany / komponenty Spring
 @Component      AdminNav — src/main/java/pl/szymtrener/admin/AdminNav.java
@@ -16,6 +16,7 @@
 @Component      DocxToHtmlConverter — src/main/java/pl/szymtrener/docimport/DocxToHtmlConverter.java
 @Component      EditorHtml — src/main/java/pl/szymtrener/content/EditorHtml.java
 @Component      HtmlSanitizer — src/main/java/pl/szymtrener/content/HtmlSanitizer.java
+@Component      HttpThumbnailFetcher — src/main/java/pl/szymtrener/media/HttpThumbnailFetcher.java
 @Component      InboundMailScheduler — src/main/java/pl/szymtrener/scheduler/InboundMailScheduler.java
 @Component      InboundMatcher — src/main/java/pl/szymtrener/crm/InboundMatcher.java
 @Component      LegacyDocConverter — src/main/java/pl/szymtrener/docimport/LegacyDocConverter.java
@@ -24,6 +25,7 @@
 @Component      PublishScheduler — src/main/java/pl/szymtrener/scheduler/PublishScheduler.java
 @Component      RateLimiter — src/main/java/pl/szymtrener/submission/RateLimiter.java
 @Component      ReminderScheduler — src/main/java/pl/szymtrener/submission/ReminderScheduler.java
+@Component      YoutubeThumbnailBackfill — src/main/java/pl/szymtrener/content/YoutubeThumbnailBackfill.java
 @Configuration  AdminAccountInitializer — src/main/java/pl/szymtrener/admin/AdminAccountInitializer.java
 @Configuration  MailConfig — src/main/java/pl/szymtrener/config/MailConfig.java
 @Configuration  SecurityConfig — src/main/java/pl/szymtrener/config/SecurityConfig.java
@@ -66,6 +68,7 @@
 @Service        StationaryOfferService — src/main/java/pl/szymtrener/offer/StationaryOfferService.java
 @Service        SubmissionService — src/main/java/pl/szymtrener/submission/SubmissionService.java
 @Service        TraineeService — src/main/java/pl/szymtrener/crm/TraineeService.java
+@Service        YoutubeThumbnails — src/main/java/pl/szymtrener/media/YoutubeThumbnails.java
 
 ## Endpointy REST
 GET     /                                             HomeController.home() — src/main/java/pl/szymtrener/web/HomeController.java
@@ -108,6 +111,7 @@ GET     /llms.txt                                     SeoController.llms() — s
 GET     /media/**                                     MediaController.serve() — src/main/java/pl/szymtrener/media/MediaController.java
 GET     /pliki/{id}/**                                MediaController.download() — src/main/java/pl/szymtrener/media/MediaController.java
 GET     /polityka-prywatnosci                         HomeController.privacy() — src/main/java/pl/szymtrener/web/HomeController.java
+GET     /regulamin                                    HomeController.terms() — src/main/java/pl/szymtrener/web/HomeController.java
 GET     /robots.txt                                   SeoController.robots() — src/main/java/pl/szymtrener/seo/SeoController.java
 GET     /sitemap.xml                                  SeoController.sitemap() — src/main/java/pl/szymtrener/seo/SeoController.java
 GET     /ustawienia-cookies                           ConsentController.settings() — src/main/java/pl/szymtrener/web/ConsentController.java
@@ -135,6 +139,7 @@ POST    /admin/oferta/dieta                           AdminOfferController.saveD
 POST    /admin/oferta/faq                             AdminOfferController.addQuestion() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/faq/{id}                        AdminOfferController.saveQuestion() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/faq/{id}/usun                   AdminOfferController.deleteQuestion() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
+POST    /admin/oferta/jednorazowe                     AdminOfferController.saveOneOff() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/konsultacja                     AdminOfferController.saveConsultation() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/opinie                          AdminOfferController.addTestimonial() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
 POST    /admin/oferta/opinie/{id}                     AdminOfferController.saveTestimonial() — src/main/java/pl/szymtrener/admin/AdminOfferController.java
@@ -223,24 +228,25 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [prv] currentLogin(): String  :90
 
 ### AdminOfferController  (src/main/java/pl/szymtrener/admin/AdminOfferController.java)
-- [pub] overview(Model model): String  :56
-- [pub] addPackage(@RequestParam String name, RedirectAttributes flash): String  :106
-- [pub] editPackage(@PathVariable Long id, Model model): String  :124
-- [pub] deletePackage(@PathVariable Long id, RedirectAttributes flash): String  :197
-- [pub] addTestimonial(@RequestParam String name, @RequestParam String body, RedirectAttributes flash): String  :208
-- [pub] editTestimonial(@PathVariable Long id, Model model): String  :224
-- [pub] deleteTestimonial(@PathVariable Long id, RedirectAttributes flash): String  :262
-- [pub] addQuestion(@RequestParam String question, RedirectAttributes flash): String  :273
-- [pub] deleteQuestion(@PathVariable Long id, RedirectAttributes flash): String  :315
-- [pub] stationary(Model model): String  :326
-- [prv] pricesInZloty(List<StationaryPackage> all): Map<Long, String>  :339
-- [pub] addStationary(@RequestParam StationaryKind kind, @RequestParam String name, RedirectAttributes flash): String  :390
-- [pub] deleteStationary(@PathVariable Long id, RedirectAttributes flash): String  :411
-- [prv] text(String v): String  :435
-- [   ] weeks(String input): Integer  :440
-- [   ] grosze(String input): Integer  :455
-- [   ] zlote(int grosze): String  :470
-- [prv] blankToNull(String v): String  :475
+- [pub] overview(Model model): String  :60
+- [pub] saveOneOff(@RequestParam String combo, @RequestParam String update, RedirectAttributes flash): String  :114
+- [pub] addPackage(@RequestParam String name, RedirectAttributes flash): String  :130
+- [pub] editPackage(@PathVariable Long id, Model model): String  :148
+- [pub] deletePackage(@PathVariable Long id, RedirectAttributes flash): String  :221
+- [pub] addTestimonial(@RequestParam String name, @RequestParam String body, RedirectAttributes flash): String  :232
+- [pub] editTestimonial(@PathVariable Long id, Model model): String  :248
+- [pub] deleteTestimonial(@PathVariable Long id, RedirectAttributes flash): String  :286
+- [pub] addQuestion(@RequestParam String question, RedirectAttributes flash): String  :297
+- [pub] deleteQuestion(@PathVariable Long id, RedirectAttributes flash): String  :339
+- [pub] stationary(Model model): String  :350
+- [prv] pricesInZloty(List<StationaryPackage> all): Map<Long, String>  :363
+- [pub] addStationary(@RequestParam StationaryKind kind, @RequestParam String name, RedirectAttributes flash): String  :432
+- [pub] deleteStationary(@PathVariable Long id, RedirectAttributes flash): String  :453
+- [prv] text(String v): String  :477
+- [   ] optionalInt(String input): Integer  :482
+- [   ] grosze(String input): Integer  :497
+- [   ] zlote(int grosze): String  :512
+- [prv] blankToNull(String v): String  :517
 
 ### AdminOfferControllerTest  (src/test/java/pl/szymtrener/admin/AdminOfferControllerTest.java)
 - [   ] parsesHumanInput(): void  :17
@@ -744,8 +750,23 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] handlesRealFailure(): void  :43
 
 ### HomeController  (src/main/java/pl/szymtrener/web/HomeController.java)
-- [pub] home(Model model): String  :35
-- [pub] privacy(Model model): String  :70
+- [pub] home(Model model): String  :43
+- [pub] privacy(Model model): String  :80
+- [pub] terms(Model model): String  :92
+
+### HomeFaq  (src/main/java/pl/szymtrener/web/HomeFaq.java)
+- [pub] of(StationaryOfferService.Page stationary, String lowestMonthly, SimplePriceView consult, SimplePriceView diet): HomeFaq  :21
+- [pub] json(): HomeFaq  :56
+- [   ] quote(String value): String  :64
+
+### HomePageCopyIT  (src/test/java/pl/szymtrener/web/HomePageCopyIT.java)
+- [prv] home(): String  :46
+- [   ] newPricesAreRendered(): void  :55
+- [   ] faqAndStructuredData(): void  :81
+- [   ] generalCopyRules(): void  :116
+- [   ] wojtekTestimonial(): void  :133
+- [   ] invalidTermIsRejected(): void  :144
+- [   ] structuredDataSurvivesHostileName(): void  :165
 
 ### HtmlSanitizer  (src/main/java/pl/szymtrener/content/HtmlSanitizer.java)
 - [pub] clean(String html): String  :52
@@ -755,6 +776,10 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] zachowujeTabeleZNaglowkami(): void  :22
 - [   ] zachowujeBlokFilmuZEdytora(): void  :31
 - [   ] dodajeLazyLoadingObrazkom(): void  :39
+
+### HttpThumbnailFetcher  (src/main/java/pl/szymtrener/media/HttpThumbnailFetcher.java)
+- [pub] fetch(String videoId): Optional<byte[]>  :33
+- [   ] jpeg(byte[] bytes): Optional<byte[]>  :56
 
 ### ImapMailbox  (src/main/java/pl/szymtrener/crm/ImapMailbox.java)
 - [pub] open(String host, int port, String user, String password): ImapMailbox  :36
@@ -847,6 +872,17 @@ POST    /zgoda-cookies                                ConsentController.consent(
 ### LegacyDocConverter  (src/main/java/pl/szymtrener/docimport/LegacyDocConverter.java)
 - [pub] convert(InputStream in): ImportResult  :22
 
+### LegalDocumentsIT  (src/test/java/pl/szymtrener/web/LegalDocumentsIT.java)
+- [prv] page(String path): String  :33
+- [   ] termsPage(): void  :42
+- [   ] privacyPage(): void  :59
+- [   ] termsAreLinked(): void  :72
+- [   ] pdfsAreServed(): void  :83
+- [   ] formsInformInsteadOfAskingForConsent(): void  :98
+- [   ] rulesFollowStudioTerms(): void  :109
+- [   ] videoThumbnailsAreSelfHosted(): void  :125
+- [   ] fontsAreSelfHosted(): void  :139
+
 ### LoginAuditListener  (src/main/java/pl/szymtrener/admin/LoginAuditListener.java)
 - [pub] onSuccess(AuthenticationSuccessEvent event): void  :34
 - [pub] onFailure(AbstractAuthenticationFailureEvent event): void  :39
@@ -863,21 +899,23 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [prv] autoReply(Submission s): MimeMessage  :102
 - [   ] plainAutoReply(Submission s): String  :117
 - [prv] plainTrainerNotification(Submission s): String  :132
-- [prv] line(StringBuilder sb, String label, String value): void  :149
+- [prv] line(StringBuilder sb, String label, String value): void  :148
 
 ### MailTemplatesTest  (src/test/java/pl/szymtrener/submission/MailTemplatesTest.java)
 - [   ] setUp(): void  :27
 - [prv] submission(): Submission  :39
 - [prv] context(Submission s): Context  :54
 - [   ] trainerNotificationRenders(): void  :65
-- [   ] skipsEmptyFields(): void  :79
-- [   ] showsOfferContext(): void  :95
-- [   ] skipsOfferContextWhenAbsent(): void  :109
-- [   ] clientConfirmationRenders(): void  :117
-- [   ] firstNameIsCapitalized(): void  :130
-- [   ] plainConfirmationGreetsByFirstName(): void  :140
-- [   ] greetingWithoutName(): void  :158
-- [   ] bothTemplatesSurviveMinimalSubmission(): void  :168
+- [   ] trainerNotificationDoesNotClaimConsent(): void  :79
+- [   ] consentLabelOnlyForLegacySubmissions(): void  :87
+- [   ] skipsEmptyFields(): void  :99
+- [   ] showsOfferContext(): void  :115
+- [   ] skipsOfferContextWhenAbsent(): void  :129
+- [   ] clientConfirmationRenders(): void  :137
+- [   ] firstNameIsCapitalized(): void  :150
+- [   ] plainConfirmationGreetsByFirstName(): void  :160
+- [   ] greetingWithoutName(): void  :178
+- [   ] bothTemplatesSurviveMinimalSubmission(): void  :188
 
 ### Mailbox  (src/main/java/pl/szymtrener/crm/Mailbox.java)
 - [   ] uidValidity(): long  :16
@@ -944,10 +982,11 @@ POST    /zgoda-cookies                                ConsentController.consent(
 ### MediaRepository  (src/main/java/pl/szymtrener/media/MediaRepository.java)
 - [   ] findByStorageKey(String storageKey): Optional<MediaFile>  :10
 - [   ] findByChecksum(String checksum): Optional<MediaFile>  :11
-- [   ] findAllByOrderByCreatedAtDesc(Pageable pageable): Page<MediaFile>  :12
-- [   ] findByKindOrderByCreatedAtDesc(MediaKind kind, Pageable pageable): Page<MediaFile>  :13
-- [   ] countByKind(MediaKind kind): long  :15
-- [   ] totalBytes(): long  :19
+- [   ] findFirstByOriginalName(String originalName): Optional<MediaFile>  :12
+- [   ] findAllByOrderByCreatedAtDesc(Pageable pageable): Page<MediaFile>  :13
+- [   ] findByKindOrderByCreatedAtDesc(MediaKind kind, Pageable pageable): Page<MediaFile>  :14
+- [   ] countByKind(MediaKind kind): long  :16
+- [   ] totalBytes(): long  :20
 
 ### MediaService  (src/main/java/pl/szymtrener/media/MediaService.java)
 - [pub] upload(MultipartFile file, String altText): MediaFile  :38
@@ -1074,16 +1113,22 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] findAllByOrderBySortOrderAsc(): List<OnlineFaq>  :9
 
 ### OnlineOfferService  (src/main/java/pl/szymtrener/offer/OnlineOfferService.java)
-- [pub] consultation(): SimplePriceView  :46
-- [pub] consultPriceGr(): int  :52
-- [pub] diet(): SimplePriceView  :61
-- [pub] dietPriceGr(): int  :67
-- [pub] packages(): List<PackageView>  :84
-- [   ] toView(OnlinePackage p): PackageView  :89
-- [pub] money(int grosze): String  :117
-- [pub] lowestMonthly(): String  :128
-- [pub] testimonials(): List<Testimonial>  :139
-- [pub] faq(): List<OnlineFaq>  :148
+- [pub] consultation(): SimplePriceView  :52
+- [pub] consultPriceGr(): int  :58
+- [pub] diet(): SimplePriceView  :67
+- [pub] dietPriceGr(): int  :73
+- [pub] comboPriceGr(): int  :77
+- [pub] updatePriceGr(): int  :81
+- [prv] visibleOneOff(): List<OneOff>  :97
+- [pub] oneOff(): List<OneOffView>  :112
+- [pub] oneOffFrom(): String  :117
+- [pub] packages(): List<PackageView>  :135
+- [   ] toView(OnlinePackage p): PackageView  :140
+- [   ] seatsLine(int left, int total): String  :166
+- [pub] money(int grosze): String  :172
+- [pub] lowestMonthly(): String  :183
+- [pub] testimonials(): List<Testimonial>  :194
+- [pub] faq(): List<OnlineFaq>  :203
 
 ### OnlineOfferServiceTest  (src/test/java/pl/szymtrener/offer/OnlineOfferServiceTest.java)
 - [prv] pack(int seatsTaken, int seatsTotal, PricingMode mode): OnlinePackage  :14
@@ -1094,8 +1139,11 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] hidesPromotionalMarkersWhenSeatsRunOut(): void  :64
 - [   ] keepsNonPromotionalBadge(): void  :81
 - [   ] showsFullStartingPriceBlock(): void  :92
-- [   ] signatureSkipsEmptyParts(): void  :108
-- [   ] unansweredFaqIsHidden(): void  :124
+- [   ] seatsLineIsInflected(): void  :108
+- [   ] signatureSkipsEmptyParts(): void  :118
+- [   ] unansweredFaqIsHidden(): void  :134
+- [   ] hiddenDietLeavesOneOffList(): void  :145
+- [   ] longTestimonial(): void  :160
 
 ### OnlinePackage  (src/main/java/pl/szymtrener/offer/OnlinePackage.java)
 - [pub] effectiveMode(): PricingMode  :49
@@ -1170,15 +1218,17 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [pub] getRepeat(): String  :12
 - [pub] setRepeat(String repeat): void  :13
 
-### Plural  (src/main/java/pl/szymtrener/crm/Plural.java)
-- [pub] form(long n, String one, String few, String many): String  :18
-- [pub] of(long n, String one, String few, String many): String  :26
-- [pub] sessions(long n): String  :30
-- [pub] packages(long n): String  :34
-- [pub] cancelled(long n): String  :38
-- [pub] clients(long n): String  :42
+### Plural  (src/main/java/pl/szymtrener/common/Plural.java)
+- [pub] form(long n, String one, String few, String many): String  :19
+- [pub] of(long n, String one, String few, String many): String  :27
+- [pub] sessions(long n): String  :31
+- [pub] months(long n): String  :35
+- [pub] weeks(long n): String  :39
+- [pub] packages(long n): String  :43
+- [pub] cancelled(long n): String  :47
+- [pub] clients(long n): String  :51
 
-### PluralTest  (src/test/java/pl/szymtrener/crm/PluralTest.java)
+### PluralTest  (src/test/java/pl/szymtrener/common/PluralTest.java)
 - [   ] threeForms(): void  :16
 - [   ] teensAreException(): void  :26
 - [   ] otherForms(): void  :38
@@ -1319,40 +1369,42 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [pub] fill(Long postId, Model model, boolean preview): String  :49
 
 ### PostRepository  (src/main/java/pl/szymtrener/content/PostRepository.java)
-- [   ] findBySlug(String slug): Optional<Post>  :13
-- [   ] findByStatusOrderByPublishedAtDesc(PostStatus status, Pageable pageable): Page<Post>  :16
-- [   ] findByStatusAndCategorySlugOrderByPublishedAtDesc(PostStatus status, String categorySlug, Pageable pageable): Page<Post>  :19
-- [   ] findBySlugAndStatus(String slug, PostStatus status): Optional<Post>  :22
-- [   ] findByStatusAndPublishAtLessThanEqual(PostStatus status, Instant now): List<Post>  :28
-- [   ] findTop3ByStatusAndCategoryIdAndIdNotOrderByPublishedAtDesc(PostStatus status, Long categoryId, Long excludedId): List<Post>  :31
-- [   ] findTop3ByStatusAndIdNotOrderByPublishedAtDesc(PostStatus status, Long excludedId): List<Post>  :34
-- [   ] findTop6ByStatusAndIdNotOrderByPublishedAtDesc(PostStatus status, Long excludedId): List<Post>  :38
-- [   ] findSlugsForSitemap(): List<Object[]>  :59
-- [   ] findTop20ByStatusOrderByPublishedAtDesc(PostStatus status): List<Post>  :63
-- [   ] countByStatus(PostStatus status): long  :69
-- [   ] findAllByOrderByUpdatedAtDesc(Pageable pageable): Page<Post>  :75
-- [   ] findByStatusOrderByUpdatedAtDesc(PostStatus status, Pageable pageable): Page<Post>  :89
-- [   ] findTop5ByStatusOrderByPublishAtAsc(PostStatus status): List<Post>  :107
-- [   ] findTop5ByStatusOrderByUpdatedAtDesc(PostStatus status): List<Post>  :111
+- [   ] findByContentHtmlContaining(String fragment): List<Post>  :14
+- [   ] findBySlug(String slug): Optional<Post>  :22
+- [   ] findByStatusOrderByPublishedAtDesc(PostStatus status, Pageable pageable): Page<Post>  :25
+- [   ] findByStatusAndCategorySlugOrderByPublishedAtDesc(PostStatus status, String categorySlug, Pageable pageable): Page<Post>  :28
+- [   ] findBySlugAndStatus(String slug, PostStatus status): Optional<Post>  :31
+- [   ] findByStatusAndPublishAtLessThanEqual(PostStatus status, Instant now): List<Post>  :37
+- [   ] findTop3ByStatusAndCategoryIdAndIdNotOrderByPublishedAtDesc(PostStatus status, Long categoryId, Long excludedId): List<Post>  :40
+- [   ] findTop3ByStatusAndIdNotOrderByPublishedAtDesc(PostStatus status, Long excludedId): List<Post>  :43
+- [   ] findTop6ByStatusAndIdNotOrderByPublishedAtDesc(PostStatus status, Long excludedId): List<Post>  :47
+- [   ] findSlugsForSitemap(): List<Object[]>  :68
+- [   ] findTop20ByStatusOrderByPublishedAtDesc(PostStatus status): List<Post>  :72
+- [   ] countByStatus(PostStatus status): long  :78
+- [   ] findAllByOrderByUpdatedAtDesc(Pageable pageable): Page<Post>  :84
+- [   ] findByStatusOrderByUpdatedAtDesc(PostStatus status, Pageable pageable): Page<Post>  :98
+- [   ] findTop5ByStatusOrderByPublishAtAsc(PostStatus status): List<Post>  :116
+- [   ] findTop5ByStatusOrderByUpdatedAtDesc(PostStatus status): List<Post>  :120
 
 ### PostService  (src/main/java/pl/szymtrener/content/PostService.java)
-- [pub] published(String categorySlug, int page, int size): Page<PostView>  :56
-- [pub] requirePublished(String slug): Post  :65
-- [pub] related(Post post): List<PostView>  :76
-- [pub] search(String query, int page, int size): Page<PostView>  :96
-- [pub] registerView(Long postId): void  :104
-- [pub] toFullView(Post p): PostView  :110
-- [pub] toCardView(Post p): PostView  :132
-- [pub] save(Post post): Post  :149
-- [pub] save(Post post, String desiredSlug): Post  :159
-- [prv] syncMediaLinks(Post post): void  :201
-- [prv] mediaIdFromUrl(String url): Optional<Long>  :231
-- [pub] uniqueSlug(String base, Long selfId): String  :253
-- [pub] postsUsing(Long mediaId): List<String>  :268
-- [pub] deleteOrArchive(Post post): boolean  :279
-- [pub] categories(): List<Category>  :291
-- [   ] iso(Instant instant): String  :293
-- [   ] label(Instant instant): String  :297
+- [pub] published(String categorySlug, int page, int size): Page<PostView>  :59
+- [pub] requirePublished(String slug): Post  :68
+- [pub] related(Post post): List<PostView>  :79
+- [pub] search(String query, int page, int size): Page<PostView>  :99
+- [pub] registerView(Long postId): void  :107
+- [pub] toFullView(Post p): PostView  :113
+- [pub] toCardView(Post p): PostView  :135
+- [pub] save(Post post): Post  :152
+- [pub] save(Post post, String desiredSlug): Post  :162
+- [pub] replaceContentKeepingDates(Long postId, String html): void  :210
+- [prv] syncMediaLinks(Post post): void  :215
+- [prv] mediaIdFromUrl(String url): Optional<Long>  :245
+- [pub] uniqueSlug(String base, Long selfId): String  :267
+- [pub] postsUsing(Long mediaId): List<String>  :282
+- [pub] deleteOrArchive(Post post): boolean  :293
+- [pub] categories(): List<Category>  :305
+- [   ] iso(Instant instant): String  :307
+- [   ] label(Instant instant): String  :311
 
 ### PostSlugHistory  (src/main/java/pl/szymtrener/content/PostSlugHistory.java)
 - [pub] getSlug(): String  :28
@@ -1384,17 +1436,17 @@ POST    /zgoda-cookies                                ConsentController.consent(
 ### PublicFormControllerTest  (src/test/java/pl/szymtrener/web/PublicFormControllerTest.java)
 - [   ] allowByDefault(): void  :62
 - [prv] validContact(): Map<String, Object>  :66
-- [prv] validOnline(): Map<String, Object>  :78
-- [   ] acceptsValidContactForm(): void  :95
-- [   ] acceptsValidOnlineForm(): void  :107
-- [   ] rejectsRequestWithoutCsrfToken(): void  :119
-- [   ] honeypotSilentlyDropsBotSubmissions(): void  :130
-- [   ] honeypotWinsOverValidation(): void  :146
-- [   ] rejectsWhenRateLimited(): void  :162
-- [   ] requiresConsent(): void  :177
-- [   ] reportsFieldValidationErrors(): void  :193
-- [   ] onlineFormRequiresItsOwnFields(): void  :210
-- [   ] rateLimitIsCheckedBeforeValidation(): void  :227
+- [prv] validOnline(): Map<String, Object>  :77
+- [   ] acceptsValidContactForm(): void  :93
+- [   ] acceptsValidOnlineForm(): void  :105
+- [   ] rejectsRequestWithoutCsrfToken(): void  :117
+- [   ] honeypotSilentlyDropsBotSubmissions(): void  :128
+- [   ] honeypotWinsOverValidation(): void  :144
+- [   ] rejectsWhenRateLimited(): void  :160
+- [   ] consentIsNotRequired(): void  :175
+- [   ] reportsFieldValidationErrors(): void  :189
+- [   ] onlineFormRequiresItsOwnFields(): void  :206
+- [   ] rateLimitIsCheckedBeforeValidation(): void  :223
 
 ### PublishScheduler  (src/main/java/pl/szymtrener/scheduler/PublishScheduler.java)
 - [pub] publishDue(): void  :32
@@ -1447,12 +1499,12 @@ POST    /zgoda-cookies                                ConsentController.consent(
 ### SeoController  (src/main/java/pl/szymtrener/seo/SeoController.java)
 - [pub] robots(): String  :44
 - [pub] sitemap(): String  :90
-- [prv] url(StringBuilder xml, String location, Instant lastMod, String priority): void  :105
-- [pub] feed(): String  :119
-- [prv] rfc822(Instant instant): String  :158
-- [prv] escape(String text): String  :162
-- [pub] indexNowKey(@PathVariable String key): String  :169
-- [pub] llms(): String  :179
+- [prv] url(StringBuilder xml, String location, Instant lastMod, String priority): void  :106
+- [pub] feed(): String  :120
+- [prv] rfc822(Instant instant): String  :159
+- [prv] escape(String text): String  :163
+- [pub] indexNowKey(@PathVariable String key): String  :170
+- [pub] llms(): String  :180
 
 ### SeoScoreService  (src/main/java/pl/szymtrener/seo/SeoScoreService.java)
 - [pub] pending(): List<Check>  :41
@@ -1469,13 +1521,13 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [pub] badge(): String  :16
 
 ### SettingsService  (src/main/java/pl/szymtrener/settings/SettingsService.java)
-- [pub] get(String key, String fallback): String  :65
-- [pub] getInt(String key, int fallback): int  :71
-- [pub] getLong(String key, long fallback): long  :82
-- [pub] getBoolean(String key, boolean fallback): boolean  :93
-- [pub] set(String key, String value): void  :99
-- [pub] all(): Map<String, String>  :109
-- [prv] ensureLoaded(): void  :114
+- [pub] get(String key, String fallback): String  :68
+- [pub] getInt(String key, int fallback): int  :74
+- [pub] getLong(String key, long fallback): long  :85
+- [pub] getBoolean(String key, boolean fallback): boolean  :96
+- [pub] set(String key, String value): void  :102
+- [pub] all(): Map<String, String>  :112
+- [prv] ensureLoaded(): void  :117
 
 ### SlugUtil  (src/main/java/pl/szymtrener/common/SlugUtil.java)
 - [pub] slugify(String input): String  :10
@@ -1491,16 +1543,29 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [pub] label(): String  :13
 
 ### StationaryOfferService  (src/main/java/pl/szymtrener/offer/StationaryOfferService.java)
-- [pub] individual(): List<PackageView>  :44
-- [pub] pairs(): List<PackageView>  :49
-- [prv] views(StationaryKind kind): List<PackageView>  :53
-- [   ] validityLabel(Integer weeks): String  :77
-- [pub] rules(): List<String>  :86
-- [pub] priceSentence(): String  :100
-- [pub] cheapestPair(): String  :121
-- [prv] price(StationaryKind kind, boolean singleEntry): String  :126
-- [prv] priceGr(StationaryKind kind, boolean singleEntry): Integer  :131
-- [pub] longestValidity(): String  :143
+- [pub] hasCare(): boolean  :88
+- [pub] page(): Page  :94
+- [prv] ofKind(List<StationaryPackage> all, StationaryKind kind): List<StationaryPackage>  :111
+- [prv] views(List<StationaryPackage> found): List<PackageView>  :115
+- [prv] totalLine(StationaryPackage p): String  :142
+- [prv] termShort(StationaryPackage p): String  :149
+- [   ] termLabel(Integer months): String  :156
+- [   ] validityLabel(Integer weeks): String  :162
+- [prv] biggestPack(List<StationaryPackage> found): Optional<StationaryPackage>  :168
+- [prv] yearCompare(List<StationaryPackage> found): YearCompare  :178
+- [   ] yearCompare(StationaryPackage care, StationaryPackage pack): YearCompare  :186
+- [   ] inSessions(int differenceGr, int perSessionGr): String  :207
+- [prv] rules(): List<String>  :218
+- [   ] of(List<StationaryPackage> found): KindPrices  :233
+- [   ] lowest(): Integer  :243
+- [prv] priceSentence(KindPrices one, KindPrices pair): String  :252
+- [   ] careTerms(StationaryPackage care): String  :280
+- [   ] locative(String name): String  :293
+- [prv] validitySentence(List<StationaryPackage> one): String  :301
+- [prv] pairPerPersonSentence(List<StationaryPackage> pair): String  :320
+- [prv] priceRange(List<StationaryPackage> visible): String  :328
+- [prv] format(Integer gr): String  :337
+- [prv] blankToNull(String s): String  :341
 
 ### StationaryOfferServiceTest  (src/test/java/pl/szymtrener/offer/StationaryOfferServiceTest.java)
 - [prv] pack(int sessions, int priceGr, Integer weeks): StationaryPackage  :14
@@ -1510,95 +1575,117 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] validityIsInflected(): void  :52
 - [   ] singleEntryHasNoValidity(): void  :63
 - [   ] amountWithoutUnit(): void  :72
+- [prv] care(int perSessionGr): StationaryPackage  :78
+- [   ] discountsMatchOctoberPriceList(): void  :87
+- [   ] yearCompareFromPrices(): void  :100
+- [   ] noYearCompareWhenCareIsNotCheaper(): void  :115
+- [   ] differenceInSessions(): void  :121
+- [   ] termLabel(): void  :131
+- [   ] careTermsFromData(): void  :139
+- [   ] monthlyFollowsTerm(): void  :151
+- [   ] locative(): void  :158
+- [   ] yearCompareSurvivesOverflow(): void  :165
+- [prv] serviceWith(StationaryPackage... all): StationaryOfferService  :171
+- [prv] of(StationaryKind kind, StationaryPackage p): StationaryPackage  :177
+- [   ] pairSentenceNeedsCheaperOption(): void  :184
+- [   ] careOnlyForPairsCountsAsCare(): void  :193
+- [   ] yearCompareUsesSameCareAsSentence(): void  :202
 
 ### StationaryPackage  (src/main/java/pl/szymtrener/offer/StationaryPackage.java)
-- [pub] totalGr(): int  :37
-- [pub] single(): boolean  :43
-- [pub] discountPercent(int singlePriceGr): int  :52
-- [pub] getId(): Long  :57
-- [pub] getKind(): StationaryKind  :58
-- [pub] setKind(StationaryKind kind): void  :59
-- [pub] getName(): String  :60
-- [pub] setName(String name): void  :61
-- [pub] getSessions(): int  :62
-- [pub] setSessions(int sessions): void  :63
-- [pub] getPricePerSessionGr(): int  :64
-- [pub] setPricePerSessionGr(int v): void  :65
-- [pub] getValidityWeeks(): Integer  :66
-- [pub] setValidityWeeks(Integer validityWeeks): void  :67
-- [pub] isFeatured(): boolean  :68
-- [pub] setFeatured(boolean featured): void  :69
-- [pub] getSortOrder(): int  :70
-- [pub] setSortOrder(int sortOrder): void  :71
-- [pub] isVisible(): boolean  :72
-- [pub] setVisible(boolean visible): void  :73
+- [pub] totalGr(): int  :47
+- [pub] single(): boolean  :53
+- [pub] discountPercent(int singlePriceGr): int  :62
+- [pub] getId(): Long  :67
+- [pub] getKind(): StationaryKind  :68
+- [pub] setKind(StationaryKind kind): void  :69
+- [pub] getName(): String  :70
+- [pub] setName(String name): void  :71
+- [pub] getSessions(): int  :72
+- [pub] setSessions(int sessions): void  :73
+- [pub] getPricePerSessionGr(): int  :74
+- [pub] setPricePerSessionGr(int v): void  :75
+- [pub] getValidityWeeks(): Integer  :76
+- [pub] setValidityWeeks(Integer validityWeeks): void  :77
+- [pub] isFeatured(): boolean  :78
+- [pub] setFeatured(boolean featured): void  :79
+- [pub] getSortOrder(): int  :80
+- [pub] setSortOrder(int sortOrder): void  :81
+- [pub] isVisible(): boolean  :82
+- [pub] setVisible(boolean visible): void  :83
+- [pub] isMonthly(): boolean  :85
+- [pub] getTermMonths(): Integer  :86
+- [pub] setTermMonths(Integer termMonths): void  :87
+- [pub] getBadgeText(): String  :88
+- [pub] setBadgeText(String badgeText): void  :89
+- [pub] getDescription(): String  :90
+- [pub] setDescription(String description): void  :91
 
 ### StationaryPackageRepository  (src/main/java/pl/szymtrener/offer/StationaryPackageRepository.java)
-- [   ] findByKindAndVisibleTrueOrderBySortOrderAsc(StationaryKind kind): List<StationaryPackage>  :8
-- [   ] findAllByOrderByKindAscSortOrderAsc(): List<StationaryPackage>  :9
+- [   ] findAllByOrderByKindAscSortOrderAsc(): List<StationaryPackage>  :8
 
 ### Submission  (src/main/java/pl/szymtrener/submission/Submission.java)
-- [pub] getId(): Long  :59
-- [pub] getType(): SubmissionType  :60
-- [pub] setType(SubmissionType type): void  :61
-- [pub] getName(): String  :62
-- [pub] setName(String name): void  :63
-- [pub] getEmail(): String  :64
-- [pub] setEmail(String email): void  :65
-- [pub] getPhone(): String  :66
-- [pub] setPhone(String phone): void  :67
-- [pub] getCity(): String  :68
-- [pub] setCity(String city): void  :69
-- [pub] getCurrentTraining(): String  :70
-- [pub] setCurrentTraining(String currentTraining): void  :71
-- [pub] getGoal(): String  :72
-- [pub] setGoal(String goal): void  :73
-- [pub] getEquipment(): String  :74
-- [pub] setEquipment(String equipment): void  :75
-- [pub] getSource(): String  :76
-- [pub] setSource(String source): void  :77
-- [pub] getOfferPath(): String  :78
-- [pub] setOfferPath(String offerPath): void  :79
-- [pub] getOfferPackage(): String  :80
-- [pub] setOfferPackage(String offerPackage): void  :81
-- [pub] getInterest(): String  :82
-- [pub] setInterest(String interest): void  :83
-- [pub] getMessage(): String  :84
-- [pub] setMessage(String message): void  :85
-- [pub] getConsentAt(): Instant  :86
-- [pub] setConsentAt(Instant consentAt): void  :87
-- [pub] getStatus(): SubmissionStatus  :88
-- [pub] setStatus(SubmissionStatus status): void  :89
-- [pub] getCallAt(): Instant  :90
-- [pub] setCallAt(Instant callAt): void  :91
-- [pub] getIpHash(): String  :92
-- [pub] setIpHash(String ipHash): void  :93
-- [pub] getUserAgent(): String  :94
-- [pub] setUserAgent(String userAgent): void  :95
-- [pub] isMailSent(): boolean  :96
-- [pub] setMailSent(boolean mailSent): void  :97
-- [pub] getMailError(): String  :98
-- [pub] setMailError(String mailError): void  :99
-- [pub] getContactedAt(): Instant  :100
-- [pub] setContactedAt(Instant v): void  :101
-- [pub] getCallBookedAt(): Instant  :102
-- [pub] setCallBookedAt(Instant v): void  :103
-- [pub] getConvertedAt(): Instant  :104
-- [pub] setConvertedAt(Instant v): void  :105
-- [pub] getArchivedAt(): Instant  :106
-- [pub] setArchivedAt(Instant v): void  :107
-- [pub] getRemindAt(): Instant  :108
-- [pub] setRemindAt(Instant remindAt): void  :109
-- [pub] isRemindDone(): boolean  :110
-- [pub] setRemindDone(boolean remindDone): void  :111
-- [pub] getCreatedAt(): Instant  :112
-- [pub] offerContext(): String  :119
-- [pub] stageDate(String stage): String  :134
-- [pub] callAtLocal(): String  :151
-- [pub] initials(): String  :159
-- [pub] firstName(): String  :170
-- [pub] greeting(): String  :178
-- [pub] getCreatedLabel(): String  :185
+- [pub] getId(): Long  :61
+- [pub] getType(): SubmissionType  :62
+- [pub] setType(SubmissionType type): void  :63
+- [pub] getName(): String  :64
+- [pub] setName(String name): void  :65
+- [pub] getEmail(): String  :66
+- [pub] setEmail(String email): void  :67
+- [pub] getPhone(): String  :68
+- [pub] setPhone(String phone): void  :69
+- [pub] getCity(): String  :70
+- [pub] setCity(String city): void  :71
+- [pub] getCurrentTraining(): String  :72
+- [pub] setCurrentTraining(String currentTraining): void  :73
+- [pub] getGoal(): String  :74
+- [pub] setGoal(String goal): void  :75
+- [pub] getEquipment(): String  :76
+- [pub] setEquipment(String equipment): void  :77
+- [pub] getSource(): String  :78
+- [pub] setSource(String source): void  :79
+- [pub] getOfferPath(): String  :80
+- [pub] setOfferPath(String offerPath): void  :81
+- [pub] getOfferPackage(): String  :82
+- [pub] setOfferPackage(String offerPackage): void  :83
+- [pub] getInterest(): String  :84
+- [pub] setInterest(String interest): void  :85
+- [pub] getMessage(): String  :86
+- [pub] setMessage(String message): void  :87
+- [pub] getConsentAt(): Instant  :88
+- [pub] getStatus(): SubmissionStatus  :89
+- [pub] setStatus(SubmissionStatus status): void  :90
+- [pub] getCallAt(): Instant  :91
+- [pub] setCallAt(Instant callAt): void  :92
+- [pub] getIpHash(): String  :93
+- [pub] setIpHash(String ipHash): void  :94
+- [pub] getUserAgent(): String  :95
+- [pub] setUserAgent(String userAgent): void  :96
+- [pub] isMailSent(): boolean  :97
+- [pub] setMailSent(boolean mailSent): void  :98
+- [pub] getMailError(): String  :99
+- [pub] setMailError(String mailError): void  :100
+- [pub] getContactedAt(): Instant  :101
+- [pub] setContactedAt(Instant v): void  :102
+- [pub] getCallBookedAt(): Instant  :103
+- [pub] setCallBookedAt(Instant v): void  :104
+- [pub] getConvertedAt(): Instant  :105
+- [pub] setConvertedAt(Instant v): void  :106
+- [pub] getArchivedAt(): Instant  :107
+- [pub] setArchivedAt(Instant v): void  :108
+- [pub] getRemindAt(): Instant  :109
+- [pub] setRemindAt(Instant remindAt): void  :110
+- [pub] isRemindDone(): boolean  :111
+- [pub] setRemindDone(boolean remindDone): void  :112
+- [pub] getCreatedAt(): Instant  :113
+- [pub] offerContext(): String  :120
+- [pub] stageDate(String stage): String  :135
+- [pub] callAtLocal(): String  :152
+- [pub] initials(): String  :160
+- [pub] firstName(): String  :171
+- [pub] greeting(): String  :179
+- [pub] getCreatedLabel(): String  :186
+- [pub] getConsentLabel(): String  :192
+- [prv] label(Instant at): String  :196
 
 ### SubmissionNote  (src/main/java/pl/szymtrener/submission/SubmissionNote.java)
 - [pub] getId(): Long  :30
@@ -1637,19 +1724,19 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [pub] acceptOnline(FormRequests.OnlineForm form, String ip, String userAgent): Submission  :33
 - [pub] acceptContact(FormRequests.ContactForm form, String ip, String userAgent): Submission  :50
 - [prv] persist(Submission s, String ip, String userAgent): Submission  :61
-- [prv] opening(Submission s): String  :77
-- [pub] changeStatus(Long id, SubmissionStatus status, Instant callAt): void  :92
-- [pub] stage(Long id, SubmissionStatus status): Submission  :105
-- [prv] stamp(Submission s, SubmissionStatus status): void  :114
-- [pub] remind(Long id, Instant at): void  :130
-- [pub] remindDone(Long id): void  :139
-- [pub] delete(Long id): void  :151
-- [pub] export(Long id): Map<String, Object>  :160
-- [pub] addNote(Long submissionId, String author, String body): void  :197
-- [pub] addNote(Long submissionId, Long traineeId, String author, String body, String tags): void  :202
-- [pub] togglePin(Long noteId): boolean  :214
-- [pub] deleteNote(Long noteId): void  :223
-- [prv] hash(String ip): String  :227
+- [prv] opening(Submission s): String  :76
+- [pub] changeStatus(Long id, SubmissionStatus status, Instant callAt): void  :91
+- [pub] stage(Long id, SubmissionStatus status): Submission  :104
+- [prv] stamp(Submission s, SubmissionStatus status): void  :113
+- [pub] remind(Long id, Instant at): void  :129
+- [pub] remindDone(Long id): void  :138
+- [pub] delete(Long id): void  :150
+- [pub] export(Long id): Map<String, Object>  :159
+- [pub] addNote(Long submissionId, String author, String body): void  :196
+- [pub] addNote(Long submissionId, Long traineeId, String author, String body, String tags): void  :201
+- [pub] togglePin(Long noteId): boolean  :213
+- [pub] deleteNote(Long noteId): void  :222
+- [prv] hash(String ip): String  :226
 
 ### SubmissionStatus  (src/main/java/pl/szymtrener/submission/SubmissionStatus.java)
 - [pub] label(): String  :6
@@ -1663,24 +1750,25 @@ POST    /zgoda-cookies                                ConsentController.consent(
 
 ### Testimonial  (src/main/java/pl/szymtrener/offer/Testimonial.java)
 - [pub] signature(): String  :31
-- [pub] initial(): String  :40
-- [pub] getId(): Long  :44
-- [pub] getName(): String  :45
-- [pub] setName(String name): void  :46
-- [pub] getCity(): String  :47
-- [pub] setCity(String city): void  :48
-- [pub] getCooperationFormat(): String  :49
-- [pub] setCooperationFormat(String v): void  :50
-- [pub] getDurationLabel(): String  :51
-- [pub] setDurationLabel(String v): void  :52
-- [pub] getBody(): String  :53
-- [pub] setBody(String body): void  :54
-- [pub] getMediaId(): Long  :55
-- [pub] setMediaId(Long mediaId): void  :56
-- [pub] getSortOrder(): int  :57
-- [pub] setSortOrder(int sortOrder): void  :58
-- [pub] isVisible(): boolean  :59
-- [pub] setVisible(boolean visible): void  :60
+- [pub] isLong(): boolean  :47
+- [pub] initial(): String  :52
+- [pub] getId(): Long  :56
+- [pub] getName(): String  :57
+- [pub] setName(String name): void  :58
+- [pub] getCity(): String  :59
+- [pub] setCity(String city): void  :60
+- [pub] getCooperationFormat(): String  :61
+- [pub] setCooperationFormat(String v): void  :62
+- [pub] getDurationLabel(): String  :63
+- [pub] setDurationLabel(String v): void  :64
+- [pub] getBody(): String  :65
+- [pub] setBody(String body): void  :66
+- [pub] getMediaId(): Long  :67
+- [pub] setMediaId(Long mediaId): void  :68
+- [pub] getSortOrder(): int  :69
+- [pub] setSortOrder(int sortOrder): void  :70
+- [pub] isVisible(): boolean  :71
+- [pub] setVisible(boolean visible): void  :72
 
 ### TestimonialRepository  (src/main/java/pl/szymtrener/offer/TestimonialRepository.java)
 - [   ] findByVisibleTrueOrderBySortOrderAsc(): List<Testimonial>  :8
@@ -1688,6 +1776,9 @@ POST    /zgoda-cookies                                ConsentController.consent(
 
 ### ThreadPagesRenderIT  (src/test/java/pl/szymtrener/admin/ThreadPagesRenderIT.java)
 - [   ] threadPagesRenderCompletely(): void  :35
+
+### ThumbnailFetcher  (src/main/java/pl/szymtrener/media/ThumbnailFetcher.java)
+- [   ] fetch(String videoId): Optional<byte[]>  :9
 
 ### Trainee  (src/main/java/pl/szymtrener/crm/Trainee.java)
 - [pub] getId(): Long  :60
@@ -1827,4 +1918,37 @@ POST    /zgoda-cookies                                ConsentController.consent(
 - [   ] findByTraineeIdOrderByStartsAtDesc(Long traineeId): List<TrainingSession>  :9
 - [   ] findByTraineeIdAndStatusOrderByStartsAtAsc(Long traineeId, SessionStatus status): List<TrainingSession>  :10
 - [   ] findByStartsAtBetweenOrderByStartsAtAsc(Instant from, Instant to): List<TrainingSession>  :11
+
+### YoutubeThumbnailBackfill  (src/main/java/pl/szymtrener/content/YoutubeThumbnailBackfill.java)
+- [pub] onReady(): void  :36
+- [   ] localizeLegacyPosts(): int  :41
+
+### YoutubeThumbnailBackfillIT  (src/test/java/pl/szymtrener/content/YoutubeThumbnailBackfillIT.java)
+- [   ] rewritesLegacyPost(): void  :46
+
+### YoutubeThumbnailBackfillTest  (src/test/java/pl/szymtrener/content/YoutubeThumbnailBackfillTest.java)
+- [prv] legacyPost(String html): Post  :27
+- [   ] rewritesLegacyPosts(): void  :36
+- [   ] keepsPostWhenThumbnailUnavailable(): void  :46
+- [   ] skipsPostsWithoutThumbnails(): void  :56
+- [   ] survivesFailures(): void  :67
+
+### YoutubeThumbnails  (src/main/java/pl/szymtrener/media/YoutubeThumbnails.java)
+- [pub] localize(String html): String  :37
+- [pub] localizeAllOrNothing(String html): Optional<String>  :46
+- [prv] rewrite(String html, boolean dropFailed): Optional<String>  :52
+- [prv] localUrl(String videoId): Optional<String>  :71
+
+### YoutubeThumbnailsTest  (src/test/java/pl/szymtrener/media/YoutubeThumbnailsTest.java)
+- [   ] setUp(): void  :31
+- [prv] stored(String key): MediaFile  :36
+- [   ] fetchesOnceAndRewrites(): void  :45
+- [   ] reusesLibrary(): void  :56
+- [   ] dropsImageWhenFetchFails(): void  :65
+- [   ] rejectsUnexpectedSource(): void  :75
+- [   ] leavesOtherContentAlone(): void  :84
+- [   ] fetcherAcceptsOnlySmallJpeg(): void  :92
+- [   ] allOrNothingKeepsContentOnFailure(): void  :104
+- [   ] acceptsQueryString(): void  :112
+- [   ] textOnlyMentionIsUnchanged(): void  :123
 

@@ -70,7 +70,6 @@ class PublicFormControllerTest {
         form.put("phone", "500100200");
         form.put("interest", "Trening personalny");
         form.put("message", "Chciałabym zacząć trenować.");
-        form.put("consent", true);
         form.put("botcheck", false);
         return form;
     }
@@ -85,7 +84,6 @@ class PublicFormControllerTest {
         form.put("goal", "Chcę zbudować siłę.");
         form.put("equipment", "Siłownia");
         form.put("source", "Google");
-        form.put("consent", true);
         form.put("botcheck", false);
         return form;
     }
@@ -173,19 +171,17 @@ class PublicFormControllerTest {
     }
 
     @Test
-    @DisplayName("brak zgody RODO blokuje zapis i wskazuje pole")
-    void requiresConsent() throws Exception {
+    @DisplayName("formularz nie wymaga zgody: pole consent=false ze starego skryptu nie blokuje zgłoszenia")
+    void consentIsNotRequired() throws Exception {
         Map<String, Object> form = validContact();
         form.put("consent", false);
 
         mvc.perform(post("/api/zgloszenia/kontakt").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json.writeValueAsString(form)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.ok").value(false))
-                .andExpect(jsonPath("$.errors.consent").exists());
+                .andExpect(status().isOk());
 
-        verifyNoInteractions(submissions);
+        verify(submissions).acceptContact(any(), any(), any());
     }
 
     @Test

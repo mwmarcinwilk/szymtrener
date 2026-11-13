@@ -58,7 +58,8 @@ spring:
         strategy:
           content:
             enabled: true
-            paths: /css/**,/js/**,/vendor/**,/images/**
+            # /dokumenty/**: PDF regulaminu i polityki; po zmianie tekstu klient nie moze dostac starej wersji z cache.
+            paths: /css/**,/js/**,/vendor/**,/images/**,/dokumenty/**
 
 server:
   port: ${PORT:8080}

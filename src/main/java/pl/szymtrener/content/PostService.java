@@ -11,6 +11,7 @@ import pl.szymtrener.common.SlugUtil;
 import pl.szymtrener.config.AppProperties;
 import pl.szymtrener.media.MediaRepository;
 import pl.szymtrener.media.MediaService;
+import pl.szymtrener.media.YoutubeThumbnails;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -35,11 +36,12 @@ public class PostService {
     private final PostSlugHistoryRepository slugHistory;
     private final PostMediaRepository postMedia;
     private final AppProperties props;
+    private final YoutubeThumbnails thumbnails;
 
     public PostService(PostRepository posts, CategoryRepository categories, ContentMetrics metrics,
                        HtmlSanitizer sanitizer, MediaService media, MediaRepository mediaFiles,
                        PostSlugHistoryRepository slugHistory, PostMediaRepository postMedia,
-                       AppProperties props, EditorHtml editorHtml) {
+                       AppProperties props, EditorHtml editorHtml, YoutubeThumbnails thumbnails) {
         this.posts = posts;
         this.categories = categories;
         this.metrics = metrics;
@@ -50,6 +52,7 @@ public class PostService {
         this.slugHistory = slugHistory;
         this.postMedia = postMedia;
         this.props = props;
+        this.thumbnails = thumbnails;
     }
 
     @Transactional(readOnly = true)
@@ -168,7 +171,8 @@ public class PostService {
         // Kolejnosc jest istotna: najpierw zamiana reprezentacji edytora na HTML
         // publikacji, dopiero potem bialalista. Odwrotnie sanitizer zdjalby atrybuty
         // data-*, z ktorych ta zamiana czyta.
-        String publication = editorHtml.toPublication(post.getContentHtml());
+        // Miniatury filmow z naszego serwera, nie z i.ytimg.com (IP odwiedzajacego nie idzie do Google).
+        String publication = thumbnails.localize(editorHtml.toPublication(post.getContentHtml()));
         post.setContentHtml(sanitizer.clean(publication));
         editorHtml.requireImageAlts(post.getContentHtml());
         ContentMetrics.Result m = metrics.analyse(post.getContentHtml(), post.getLead());
@@ -198,6 +202,16 @@ public class PostService {
      * Odtwarza powiazania wpis–plik na podstawie tresci. Bez tego nie da sie
      * odpowiedziec na pytanie „czy ten plik wolno usunac z biblioteki".
      */
+    /**
+     * Podmiana tresci bez edycji redakcyjnej (przeniesienie miniatur YouTube na nasz serwer): updatedAt zostaje,
+     * a powiazania z biblioteka mediow sa odswiezone, zeby nowych plikow nie dalo sie usunac spod wpisu.
+     */
+    @Transactional
+    public void replaceContentKeepingDates(Long postId, String html) {
+        posts.updateContentHtml(postId, html);
+        posts.findById(postId).ifPresent(this::syncMediaLinks);
+    }
+
     private void syncMediaLinks(Post post) {
         Set<Long> inline = new LinkedHashSet<>();
         Document doc = Jsoup.parseBodyFragment(post.getContentHtml() == null ? "" : post.getContentHtml());

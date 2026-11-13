@@ -24,10 +24,10 @@ import java.util.stream.Stream;
 @Service
 public class StationaryOfferService {
 
-    /** Zasady odwolan, pauzy i zamrozenia. Teksty, bo Szymon ma je zmieniac bez programisty. */
+    /** Zasady odwolan i zamrozenia. Teksty, bo Szymon ma je zmieniac bez programisty; musza sie
+     *  zgadzac z Regulaminem Studia (odwolanie 12 h). Przerwy w pakiecie nie ma od 11.2026. */
     public static final String RULE_CANCEL = "stationary.rules.cancel";
     public static final String RULE_LATE = "stationary.rules.late";
-    public static final String RULE_PAUSE = "stationary.rules.pause";
     public static final String RULE_FREEZE = "stationary.rules.freeze";
 
     private final StationaryPackageRepository packages;
@@ -214,10 +214,10 @@ public class StationaryOfferService {
                 : "ponad " + Plural.sessions(whole);
     }
 
-    /** Zasady odwolan, pauzy i zamrozenia, od najlagodniejszej. Puste pomijamy. */
+    /** Zasady odwolan i zamrozenia, od najlagodniejszej. Puste pomijamy. */
     private List<String> rules() {
         List<String> out = new ArrayList<>();
-        for (String key : List.of(RULE_CANCEL, RULE_LATE, RULE_PAUSE, RULE_FREEZE)) {
+        for (String key : List.of(RULE_CANCEL, RULE_LATE, RULE_FREEZE)) {
             String value = settings.get(key, null);
             if (value != null && !value.isBlank()) out.add(value.trim());
         }

@@ -141,7 +141,6 @@ public class MailService {
         line(sb, "Zainteresowanie", s.getInterest());
         line(sb, "Skąd trafił", s.getSource());
         line(sb, "Wiadomość", s.getMessage());
-        sb.append("\nZgoda RODO: ").append(s.getConsentAt());
         sb.append("\nPodgląd w panelu: ").append(props.absolute("/admin/zgloszenia/" + s.getId()));
         return sb.toString();
     }

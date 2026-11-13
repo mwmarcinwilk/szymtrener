@@ -31,7 +31,9 @@ public class Submission {
     private String interest;
     @Column(columnDefinition = "text") private String message;
 
-    @Column(name = "consent_at", nullable = false) private Instant consentAt = Instant.now();
+    // Od 11.2026 formularz nie zbiera zgody (podstawa: art. 6 ust. 1 lit. b i f RODO), wiec nowe
+    // zgloszenia maja tu null. Stare wiersze zachowuja date zgody z poprzedniej wersji formularza.
+    @Column(name = "consent_at") private Instant consentAt;
 
     @Enumerated(EnumType.STRING) @Column(nullable = false)
     private SubmissionStatus status = SubmissionStatus.NEW;
@@ -84,7 +86,6 @@ public class Submission {
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
     public Instant getConsentAt() { return consentAt; }
-    public void setConsentAt(Instant consentAt) { this.consentAt = consentAt; }
     public SubmissionStatus getStatus() { return status; }
     public void setStatus(SubmissionStatus status) { this.status = status; }
     public Instant getCallAt() { return callAt; }
@@ -183,8 +184,18 @@ public class Submission {
     /** Data gotowa do wyswietlenia — szablon nie formatuje dat samodzielnie. */
     @Transient
     public String getCreatedLabel() {
+        return label(createdAt);
+    }
+
+    /** Data zgody ze starego formularza (przed 11.2026) albo null, gdy zgloszenie zgody nie zbieralo. */
+    @Transient
+    public String getConsentLabel() {
+        return consentAt == null ? null : label(consentAt);
+    }
+
+    private static String label(Instant at) {
         return java.time.format.DateTimeFormatter
                 .ofPattern("d MMM yyyy, HH:mm", java.util.Locale.forLanguageTag("pl-PL"))
-                .format(createdAt.atZone(java.time.ZoneId.of("Europe/Warsaw")));
+                .format(at.atZone(java.time.ZoneId.of("Europe/Warsaw")));
     }
 }

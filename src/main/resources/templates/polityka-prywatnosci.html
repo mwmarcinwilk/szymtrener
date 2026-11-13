@@ -3,21 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Polityka prywatności | Szymon Domagała – Trener Longevity</title>
-<meta name="description" content="Polityka prywatności serwisu szymtrener.pl – zasady przetwarzania danych osobowych zgodnie z RODO.">
+<title>Polityka prywatności | Szymon Domagała, Trener Longevity</title>
+<meta name="description" content="Polityka prywatności serwisu szymtrener.pl: zasady przetwarzania danych osobowych zgodnie z RODO.">
 <link rel="canonical" th:href="${canonical}" href="https://szymtrener.pl/polityka-prywatnosci">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#0E1A26">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/fonts.css}" href="/css/fonts.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
 </head>
-<body>
+<body class="legal-page">
 
 <nav class="legal-nav">
   <div class="container nav-inner">
@@ -31,97 +29,148 @@
 
 <main class="legal-wrap">
   <h1>Polityka prywatności</h1>
-  <p class="legal-updated">Ostatnia aktualizacja: <time datetime="2026-09-17">17 września 2026</time></p>
+  <p class="legal-updated">Ostatnia aktualizacja: <time datetime="2026-11-13">13 listopada 2026</time><span class="legal-pdf"> · <a th:href="@{/dokumenty/polityka-prywatnosci.pdf}" href="/dokumenty/polityka-prywatnosci.pdf" download>Pobierz PDF</a></span></p>
 
   <h2>Postanowienia ogólne</h2>
-  <p>Administratorem danych osobowych zbieranych za pośrednictwem strony internetowej jest <strong>Szymon Domagała</strong> prowadzący działalność gospodarczą pod firmą Szymon Domagała Trener Personalny, NIP: 7272628265, adres głównego miejsca wykonywania działalności: ul. Retkińska 79A lok. 12, 94-004 Łódź, adres e-mail: <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>, numer telefonu: +48 502 338 373, dalej jako „Administrator”.</p>
-  <p>Dane osobowe przetwarzane są zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO) oraz innymi obowiązującymi przepisami dotyczącymi ochrony danych osobowych.</p>
-
+  <ol class="legal-list">
+  <li>Administratorem danych osobowych zbieranych za pośrednictwem strony internetowej <a href="https://szymtrener.pl/">https://szymtrener.pl/</a> jest Szymon Domagała prowadzący działalność gospodarczą pod firmą Szymon Domagała Trener Personalny, NIP: 7272628265, adres głównego miejsca wykonywania działalności: ul. Retkińska 79A lok. 12, 94-004 Łódź, adres e-mail: <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>, numer telefonu: +48 502 338 373, dalej jako „Administrator”.
+  </li>
+  <li>Dane osobowe przetwarzane są zgodnie z rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO) oraz innymi obowiązującymi przepisami dotyczącymi ochrony danych osobowych.
+  </li>
+  <li>Niniejsza Polityka Prywatności określa zasady przetwarzania danych osobowych osób korzystających ze strony internetowej, w szczególności kontaktujących się z Administratorem lub zainteresowanych skorzystaniem z jego usług.
+  </li>
+  </ol>
   <h2>Cel i podstawa przetwarzania danych</h2>
-  <p>Administrator przetwarza dane osobowe użytkowników strony internetowej w następujących celach:</p>
-
-  <h3>Formularz kontaktowy</h3>
-  <p>W przypadku skorzystania z formularza kontaktowego dane osobowe są przetwarzane w celu:</p>
-  <ul>
-    <li>udzielenia odpowiedzi na przesłane zapytanie,</li>
-    <li>nawiązania kontaktu z osobą zainteresowaną współpracą,</li>
-    <li>przedstawienia oferty usług treningowych i konsultacyjnych,</li>
-    <li>podjęcia działań na żądanie osoby przed zawarciem umowy.</li>
-  </ul>
-  <p>Podstawą przetwarzania danych jest:</p>
-  <ul>
-    <li>art. 6 ust. 1 lit. b RODO – podjęcie działań na żądanie osoby przed zawarciem umowy,</li>
-    <li>art. 6 ust. 1 lit. f RODO – prawnie uzasadniony interes Administratora polegający na obsłudze korespondencji i kontaktu z potencjalnymi klientami.</li>
-  </ul>
-
+  <h3>Formularz kontaktowy i umawianie rozmów</h3>
+  <ol class="legal-list" start="4">
+  <li>W przypadku skorzystania z formularza kontaktowego, formularza umożliwiającego umówienie rozmowy lub innej formy kontaktu dostępnej na stronie internetowej dane osobowe przetwarzane są w celu:
+    <ul class="legal-sub">
+      <li>a. udzielenia odpowiedzi na przesłane zapytanie;</li>
+      <li>b. nawiązania kontaktu z osobą zainteresowaną współpracą;</li>
+      <li>c. przedstawienia informacji o oferowanych usługach treningowych i konsultacyjnych;</li>
+      <li>d. uzgodnienia terminu rozmowy lub konsultacji;</li>
+      <li>e. podjęcia działań na żądanie osoby przed zawarciem umowy.</li>
+    </ul>
+  </li>
+  <li>Podstawą przetwarzania danych jest:
+    <ul class="legal-sub">
+      <li>a. art. 6 ust. 1 lit. b RODO – w zakresie niezbędnym do podjęcia działań na żądanie osoby przed zawarciem umowy;</li>
+      <li>b. art. 6 ust. 1 lit. f RODO – w zakresie prawnie uzasadnionego interesu Administratora polegającego na obsłudze korespondencji, udzielaniu odpowiedzi na zapytania i prowadzeniu kontaktu z osobami zainteresowanymi jego działalnością.</li>
+    </ul>
+  </li>
+  </ol>
   <h3>Realizacja usług</h3>
-  <p>W przypadku podjęcia współpracy dane osobowe mogą być przetwarzane w celu:</p>
-  <ul>
-    <li>przygotowania indywidualnych planów treningowych i żywieniowych,</li>
-    <li>prowadzenia konsultacji treningowych,</li>
-    <li>monitorowania postępów klienta,</li>
-    <li>utrzymywania kontaktu w związku z realizacją usług,</li>
-    <li>realizacji obowiązków podatkowych i księgowych.</li>
-  </ul>
-  <p>Podstawą przetwarzania danych jest:</p>
-  <ul>
-    <li>art. 6 ust. 1 lit. b RODO – wykonanie umowy,</li>
-    <li>art. 6 ust. 1 lit. c RODO – obowiązki wynikające z przepisów prawa,</li>
-    <li>art. 6 ust. 1 lit. f RODO – prawnie uzasadniony interes Administratora.</li>
-  </ul>
-  <p>Jeżeli w trakcie współpracy przetwarzane są dane dotyczące zdrowia, ich przetwarzanie odbywa się na podstawie wyraźnej zgody klienta zgodnie z art. 9 ust. 2 lit. a RODO.</p>
-
+  <ol class="legal-list" start="6">
+  <li>W przypadku podjęcia współpracy dane osobowe mogą być przetwarzane w celu:
+    <ul class="legal-sub">
+      <li>a. przygotowania indywidualnych planów treningowych i żywieniowych;</li>
+      <li>b. prowadzenia treningów indywidualnych i treningów w parach, konsultacji oraz współpracy treningowej online;</li>
+      <li>c. realizacji programów długoterminowej opieki treningowej;</li>
+      <li>d. monitorowania postępów klienta i dostosowywania świadczonych usług do jego indywidualnych potrzeb;</li>
+      <li>e. utrzymywania kontaktu z klientem w związku z realizacją usług;</li>
+      <li>f. realizacji obowiązków podatkowych i księgowych;</li>
+      <li>g. ustalenia, dochodzenia lub obrony przed roszczeniami.</li>
+    </ul>
+  </li>
+  <li>Podstawą przetwarzania danych jest odpowiednio:
+    <ul class="legal-sub">
+      <li>a. art. 6 ust. 1 lit. b RODO – wykonanie umowy;</li>
+      <li>b. art. 6 ust. 1 lit. c RODO – realizacja obowiązków wynikających z przepisów prawa;</li>
+      <li>c. art. 6 ust. 1 lit. f RODO – prawnie uzasadniony interes Administratora polegający na ustaleniu, dochodzeniu lub obronie przed roszczeniami.</li>
+    </ul>
+  </li>
+  <li>Jeżeli w trakcie współpracy przetwarzane są dane dotyczące zdrowia klienta, ich przetwarzanie odbywa się na podstawie jego wyraźnej zgody, zgodnie z art. 9 ust. 2 lit. a RODO, przy uwzględnieniu odpowiedniej podstawy przetwarzania wynikającej z art. 6 ust. 1 RODO. Szczegółowe informacje dotyczące przetwarzania danych klientów przekazywane są w odrębnej klauzuli informacyjnej.
+  </li>
+  </ol>
   <h2>Zakres przetwarzanych danych</h2>
-  <p>Administrator może przetwarzać następujące dane:</p>
-  <ul>
-    <li>imię i nazwisko,</li>
-    <li>adres e-mail,</li>
-    <li>numer telefonu,</li>
-    <li>treść wiadomości przesłanej przez formularz kontaktowy,</li>
-    <li>dane niezbędne do zawarcia i realizacji umowy,</li>
-    <li>dane dotyczące zdrowia przekazane przez klienta w formularzach, ankietach lub podczas współpracy treningowej.</li>
-  </ul>
-
+  <ol class="legal-list" start="9">
+  <li>W związku z korzystaniem ze strony internetowej Administrator może przetwarzać następujące dane osobowe:
+    <ul class="legal-sub">
+      <li>a. imię i nazwisko;</li>
+      <li>b. adres e-mail;</li>
+      <li>c. numer telefonu;</li>
+      <li>d. treść wiadomości przesłanej za pomocą formularza kontaktowego lub innych dostępnych kanałów kontaktu;</li>
+      <li>e. dane dotyczące wybranego terminu rozmowy lub konsultacji;</li>
+      <li>f. dane techniczne związane z korzystaniem ze strony internetowej, w zakresie, w jakim umożliwiają identyfikację użytkownika.</li>
+    </ul>
+  </li>
+  <li>W przypadku zawarcia umowy zakres przetwarzanych danych może być szerszy i obejmować informacje niezbędne do prawidłowego świadczenia usług, w tym dane dotyczące zdrowia, parametrów ciała i postępów treningowych. Szczegółowe informacje w tym zakresie zawiera odrębna klauzula informacyjna przekazywana klientowi.
+  </li>
+  </ol>
   <h2>Okres przechowywania danych</h2>
-  <p>Dane przesłane za pomocą formularza kontaktowego przechowywane są przez okres niezbędny do obsługi korespondencji oraz prowadzenia rozmów dotyczących współpracy.</p>
-  <p>W przypadku zawarcia umowy dane przechowywane są przez okres jej realizacji oraz przez okres wymagany przepisami prawa, w szczególności podatkowymi i dotyczącymi przedawnienia roszczeń.</p>
-  <p>Dane przetwarzane na podstawie zgody przechowywane są do czasu cofnięcia zgody lub ustania celu ich przetwarzania.</p>
-
+  <ol class="legal-list" start="11">
+  <li>Dane przekazane za pomocą formularza kontaktowego lub w związku z umówieniem rozmowy przechowywane są przez okres niezbędny do obsługi zapytania, prowadzenia korespondencji oraz ewentualnych rozmów dotyczących współpracy. Po zakończeniu kontaktu dane mogą być przechowywane przez okres niezbędny do ochrony przed roszczeniami, jeżeli istnieje ku temu uzasadniona podstawa.
+  </li>
+  <li>W przypadku zawarcia umowy dane osobowe przechowywane są przez okres jej realizacji, a następnie przez okres wymagany przepisami prawa, w szczególności dotyczącymi dokumentacji podatkowej i księgowej, lub przez okres niezbędny do ustalenia, dochodzenia lub obrony przed roszczeniami.
+  </li>
+  <li>Dane przetwarzane na podstawie zgody przechowywane są do czasu jej cofnięcia lub ustania celu przetwarzania, chyba że istnieje inna podstawa prawna uzasadniająca dalsze przechowywanie określonych danych.
+  </li>
+  </ol>
   <h2>Odbiorcy danych</h2>
-  <p>Dane osobowe mogą być przekazywane podmiotom współpracującym z Administratorem, w szczególności:</p>
-  <ul>
-    <li>dostawcom usług hostingowych,</li>
-    <li>dostawcom poczty elektronicznej,</li>
-    <li>dostawcom usług informatycznych,</li>
-    <li>biuru rachunkowemu,</li>
-    <li>kancelariom prawnym,</li>
-    <li>podmiotom świadczącym usługi wsparcia technicznego.</li>
-  </ul>
-  <p>Podmioty te przetwarzają dane wyłącznie na podstawie odpowiednich umów i zgodnie z obowiązującymi przepisami.</p>
-
+  <ol class="legal-list" start="14">
+  <li>Dane osobowe mogą być udostępniane podmiotom współpracującym z Administratorem w zakresie niezbędnym do realizacji określonych celów przetwarzania, w szczególności:
+    <ul class="legal-sub">
+      <li>a. dostawcom usług hostingowych;</li>
+      <li>b. dostawcom poczty elektronicznej;</li>
+      <li>c. dostawcom systemów służących do obsługi formularzy i umawiania spotkań;</li>
+      <li>d. dostawcom usług informatycznych i wsparcia technicznego;</li>
+      <li>e. biuru rachunkowemu;</li>
+      <li>f. kancelariom prawnym i innym doradcom.</li>
+    </ul>
+  </li>
+  <li>Podmioty przetwarzające dane w imieniu Administratora działają na podstawie odpowiednich umów powierzenia przetwarzania danych, jeżeli zawarcie takich umów jest wymagane przepisami RODO.
+  </li>
+  <li>Dane osobowe nie są przekazywane do państw trzecich, tj. poza Europejski Obszar Gospodarczy, ani do organizacji międzynarodowych.
+  </li>
+  </ol>
   <h2>Prawa osób, których dane dotyczą</h2>
-  <p>Osoba, której dane dotyczą, ma prawo do:</p>
-  <ul>
-    <li>dostępu do danych,</li>
-    <li>sprostowania danych,</li>
-    <li>usunięcia danych,</li>
-    <li>ograniczenia przetwarzania,</li>
-    <li>przenoszenia danych,</li>
-    <li>wniesienia sprzeciwu wobec przetwarzania,</li>
-    <li>cofnięcia zgody w dowolnym momencie,</li>
-    <li>wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</li>
-  </ul>
-  <p>W sprawach związanych z ochroną danych osobowych można kontaktować się pod adresem: <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a></p>
-
+  <ol class="legal-list" start="17">
+  <li>Osobie, której dane dotyczą, przysługuje, w przypadkach przewidzianych przepisami RODO, prawo do:
+    <ul class="legal-sub">
+      <li>a. dostępu do danych osobowych;</li>
+      <li>b. sprostowania danych;</li>
+      <li>c. usunięcia danych;</li>
+      <li>d. ograniczenia przetwarzania;</li>
+      <li>e. przenoszenia danych;</li>
+      <li>f. wniesienia sprzeciwu wobec przetwarzania danych;</li>
+      <li>g. cofnięcia zgody w dowolnym momencie, jeżeli przetwarzanie odbywa się na podstawie zgody, przy czym cofnięcie zgody nie wpływa na zgodność z prawem przetwarzania dokonanego przed jej cofnięciem;</li>
+      <li>h. wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</li>
+    </ul>
+  </li>
+  <li>W sprawach związanych z ochroną danych osobowych można kontaktować się z Administratorem pod adresem: <a href="mailto:szymtrener@gmail.com">szymtrener@gmail.com</a>.
+  </li>
+  </ol>
+  <h2>Dobrowolność podania danych</h2>
+  <ol class="legal-list" start="19">
+  <li>Podanie danych osobowych za pośrednictwem formularza kontaktowego lub formularza umawiania rozmowy jest dobrowolne, jednak niepodanie danych niezbędnych do obsługi zapytania lub rezerwacji może uniemożliwić udzielenie odpowiedzi lub umówienie rozmowy.
+  </li>
+  <li>Podanie danych niezbędnych do zawarcia i wykonania umowy jest dobrowolne, jednak ich niepodanie może uniemożliwić zawarcie umowy lub świadczenie określonych usług. Szczegółowe informacje dotyczące danych wymaganych w ramach współpracy przekazywane są klientom w odrębnej klauzuli informacyjnej.
+  </li>
+  <li>Dane osobowe nie są wykorzystywane do podejmowania decyzji opartych wyłącznie na zautomatyzowanym przetwarzaniu, w tym profilowaniu, które wywoływałyby wobec użytkownika skutki prawne lub w podobny sposób istotnie na niego wpływały.
+  </li>
+  </ol>
   <h2>Pliki cookies</h2>
+  <ol class="legal-list" start="22">
+  <li>Strona internetowa może wykorzystywać pliki cookies oraz podobne technologie służące do zapewnienia jej prawidłowego funkcjonowania.
+  </li>
+  <li>Pliki cookies niezbędne do prawidłowego działania strony mogą być stosowane bez uzyskiwania odrębnej zgody użytkownika.
+  </li>
+  <li>Wykorzystywanie plików cookies lub podobnych technologii w innych celach, w szczególności analitycznych lub marketingowych, wymaga uprzedniego uzyskania zgody użytkownika, jeżeli obowiązek taki wynika z obowiązujących przepisów.
+  </li>
+  <li>Użytkownik może zarządzać plikami cookies za pomocą ustawień swojej przeglądarki internetowej, w tym ograniczyć lub zablokować ich zapisywanie. Ograniczenie stosowania niektórych plików cookies może wpływać na funkcjonowanie strony internetowej.
+  </li>
+  </ol>
+  <h3>Pliki cookies na tej stronie</h3>
   <p>Strona wykorzystuje pliki cookies niezbędne do prawidłowego działania: <code>__Host-st_zgoda</code>, który zapamiętuje decyzję z panelu cookies, oraz <code>JSESSIONID</code>, który chroni formularze przed podszyciem. Strona nie korzysta z cookies marketingowych ani z narzędzi analitycznych firm trzecich.</p>
   <p>Odwiedziny są liczone na serwerze Administratora. Bez zgody zapisywany jest wyłącznie jednodniowy, nieodwracalny skrót, którego nie da się powiązać z osobą. Po wyrażeniu zgody na statystykę odsłony są dodatkowo powiązane z losowym identyfikatorem zgody, co pozwala policzyć powracające osoby. Usunięcie zgody usuwa także te odsłony.</p>
-  <p>Decyzja w sprawie cookies jest zapisywana w bazie danych razem z datą i historią zmian, bez adresu IP. Dane zgody są przechowywane przez 12 miesięcy od ostatniej zmiany, a odsłony przez 12 miesięcy od ich zapisania. Identyfikator zgody, pobranie swoich danych i zmiana decyzji są dostępne na stronie <a href="/ustawienia-cookies">Ustawienia cookies</a>. Na prośbę wysłaną z identyfikatorem zgody Administrator usuwa zgodę.</p>
-
+  <p>Decyzja w sprawie cookies jest zapisywana w bazie danych razem z datą i historią zmian, bez adresu IP. Dane zgody są przechowywane przez 12 miesięcy od ostatniej zmiany, a odsłony przez 12 miesięcy od ich zapisania. Identyfikator zgody, pobranie swoich danych i zmiana decyzji są dostępne na stronie <a href="https://szymtrener.pl/ustawienia-cookies">Ustawienia cookies</a>. Na prośbę wysłaną z identyfikatorem zgody Administrator usuwa zgodę.</p>
   <h2>Postanowienia końcowe</h2>
-  <p>Administrator stosuje odpowiednie środki techniczne i organizacyjne zapewniające ochronę danych osobowych przed ich utratą, zniszczeniem, nieuprawnionym dostępem lub ujawnieniem.</p>
-  <p>Strona internetowa korzysta z szyfrowanego połączenia SSL.</p>
-  <p>W sprawach nieuregulowanych niniejszą Polityką Prywatności zastosowanie mają przepisy RODO oraz inne właściwe przepisy prawa polskiego.</p>
+  <ol class="legal-list" start="26">
+  <li>Administrator stosuje odpowiednie środki techniczne i organizacyjne zapewniające ochronę danych osobowych przed ich utratą, zniszczeniem, nieuprawnionym dostępem lub ujawnieniem.
+  </li>
+  <li>W sprawach nieuregulowanych niniejszą Polityką Prywatności zastosowanie mają przepisy RODO oraz inne właściwe przepisy prawa.
+  </li>
+  </ol>
 </main>
 
 <footer>
@@ -132,7 +181,7 @@
     </div>
     <div class="footer-copy">
       <p>© 2026 Szymon Domagała. Wszelkie prawa zastrzeżone.</p>
-      <p class="footer-links"><a href="/">Powrót do strony głównej</a> · <a href="/ustawienia-cookies" data-consent-open>Ustawienia cookies</a></p>
+      <p class="footer-links"><a href="/">Powrót do strony głównej</a> · <a href="/regulamin">Regulamin</a> · <a href="/ustawienia-cookies" data-consent-open>Ustawienia cookies</a></p>
     </div>
   </div>
 </footer>

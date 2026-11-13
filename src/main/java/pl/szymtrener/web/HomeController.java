@@ -1,5 +1,7 @@
 package pl.szymtrener.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,5 +81,17 @@ public class HomeController {
         model.addAttribute("year", Year.now(ZONE).getValue());
         model.addAttribute("canonical", props.absolute("/polityka-prywatnosci"));
         return "polityka-prywatnosci";
+    }
+
+    /** Publiczny, jak cala strona (SecurityConfig: anyRequest().permitAll()). PDF tej samej tresci: /dokumenty/regulamin.pdf. */
+    @Operation(summary = "Regulamin świadczenia usług",
+               description = "HTML: regulamin świadczenia usług i zawierania umów na odległość z załącznikami "
+                       + "(pouczenie i wzór formularza odstąpienia). Wersja do pobrania: /dokumenty/regulamin.pdf.")
+    @ApiResponse(responseCode = "200", description = "Strona HTML")
+    @GetMapping("/regulamin")
+    public String terms(Model model) {
+        model.addAttribute("year", Year.now(ZONE).getValue());
+        model.addAttribute("canonical", props.absolute("/regulamin"));
+        return "regulamin";
     }
 }

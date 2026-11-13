@@ -353,7 +353,6 @@ public class AdminOfferController {
         model.addAttribute("pairs", all.stream().filter(p -> p.getKind() == StationaryKind.PARA).toList());
         model.addAttribute("ruleCancel", settings.get(StationaryOfferService.RULE_CANCEL, ""));
         model.addAttribute("ruleLate", settings.get(StationaryOfferService.RULE_LATE, ""));
-        model.addAttribute("rulePause", settings.get(StationaryOfferService.RULE_PAUSE, ""));
         model.addAttribute("ruleFreeze", settings.get(StationaryOfferService.RULE_FREEZE, ""));
         model.addAttribute("prices", pricesInZloty(all));
         model.addAttribute("title", "Cennik stacjonarny");
@@ -460,18 +459,16 @@ public class AdminOfferController {
     }
 
     /**
-     * Zasady odwolan i pauzy. Brief: maja byc argumentem sprzedazowym widocznym
-     * przy cenniku, nie zapisem w regulaminie — stad zwykle pola tekstowe.
+     * Zasady odwolan i zamrozenia. Widoczne przy cenniku jako zwykle pola tekstowe, ale tresc
+     * musi sie zgadzac z Regulaminem Studia (od 11.2026: odwolanie 12 h, bez przerwy w pakiecie).
      */
     @PostMapping("/stacjonarnie/zasady")
     public String saveRules(@RequestParam(required = false) String cancel,
                             @RequestParam(required = false) String late,
-                            @RequestParam(required = false) String pause,
                             @RequestParam(required = false) String freeze,
                             RedirectAttributes flash) {
         settings.set(StationaryOfferService.RULE_CANCEL, text(cancel));
         settings.set(StationaryOfferService.RULE_LATE, text(late));
-        settings.set(StationaryOfferService.RULE_PAUSE, text(pause));
         settings.set(StationaryOfferService.RULE_FREEZE, text(freeze));
         flash.addFlashAttribute("info", "Zapisano zasady odwołań.");
         return "redirect:/admin/oferta/stacjonarnie";

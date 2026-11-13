@@ -714,17 +714,8 @@ body.menu-open .mobile-menu a:nth-child(5) { transition-delay: .43s; }
 .of-group textarea { min-height: 96px; }
 .of-group input::placeholder, .of-group textarea::placeholder { color: #94A3AE; }
 .of-group input:focus, .of-group textarea:focus, .of-group select:focus { border-color: var(--o-mint); box-shadow: 0 0 0 3px rgba(29,158,117,.14); }
-.of-consent { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
-.of-consent input {
-  flex-shrink: 0; appearance: none; -webkit-appearance: none; margin: 1px 0 0;
-  width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid rgba(26,43,60,.28);
-  background: #fff; cursor: pointer; display: grid; place-content: center; transition: background .25s, border-color .25s;
-}
-.of-consent input::after { content: ''; width: 6px; height: 11px; margin-top: -2px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) scale(0); transition: transform .2s var(--ease-out); }
-.of-consent input:checked { background: var(--o-mint); border-color: var(--o-mint); }
-.of-consent input:checked::after { transform: rotate(45deg) scale(1); }
-.of-consent input:focus-visible { outline: 2px solid var(--o-mint); outline-offset: 2px; }
-.of-consent span { font-size: var(--fs-xs); color: #4A5B6B; line-height: 1.6; }
+/* informacja o danych pod formularzem (bez checkboxa: podstawa art. 6 ust. 1 lit. b i f RODO) */
+.of-consent { margin: 0; font-size: var(--fs-xs); color: #4A5B6B; line-height: 1.6; }
 .of-consent a { color: var(--o-mint); text-decoration: underline; }
 .of-form .btn { width: 100%; }
 .of-success, .of-error { display: none; padding: 15px 16px; border-radius: 11px; font-size: var(--fs-sm); line-height: 1.55; }
@@ -860,22 +851,8 @@ body.menu-open .mobile-menu a:nth-child(5) { transition-delay: .43s; }
 .form-success { display: none; padding: 16px; background: var(--mint-pale); border: 1px solid var(--mint); border-radius: var(--radius); font-size: var(--fs-sm); color: var(--mint); }
 .form-error { display: none; padding: 16px; background: rgba(230,140,90,.1); border: 1px solid rgba(230,140,90,.5); border-radius: var(--radius); font-size: var(--fs-sm); color: #E8A074; }
 .form-error a { color: #E8A074; text-decoration: underline; font-weight: 700; }
-/* zgoda RODO */
-.form-consent { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin-top: 4px; }
-.form-consent input {
-  flex-shrink: 0; appearance: none; -webkit-appearance: none; margin: 1px 0 0;
-  width: 22px; height: 22px; border-radius: 6px;
-  border: 1.5px solid var(--border); background: var(--card-bg); cursor: pointer;
-  display: grid; place-content: center; transition: border-color .25s, background .25s;
-}
-.form-consent input::after {
-  content: ''; width: 6px; height: 11px; margin-top: -2px;
-  border: solid var(--navy-deep); border-width: 0 2.5px 2.5px 0;
-  transform: rotate(45deg) scale(0); transition: transform .2s var(--ease-out);
-}
-.form-consent input:checked { background: var(--mint); border-color: var(--mint); }
-.form-consent input:checked::after { transform: rotate(45deg) scale(1); }
-.form-consent input:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+/* informacja o danych pod formularzem */
+.form-consent { margin: 4px 0 0; }
 .consent-text { font-size: var(--fs-xs); color: var(--text-muted); line-height: 1.6; }
 .consent-text a { color: var(--mint); text-decoration: underline; }
 
@@ -895,6 +872,37 @@ body.menu-open .mobile-menu a:nth-child(5) { transition-delay: .43s; }
 .legal-wrap li::marker { color: var(--mint); }
 .legal-wrap a { color: var(--mint); text-decoration: underline; }
 .legal-wrap strong { color: var(--white); }
+/* numeracja ustępów jak w Wordzie (regulamin od 1 w każdym §, polityka ciągiem); podpunkty mają literę w tekście */
+.legal-wrap ol.legal-list { list-style: decimal; padding-left: 28px; margin: 0 0 16px; display: grid; gap: 12px; }
+.legal-wrap ol.legal-list > li { padding-left: 4px; }
+.legal-wrap ol.legal-list > li::marker { font-weight: 700; }
+.legal-wrap ul.legal-sub { list-style: none; padding-left: 0; margin: 10px 0 2px; gap: 6px; }
+.legal-toc { font-size: var(--fs-sm); }
+/* kotwice #zalacznik-N nie chowaja naglowka pod przyklejona nawigacja */
+.legal-wrap h2[id] { scroll-margin-top: 96px; }
+.legal-wrap .legal-address { padding: 14px 18px; border-left: 2px solid var(--mint); background: rgba(255,255,255,.03); line-height: 1.7; }
+.legal-form { margin-top: 8px; padding: 22px 24px; border: 1px dashed var(--border); border-radius: var(--radius); }
+.legal-wrap .legal-form p { margin-bottom: 10px; overflow-wrap: anywhere; }
+/* wydruk i PDF stron prawnych (body.legal-page, Chrome --print-to-pdf): jasne tło, bez nawigacji, stopki i panelu cookies */
+@media print {
+  @page { margin: 18mm 16mm; }
+  html:has(body.legal-page) { font-size: 90%; }
+  body.legal-page { background: #fff !important; }
+  /* ziarno (body::before, SVG feTurbulence) Chrome wypala w PDF jako bitmape na kazdej stronie: dziesiatki MB */
+  body.legal-page::before { display: none !important; }
+  .legal-page :is(.legal-nav, footer, .consent-bar, .consent-dialog, .back-top, .legal-pdf) { display: none !important; }
+  .legal-wrap { max-width: none; padding: 0; }
+  /* grid nie dzieli sie na strony: lista przeskakiwala w calosci na nastepna, zostawiajac pol pustej strony */
+  .legal-wrap ol.legal-list, .legal-wrap ul { display: block; }
+  .legal-wrap li { margin-bottom: 8px; line-height: 1.55; }
+  .legal-wrap p { line-height: 1.6; }
+  .legal-wrap h1, .legal-wrap h2, .legal-wrap h3, .legal-wrap strong, .legal-wrap a, .legal-wrap li::marker { color: #111; }
+  .legal-wrap p, .legal-wrap li, .legal-updated, .legal-toc { color: #222; }
+  .legal-updated { border-bottom-color: #ccc; }
+  .legal-wrap h2, .legal-wrap h3 { break-after: avoid; }
+  .legal-wrap .legal-address { background: none; border-left-color: #999; break-inside: avoid; }
+  .legal-form { border-color: #999; break-inside: avoid; }
+}
 
 /* ─── FOOTER ─── */
 footer { padding: 52px 0 36px; border-top: 1px solid var(--border); background: var(--navy-deep); position: relative; z-index: 2; }

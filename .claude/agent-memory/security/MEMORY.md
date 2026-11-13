@@ -1,2 +1,3 @@
-- [Pełny zestaw (verify + IT, z Dockerem i bez), sondy](reference_it_bez_dockera.md) — clean test pomija IT; api.version=1.43; sondy MIME, nazwy plików, ścieżki springdoc (.yaml)
+- [Pełny zestaw (verify + IT, z Dockerem i bez), sondy](reference_it_bez_dockera.md) — clean test pomija IT; sondy MIME, ścieżek, listing katalogów (MockMvc kłamie), linki w PDF
 - [Thymeleaf [[...]] w JSON-LD](reference_thymeleaf_jsonld_escaping.md) — HTML-escape, nie JSON: \ i newline łamią blok; sonda SpringTemplateEngine
+- [Backfill omija syncMediaLinks](reference_backfill_pomija_serwis.md) — zapis contentHtml poza PostService.save = post_media nieaktualne, plik do skasowania
