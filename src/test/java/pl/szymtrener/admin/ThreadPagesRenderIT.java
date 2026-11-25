@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import pl.szymtrener.PostgresTestBase;
+import pl.szymtrener.crm.AttachmentPolicy;
 import pl.szymtrener.crm.MessageService;
 import pl.szymtrener.crm.TraineeService;
 import pl.szymtrener.submission.Submission;
@@ -45,6 +47,7 @@ class ThreadPagesRenderIT extends PostgresTestBase {
         mvc.perform(get("/admin/zgloszenia/" + s.getId()).with(admin))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("id=\"cmp-pliki\"")))
+                .andExpectAll(pickerLimits())
                 .andExpect(content().string(containsString("</html>")));
 
         Long traineeId = trainees.fromSubmission(s.getId()).getId();
@@ -52,6 +55,15 @@ class ThreadPagesRenderIT extends PostgresTestBase {
         mvc.perform(get("/admin/klienci/" + traineeId).with(admin))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("id=\"cmp-pliki\"")))
+                .andExpectAll(pickerLimits())
                 .andExpect(content().string(containsString("</html>")));
+    }
+
+    /** admin-crm.js bez atrybutu po cichu bierze 5 plikow, wiec pilnujemy wartosci z polityki. */
+    private static ResultMatcher[] pickerLimits() {
+        return new ResultMatcher[] {
+                content().string(containsString("data-max-files=\"" + AttachmentPolicy.OUT_MAX_FILES + "\"")),
+                content().string(containsString("data-max-bytes=\"" + AttachmentPolicy.OUT_MAX_TOTAL + "\"")),
+                content().string(containsString("data-max-file=\"" + AttachmentPolicy.OUT_MAX_FILE + "\""))};
     }
 }

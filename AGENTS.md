@@ -5,7 +5,7 @@ Instrukcja dla agentów kodujących. Format AGENTS.md czyta ponad 30 narzędzi
 który importuje ten plik.
 
 ## Stack
-- Java 21 / Spring Boot 3.5.5
+- Java 21 / Spring Boot 3.5.16
 - Pakiet bazowy: `pl.szymtrener`
 - Build: Maven
 
